@@ -1,0 +1,202 @@
+
+
+
+                    ============================
+                       N O N - W E I G H T S    
+                    ============================
+
+
+
+ STATE  (WITH  1 CONFIGURATIONS):
+ -------------------------------
+
+
+ THERE ARE  2 ORBITALS AS FOLLOWS:
+
+       1s 2p1
+
+ CONFIGURATION  1 ( OCCUPIED ORBITALS= 2 ):  1s( 2) 2p1( 1)
+                           COUPLING SCHEME:     1S0     2P1
+                                                           2P0
+
+
+                    ===================
+                      MCHF  ...  1988
+                    ===================
+
+
+          THE DIMENSIONS FOR THE CURRENT VERSION ARE:
+            NCFG=100       NWF= 30        NO=220
+
+
+
+ Li    2P        3.   220  2  2  1  F  F
+
+  F.1D-09.1D-06 12  30.0  0  T  F
+
+
+
+          WEAK ORTHOGONALIZATION DURING THE SCF CYCLE=   T
+          ACCELERATING PARAMETER FOR MCHF ITERATION  = 0.00
+          SCF CONVERGENCE TOLERANCE (FUNCTIONS)      = 1.00D-07
+          NUMBER OF POINTS IN THE MAXIMUM RANGE      = 220
+          RELATIVISTIC DIAGONAL  ENERGY CORRECTIONS  =   F
+
+
+          ITERATION NUMBER  1
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  2.4D-07
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      3.9935632      8.9120692   1.2042699    1.46D-01
+          ED =  -0.474131; ADJUSTED TO ALLOWED MINIMUM ENERGY
+                    2p1      0.4409082      2.9553938   0.1791625    2.04D-01
+                     1s      4.5825111      9.2367965   1.2436399    3.23D-02
+          ED =  -0.090704; ADJUSTED TO ALLOWED MINIMUM ENERGY
+          ED =  -0.090704; ADJUSTED TO ALLOWED MINIMUM ENERGY
+                    2p1      0.4409082      0.9207948   1.0000000*   2.77D-01
+                    2p1      0.2317634      0.4864075   1.0000000*   1.32D-01
+
+      LEAST SELF-CONSISTENT FUNCTION IS 2p1 :WEIGHTED MAXIMUM CHANGE =  1.32D-01
+
+
+          ITERATION NUMBER  2
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  4.9D-07
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      5.0763623      9.2696529   1.2103746    8.57D-03
+                    2p1      0.2569352      0.4317883   1.0000000*   1.12D-02
+                     1s      5.0590433      9.2603344   0.9994021    9.34D-04
+                    2p1      0.2573484      0.4268610   1.0000000*   6.80D-04
+
+      LEAST SELF-CONSISTENT FUNCTION IS  1s :WEIGHTED MAXIMUM CHANGE =  1.32D-03
+
+
+          ITERATION NUMBER  3
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  9.8D-07
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      5.0616057      9.2620797   1.0005108    1.70D-04
+                    2p1      0.2573443      0.4262231   1.0000000*   1.11D-04
+                     1s      5.0613940      9.2617898   0.9999356    2.79D-05
+
+      LEAST SELF-CONSISTENT FUNCTION IS 2p1 :WEIGHTED MAXIMUM CHANGE =  1.11D-04
+
+
+          ITERATION NUMBER  4
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.7D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  2.0D-06
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      5.0614456      9.2618264   1.0000117    4.70D-06
+                    2p1      0.2573450      0.4261485   1.0000000*   1.20D-05
+                    2p1      0.2573450      0.4261391   1.0000000*   1.57D-06
+
+      LEAST SELF-CONSISTENT FUNCTION IS  1s :WEIGHTED MAXIMUM CHANGE =  6.65D-06
+
+
+          ITERATION NUMBER  5
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  3.8D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  3.9D-06
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      5.0614526      9.2618319   1.0000022    7.27D-07
+                    2p1      0.2573450      0.4261377   1.0000000*   2.67D-07
+
+      LEAST SELF-CONSISTENT FUNCTION IS  1s :WEIGHTED MAXIMUM CHANGE =  1.03D-06
+
+
+          ITERATION NUMBER  6
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  5.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  7.8D-06
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      5.0614518      9.2618326   1.0000003    9.06D-08
+                    2p1      0.2573450      0.4261375   1.0000000*   4.27D-08
+
+
+          TOTAL ENERGY =       -7.365069661
+
+
+     ENERGY (a.u.)
+     ------
+           Total                  -7.365069661
+           Potential             -14.730139210
+           Kinetic                 7.365069549
+           Ratio                   2.000000015
+
+                     Hyperfine structure calculation 
+
+ li1.c                   
+ Tolerance for printing       0.000000 MHz 
+ Nuclear dipole moment        3.256000 n.m.
+ Nuclear quadrupole moment   -0.040000 barns
+ 2*I=   3
+   Li    2P        -7.3650697                                           
+
+ (config   1|hfs|config   1 )
+
+ Orbital term
+ matrix element     <2p1|R**(-3)|2p1>
+  J    J'   weight    coeff       matrix element values       Aorb(MHz)
+ 1/2  1/2  1.000000  2.666667    0.0586                    16.173955
+ 3/2  3/2  1.000000  1.333333    0.0586                     8.086977
+
+ Spin-dipole term
+ matrix element     <2p1|R**(-3)|2p1>
+  J    J'   weight    coeff       matrix element values       Adip(MHz)
+ 1/2  1/2  1.000000  2.669759    0.0586                    16.192709
+ 3/2  3/2  1.000000 -0.266976    0.0586                    -1.619271
+
+ Quadrupole term
+ matrix element     <2p1|R**(-3)|2p1>
+  J    J'   weight    coeff       matrix element values          B(MHz)
+ 3/2  3/2  1.000000  0.400000    0.0586                    -0.220196
+
+                              **
+
+                    A factors in MHz 
+
+  J     J'        Orbital        Spin-dip        Cont           Total 
+
+ 1/2   1/2       16.17395       16.19271        0.00000       32.36666
+
+ 3/2   3/2        8.08698       -1.61927        0.00000        6.46771
+
+                    B factors in MHz 
+
+  J     J'        Quadrupole
+
+ 1/2   1/2        0.00000
+
+ 3/2   3/2       -0.22020
+
+                              **
+
+                    Hyperfine parameters in a.u.
+
+                    al             ad             ac             bq
+
+                 0.05857       -0.01171        0.00000       -0.02343
+
+                              **

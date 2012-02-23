@@ -1,0 +1,5009 @@
+************************************************************************
+*
+	PROGRAM BREIT
+*
+*             C O P Y R I G H T -- 1994
+*
+* --- Adapted from CIV3 (R. Glass and A. Hibbert) by
+*         A. Hibbert, Queen's Univeristy Belfast, and
+*         C. Froese Fischer, Vanderbilt University
+*
+*                   August, 1982
+*
+*     Computer Physics Communications, Vol. 64, 455--472 (1991).
+*     
+*     CLSHBW corrected Jan, 1997
+************************************************************************
+*
+* --- THIS PROGRAM EVALUATES THE BREIT-PAULI OPERATORS
+*
+*     ONE-ELECTRON OPERATOR
+*     ELECTROSTATIC INTERACTION
+*     SPIN-ORBIT INTERACTION
+*     SPIN-OTHER-ORBIT INTERACTION
+*     SPIN-SPIN INTERACTION
+*
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      CHARACTER ANS*2, NAME(2)*24
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DIAGNL/IDIAG,JA,JB
+      COMMON /FOUT/NOV(2),IOVLAP(10,2),NF,NG,NR,NL,NZ,NN,NV,NS,IFLAG,NIJ
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/KRON/IDEL(10,10)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/PHASES/SIGNFA(NCD2),ICSTAS
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+      DIMENSION NFLG(20),IRFST(NCD2),NCOUNT(8)
+      EQUIVALENCE (NCOUNT(1),NF)
+      LOGICAL INCL
+*
+*
+  105 FORMAT (49H ISPORB=0 AND ISOORB=1 CAUSES THE PROGRAM TO FAIL,
+     :  34H BECAUSE THE BLUME WATSON FORMULAE,/
+     :  50H CANNOT BE USED FOR CLOSED SUBSHELLS.  TO OVERCOME,
+     :  34H THIS, THE CODE HAS SET ISPORB = 1//)
+   11 FORMAT(////' THE TYPE OF CALCULATION IS DEFINED BY ',
+     :  'THE FOLLOWING PARAMETERS - '/
+     : 5X,22H BREIT-PAULI OPERATORS,13X,8HIREL   =,I2/
+     : 5X,27H PHASE CONVENTION PARAMETER,8X,8HICSTAS =,I2/)
+   13 FORMAT(40H RELATIVISTIC OPERATORS TO BE INCLUDED -/5X,13H SPIN-ORB
+     :IT (,I1,22H),  SPIN-OTHER-ORBIT (,I1,15H),  SPIN-SPIN (,I1,1H)/)
+   24 FORMAT(36H0INITIAL DEBUG: IN 1-ELECTRON PART =,I2,2H ,,5X,
+     : 20H IN 2-ELECTRON PART=,I2/16X,23HIN RECOUPLING PACKAGE =,I2/)
+   42 FORMAT(//' MATRIX ELEMENTS CONSTRUCTED USING ',
+     :       'THE SPHERICAL HARMONIC PHASE CONVENTION OF'/)
+   43 FORMAT(16X,47HCONDON AND SHORTLEY, THEORY OF ATOMIC STRUCTURE/16X,
+     :47H-----------------------------------------------///)
+   44 FORMAT(25X,42HFANO AND RACAH, IRREDUCIBLE TENSORIAL SETS/25X,42H--
+     :----------------------------------------///)
+   50 FORMAT(/20X,'======================='/
+     :        20X,' B R E I T - P A U L I '/
+     :        20X,'======================='/)
+   78 FORMAT(19H DEBUG PARAMETERS -/5X,16H NBUG6(TENSOR) =,I2/5X,
+     : ' NBUG7(RELATIVISTIC OPERATORS - SO,SOO,SS) =',I2//)
+*
+*     SET INPUT AND OUTPUT CHANNELS
+*
+      IREAD=4
+      IWRITE=6
+      IOUT = 7
+      DO 2 I = 1,8
+	 ISC(I) = 10 + I
+	 NCOUNT(I) = 0
+	 OPEN(UNIT=ISC(I),STATUS='SCRATCH',FORM='UNFORMATTED')
+    2 CONTINUE
+      NAME(1) = 'cfg.inp'
+      NAME(2) = 'int.lst'
+CSUN  i = iargc()
+CSUN  if (i .ge. 1) then
+CSUN     call getarg(1,NAME(1))
+CSUN     if (i .eq. 2) call getarg(2,NAME(2))
+CSUN  end if
+      OPEN(UNIT=IOUT,FILE=NAME(2),STATUS='UNKNOWN')
+          
+      NIJ = 0
+      NHDEL=10
+      MXIHSH=(10)
+*
+*      WRITE HEADING
+*
+   10 WRITE(IWRITE,50)
+*
+      WRITE(0,'(A/A/A/A)') ' Indicate the type of calculation ',
+     : ' 0 => non-relativistic Hamiltonian only;',
+     : ' 1 => one or more relativistic operators only;',
+     : ' 2 => non-relativistic operators and selected relativistic:  '
+      READ(5,*) IREL
+      WRITE(0,'(A)') ' Is full print-out requested? (Y/N) '
+      READ(5,'(A2)') ANS
+      IFULL = 0
+      IF (ANS .EQ. 'Y' .OR. ANS .EQ. 'y') IFULL = 1
+*
+*     Determine basic parameters  (CS phases selected)
+*
+*     WRITE(0,'(/A)')
+*    :    ' Phases:- Condon and Shortley or Fano and Racah ? (CS/FR) '
+*     READ(5,'(A2)') ANS
+*        IF ( ANS .EQ. 'CS' .OR. ANS .EQ. 'cs') THEN
+            ICSTAS = 1
+*          ELSE
+*           ICSTAS = 0
+*        END IF
+      ISPORB = 0
+      ISOORB = 0
+      ISPSPN = 0
+*
+      IF (IREL .NE. 0) THEN
+      ISPORB = 1
+      ISOORB = 1
+      ISPSPN = 1
+      WRITE(0,'(A)') ' All relativistic operators ? (Y/N) '
+      READ(5,'(A2)') ANS
+      IF ( ANS .EQ. 'N ' .OR. ANS .EQ. 'n ') THEN
+         WRITE(0,'(A)') ' Spin-orbit ? (Y/N) '
+         READ(5,'(A2)') ANS
+         IF ( ANS .EQ. 'N ' .OR. ANS .EQ. 'n ') ISPORB = 0
+         WRITE(0,'(A)') ' Spin-other-orbit ? (Y/N) '
+         READ(5,'(A2)') ANS
+         IF ( ANS .EQ. 'N ' .OR. ANS .EQ. 'n ') ISOORB = 0
+         WRITE(0,'(A)') ' Spin-spin ? (Y/N) '
+         READ(5,'(A2)') ANS
+         IF ( ANS .EQ. 'N ' .OR. ANS .EQ. 'n ') ISPSPN = 0
+      END IF
+*
+      IF(ISPORB.EQ.0.AND.ISOORB.NE.0) THEN
+         ISPORB = 1
+         WRITE (IWRITE,105)
+      END IF
+      END IF
+*
+*  --:  Determine debug parameters
+*
+      IBUG1 = 0
+      IBUG2 = 0
+      IBUG3 = 0
+      NBUG6 = 0
+      NBUG7 = 0
+*
+CDBG  WRITE(0,'(A)') ' Debug parameters ? (Y/N) '
+CDBG  READ(5,'(A2)') ANS
+CDBG  IF ( ANS .EQ. 'Y  ' .OR. ANS .EQ. 'y ') THEN
+CDBG     WRITE(0,'(A)') ' IBUG1 FOR 1-EL PART ? (Y/N) '
+CDBG     READ(5,'(A2)') ANS
+CDBG     IF (ANS .EQ. 'Y ' .OR. ANS .EQ. 'y ' ) IBUG1 = 1
+CDBG     WRITE(0,'(A)') ' IBUG2 FOR 2-EL PART ? (Y/N) '
+CDBG     READ(5,'(A2)') ANS
+CDBG     IF (ANS .EQ. 'Y ' .OR. ANS .EQ. 'y ' ) IBUG2 = 1
+CDBG     WRITE(0,'(A)') ' IBUG3 FOR RECOUPLING ? (Y/N) '
+CDBG     READ(5,'(A2)') ANS
+CDBG     IF (ANS .EQ. 'Y ' .OR. ANS .EQ. 'y ' ) IBUG3 = 1
+CDBG     WRITE(0,'(A)') ' NBUG6 FOR TENSOR ? (Y/N) '
+CDBG     READ(5,'(A2)') ANS
+CDBG     IF (ANS .EQ. 'Y ' .OR. ANS .EQ. 'y ' ) NBUG6 = 1
+CDBG     WRITE(0,'(A)') ' NBUG7 FOR SO, SOO, SS ? (Y/N) '
+CDBG     READ(5,'(A2)') ANS
+CDBG     IF (ANS .EQ. 'Y ' .OR. ANS .EQ. 'y ' ) NBUG7 = 1
+CDBG  END IF
+CDBG  WRITE(IWRITE,24) IBUG1,IBUG2,IBUG3
+CDBG  WRITE(IWRITE,78) NBUG6,NBUG7
+*
+      WRITE(IWRITE,11) IREL,ICSTAS
+*
+*     SET FACTORIALS AND LOG OF FACTORIALS
+*
+   79 CALL INITA
+*
+* --- READ IN THE SET OF CONFIGURATIONS
+*
+   21 CALL ACNFIG(NAME(1))
+*
+      IDG = 0
+      NZERO = NCFG
+      NEW = NCFG
+      DO 554 I = 1,NZERO
+554   IRFST(I) = 1
+      ISTART = 1
+      WRITE(0,'(A)') ' All Interactions? (Y/N): '
+      READ (5,'(A2)') ANS
+      IF (ANS .NE. 'Y' .AND. ANS .NE. 'y') THEN
+          WRITE(0,'(A,I3,A/A)') ' Of the ',NCFG,
+     :         ' configurations, how many at the end are new? ',
+     :         ' How many configurations define the zero-order set?'
+         READ (5,*) NEW,NZERO
+	 IF (NEW .EQ. 0) NEW = NCFG
+         ISTART = NCFG - NEW + 1
+         IF (NZERO .eq. 0) NZERO = NCFG
+         IF (IREL .NE. 0 .AND. NZERO .NE. NCFG) THEN
+            WRITE(0,'(A)') ' Rel interaction with all the zero block? '
+            READ (5,'(A2)') ANS
+            IF (ANS .NE. 'Y' .AND. ANS .NE. 'y') THEN
+               DO 553 I = 1,(20)
+553            NFLG(I) = 0
+               WRITE(0,*) ' Define your reference set : FORM(20I3)'
+               READ (5,'(20I3)') (NFLG(I),I=1,(20))
+               DO 551 I = 1,(ISTART-1)
+               IRFST(I) = 0
+               DO 552 J = 1,(20)
+               IF (NFLG(J) .EQ. I) THEN
+                  IRFST(I) = 1
+                  GO TO 552
+               ENDIF
+552            CONTINUE
+551            CONTINUE
+            ENDIF
+            WRITE(0,*) ' Diagonal rel corrections ? (Y/N): '
+            READ (5,'(A2)') ANS
+            IF (ANS.EQ.'Y'.OR.ANS.EQ.'y') IDG = 1
+         ENDIF
+         ISTRICT = 1
+         WRITE(0,*)  ' Restricted Two-body interactions? (Y/N); '
+         READ (5,'(A2)') ANS
+         IF (ANS .NE. 'Y' .and. ANS .NE. 'y' ) ISTRICT = 0
+      END IF
+*
+* ...  Start the calculation
+*
+   67 DO 6 JA = ISTART, NCFG
+	  IF (IFULL .EQ. 0) WRITE(0,'(A,I5)') ' JA =',JA
+      DO 7 JB=1, JA
+      INCL = .FALSE.
+      IF (JB.LE.NZERO.AND.IRFST(JB).EQ.1) INCL = .TRUE.
+      IFLAG = 0
+      IDIAG = 0
+      IF (JA .EQ. JB) THEN
+         IDIAG = 1
+         IF (IDG .EQ. 1) INCL = .TRUE.
+      ENDIF
+      ICOUNT = 0
+*
+* ... Set up defining quantum numbers for each matrix element.
+*
+      CALL SETUP(JA,JB)
+      IF(IBUG1.NE.0 .OR. IBUG2.NE.0) CALL VIJOUT(JA,JB)
+      IF(IHSH.GT.MXIHSH) STOP
+*
+* ... TEST ON POSSIBLE RECOUPLING ORTHOGONALITY.
+*
+      CALL ORTHOG(LET,INCL)
+      IF (LET .EQ. 0) GO TO 7
+      IF (IFULL .NE. 0) WRITE(IWRITE,77)
+   77 FORMAT(///30X,'MULTIPLYING FACTOR',11X,'TYPE OF INTEGRAL')
+      IF (IREL .NE. 1) THEN
+         CALL H0WTS
+         CALL CHOP
+      END IF
+      IF(ISPORB.NE.0.AND.INCL)
+     :              CALL SPNORB (ICOUNT,JA,JB)
+      IF (ISTRICT.EQ.1 .AND. IZOUT.EQ.0) THEN
+         ITSOO = ISOORB
+         ITSPSP = ISPSPN
+         ISOORB = 0
+         ISPSPN = 0
+         IF (IREL.NE.1) CALL RKWTS(ICOUNT,JA,JB,INCL)
+         ISOORB = ITSOO
+         ISPSPN = ITSPSP
+      ELSE
+         IF(ISOORB.NE.0 .OR. ISPSPN.NE.0 .OR. IREL.NE.1)
+     :      CALL RKWTS(ICOUNT,JA,JB,INCL)
+      END IF
+      IF (IFLAG .NE. 0) NIJ = NIJ + 1
+    7 CONTINUE
+    6 CONTINUE
+      NTOTAL = ((2*NCFG - NEW +1)*NEW)/2
+      WRITE(0,*) NTOTAL, ' matrix elements'
+      WRITE(0,*) NIJ, ' non-zero matrix elements'
+      WRITE(0,*) 100*NIJ/REAL(NTOTAL),' % dense'
+      WRITE(0,*) 'NF=',nf,' NG=',ng,' NR=',nr,' NL=',nl
+      WRITE(0,*) 'NZ=',nz,' NN=',nn,' NV=',nv,' NS=',ns
+      WRITE(0,*) 'Total number of terms =', NF+NG+NR+NL+NZ+NN+NV+NS
+      CALL OUTLSJ
+      WRITE(IWRITE,42)
+      IF(ICSTAS.EQ.0) THEN
+         WRITE(IWRITE,44)
+        ELSE
+         WRITE(IWRITE,43)
+      END IF
+      STOP
+      END
+*
+*     ------------------------------------------------------------------
+*	A C N F I G
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE ACNFIG(INPUT)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      CHARACTER INPUT*24
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/PHASES/SIGNFA(NCD2),ICSTAS
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+    2 FORMAT(1H1////29X,21H---------------------/29X,21HTHE CONFIGURATIO
+     :N SET/29X,21H---------------------///)
+*
+*     READ IN (AND PRINT OUT) CONFIGURATIONS
+*
+      WRITE(IWRITE,2)
+      CALL CFGO1(NCFG,MAXORB,IAJCMP,LJCOMP,NJCOMP,NOCCSH,
+     :            NELCSH,NOCORB,J1QNRD,NCD2,INPUT)
+*
+*     DETERMINE THE SIGN ASSOCIATED WITH ANGULAR MOMENTUM PHASE
+*          CONVENTIONS
+*
+   22 ISTART=1
+   23 IEND=NCFG
+      SIGNFA(ISTART)=ONE
+      LBASE=0
+      N1=NOCCSH(ISTART)
+      DO 7 I=1,N1
+      N2=NOCORB(I,ISTART)
+      LBASE=LBASE+NELCSH(I,ISTART)*LJCOMP(N2)
+    7 CONTINUE
+      ISP1=ISTART+1
+      DO 13 N=ISP1,IEND
+      LPHASE=0
+      N1=NOCCSH(N)
+      DO 4 I=1,N1
+      N2=NOCORB(I,N)
+      LPHASE=LPHASE+NELCSH(I,N)*LJCOMP(N2)
+    4 CONTINUE
+      LPHASE=(LPHASE-LBASE)/2
+      IF((LPHASE-LPHASE/2*2).EQ.0) GO TO 5
+      SIGNFA(N)=-ONE
+      GO TO 13
+    5 SIGNFA(N)=ONE
+   13 CONTINUE
+   21 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	A L L A D D
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE ALLADD(IHSH,M3,M4,M5,M6,M7,M8,M9,M10,
+     :                  M11,M12,M13,M14,M15,M16,M17,M18)
+      M3=IHSH-1
+      M4=IHSH+1
+      M5=IHSH+2
+      M6=2*IHSH-1
+      M7=M6+1
+      M8=M3+M6
+      M9=M8+1
+      M10=M8+2
+      M11=M8+3
+      M12=M8+4
+      M13=M8+5
+      M14=M8+6
+      M15=M8+7
+      M16=M8+8
+      M17=M8+9
+      M18=IHSH+3
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	B L O C K   D A T A
+*     ------------------------------------------------------------------
+*
+      BLOCK DATA
+C
+      IMPLICIT REAL *8(A-H,O-Z)
+C
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+C
+C     SET GLOBAL REAL CONSTANTS
+C
+      DATA ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS/
+     :     0.0D 00,0.1D 00,0.5D 00,1.0D 00,2.0D 00,3.0D 00,4.0D 00,
+     :     7.0D 00,1.1D 01,1.0D-08/
+C
+      END
+*
+*     ------------------------------------------------------------------
+*	B L M W A T
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE BLMWAT(IRHO,ISIG)
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      COMMON/BLUME/COEFN2(4),COEFNK(4),COEFVK(4)
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DIAGNL/ IDIAG,JA,JB
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/DENKVK/D00N2(12),D00NK(12),D00VK(12),D11N2(12),D11NK(12),
+     :     D11VK(12),E01N2(12),E01NK(12),E01VK(12),E10N2(12),E10NK(12),
+     :     E10VK(12)
+      COMMON/DESSNK/D00SNK(12),D11SNK(12),E01SNK(12),E10SNK(12),
+     :     MULDSS,MULDSP,MULESS,MULESP
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/XATION/AMULT(15),BMULT(15),KD1,KD2,KE1,KE2,MULTD,MULTE
+      COMMON/DEMULT/DMULT0(12,3),DMULT1(12,3),EMULT0(12,3),EMULT1(12,3),
+     :     MULDSO,MULESO
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/SPORB/ACMULT(NWD)
+*
+* ... THIS ROUTINE EVALUATES SPIN-OTHER-ORBIT INTERACTIONS BETWEEN
+*     A CLOSED AND AN OPEN SUBSHELL.
+*
+      IF(IRHO.NE.ISIG) GO TO 100
+      WRITE (IWRITE,200) JA,JB,IRHO
+  200 FORMAT (42H WRONG LCALL OF BLMWAT IN MATRIX ELEMENT (,I3,
+     :  11H), SUBSHELL,I2/)
+      STOP
+  100 N1 = NOSH1(IRHO)
+      LRHO = LJ(IRHO)
+      IFLAG = 0
+      IF(N1.EQ.(4*LRHO + 2)) GO TO 1
+*
+* ... ENSURE THAT FOR THE REST OF THIS ROUTINE, RHO IS THE CLOSED
+*     SUBSHELL.
+*
+      ISTO = IRHO
+      IRHO = ISIG
+      ISIG = ISTO
+      LSIG = LRHO
+      LRHO = LJ(IRHO)
+      IFLAG = 1
+      GO TO 2
+    1 LSIG = LJ(ISIG)
+    2 I1 = IJFUL(ISIG)
+      IF (LRHO .EQ. 0 .AND. LSIG .EQ. 0) GO TO 4
+*
+* ... AC2 IS THE COEFFICIENT OF THE SPIN-ORBIT INTEGRAL OF
+*     SUBSHELL SIG.
+*
+      AC2 = ACMULT(I1)
+      KD1 = 1
+      KD2 = 1
+      KE1 = IABS(LSIG - LRHO) + 1
+      IF(LRHO.EQ.LSIG) KE1 = 3
+      KE2 = LRHO + LSIG + 1
+      D00N2(1) = ZERO
+      D00VK(1) = ZERO
+      D11N2(1) = ZERO
+      D11VK(1) = ZERO
+*
+*  D0:NK(1) AND D11NK(1) WERE INTERCHANGED BY MRG DECEMBER 18, 1981
+*
+      D11NK(1) = -2*(LRHO + LRHO + 1)*AC2
+      D00NK(1) = ZERO
+      CALL BWINT(LRHO,LSIG)
+      L = 0
+      DO 3 J=KE1, KE2, 2
+      L = L + 1
+      E10N2(L) = ZERO
+      E01N2(L) = COEFN2(L)*AC2
+      E01VK(L) = -COEFVK(L)*AC2
+      E10VK(L) = -E01VK(L)
+      E10NK(L) = COEFNK(L)*AC2
+      E01NK(L) = ZERO
+    3 CONTINUE
+      MULDSO = 1
+      M1 = ISIG - IRHO
+      M2 = M1
+      M19 = 0
+      M20 = 0
+      MULESO = 1
+      MULDSS = 0
+      MULDSP = 0
+      MULESS = 0
+      MULESP = 0
+      CALL RADWTS(IRHO,ISIG,IRHO,ISIG,ICOUNT)
+    4 IF (IFLAG .EQ. 0) RETURN
+      ISTO = IRHO
+      IRHO = ISIG
+      ISIG = ISTO
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	C H O P
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE CHOP
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/DIAGNL/IDIAG,JA,JB
+*
+*     NO AVERAGE ENERGY TERMS FOR OFF-DIAGONAL MATRIX ELEMENTS
+*
+      IF(IDIAG.EQ.0) RETURN
+      JSTO=0
+      ICOUNT=0
+      DO 3 J=1,IHSH
+      NFULL=4*LJ(J)+2
+      I2=NOSH1(J)
+*
+*     IS THE SHELL FULL OR EMPTY
+*
+      IF(I2.EQ.NFULL.OR.I2.EQ.0) GO TO 4
+*
+*     IF NOT, DOES IT CONTAIN ONLY ONE ELECTRON, OR ONLY ONE =HOLE=
+*
+      IF(I2.EQ.1.OR.I2.EQ.(NFULL-1)) JSTO=J
+      GO TO 3
+    4 ICOUNT=ICOUNT+1
+    3 CONTINUE
+*
+*     IF ALL BUT ONE SHELL IS CLOSED, AND THIS CONTAINS ONE ELECTRON OR
+*     =HOLE= , THEN IT CAN BE TREATED PURELY BY AVERAGE ENERGY
+*
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	C L S H B W
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE CLSHBW(ISIG,ISIGP,IRHO)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+*  Uses the formulae of Blume and Watson for the spin-other-orbit
+*  interaction when one of the interacting subshells is full.  The
+*  coefficients of the two-electron integrals are related to the
+*  coefficient of the spin-orbit interaction by Blume and Watson's
+*  formulae.
+*
+      COMMON/BLUME/ COEFN2(4),COEFNK(4),COEFVK(4)
+      COMMON /CLOSED/B1ELC(4),NCLOSD,IAJCLD(NWD),LJCLSD(NWD),IBK
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/DIAGNL/IDIAG,JA,JB
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/PHASES/SIGNFA(NCD2),ICSTAS
+      COMMON/SPORB/ ACMULT(NWD)
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+*
+    3 FORMAT(35X,F14.8,11X,1HN,I2,1H(,A3,1H,,A3,1H/,A3,1H,,A3,1H))
+    4 FORMAT(35X,F14.8,11X,1HV,I2,1H(,A3,1H,,A3,1H/,A3,1H,,A3,1H))
+  303 FORMAT(F14.8,1HN,I2,1H(,2A3,I3,1H,,2A3,I3,1H))
+  304 FORMAT(F14.8,1HV,I2,1H(,2A3,I3,1H,,2A3,I3,1H))
+  340 FORMAT(9H (CONFIG ,I3,12H/SDD/CONFIG ,I3,1H))
+      IF (IRHO.EQ.0 .AND. IFULL.EQ.0) RETURN
+      ICOUNT=1
+      IF(ICSTAS.NE.0)THEN
+         SIGNCH=SIGNFA(JA)*SIGNFA(JB)
+      ELSE
+         SIGNCH=ONE
+      ENDIF
+      M=1
+    7 IF(ISIG.EQ.0)THEN
+         JM=IJFUL(M)
+         AC2=ACMULT(JM)
+         LB=LJ(M)
+      ELSE
+         AC2=ACMULT(1)
+         JSIG=IJFUL(ISIG)
+         JSIGP=IJFUL(ISIGP)
+         LB=LJ(ISIG)
+      ENDIF
+      IF(ABS(AC2).LT.EPS)GO TO 5
+      IF(ICOUNT.EQ.1)THEN
+         IF (IFULL .NE. 0) WRITE(IWRITE,340)JA,JB
+         ICOUNT=2
+      ENDIF
+      AC2=AC2*SIGNCH
+      I=1
+    6 IF(IRHO.EQ.0)THEN
+         LA=LJCLSD(I)
+      ELSE
+         LA=LJ(IRHO)
+         JRHO=IJFUL(IRHO)
+      ENDIF
+      CALL BWINT(LA,LB)
+      D11NK=-(4*LA+2)*AC2
+      K=0
+      IF(IRHO.EQ.0 .AND. IFULL.NE.0)THEN
+         IF(ISIG.EQ.0) THEN
+            WRITE(IWRITE,3)D11NK,K,IAJCMP(M),IAJCLD(I),
+     :                             IAJCMP(M),IAJCLD(I)
+         ELSE
+            WRITE(IWRITE,3)D11NK,K,IAJCMP(JSIG),IAJCLD(I),
+     :                             IAJCMP(JSIGP),IAJCLD(1)
+         ENDIF
+      ELSE
+	 IF (IFULL.NE.0) 
+     :      WRITE(IWRITE,3)D11NK,K,IAJCMP(JSIG),IAJCMP(JRHO),
+     :                             IAJCMP(JSIGP),IAJCMP(JRHO)
+*        WRITE(JSC1,303) D11NK,K,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :                           IAJCMP(JSIGP),IAJCMP(JRHO),JB
+	 CALL SAVE(6,D11NK,K,JSIG,JRHO,JSIGP,JRHO,JA,JB,0)
+      ENDIF
+      IF(LA.EQ.LB)THEN
+         KE1=3
+      ELSE
+         KE1=IABS(LA-LB)+1
+      ENDIF
+      KE2=LA+LB+1
+      L=0
+      DO 1 J=KE1,KE2,2
+      L=L+1
+      K=J-1
+      K1=K-1
+      K2=K-2
+      E01N2=COEFN2(L)*AC2
+      E10VK=COEFVK(L)*AC2
+      E01VK=-E10VK
+      E01NK=COEFNK(L)*AC2
+      IF(IRHO.EQ.0 .AND. IFULL.NE.0)THEN
+         IF(ISIG.EQ.0)THEN
+            WRITE(IWRITE,3)E01N2,K2,IAJCMP(M),IAJCLD(I),
+     :                              IAJCLD(I),IAJCMP(M)
+            WRITE(IWRITE,3)E01NK,K, IAJCLD(I),IAJCMP(M),
+     :                              IAJCMP(M),IAJCLD(I)
+            WRITE(IWRITE,4)E01VK,K1,IAJCLD(I),IAJCMP(M),
+     :                              IAJCMP(M),IAJCLD(I)
+            WRITE(IWRITE,4)E10VK,K1,IAJCMP(M),IAJCLD(I),
+     :                              IAJCLD(I),IAJCMP(M)
+         ELSE
+            WRITE(IWRITE,3)E01N2,K2,IAJCMP(JSIG),IAJCLD(I),
+     :                              IAJCLD(I),IAJCMP(JSIGP)
+            WRITE(IWRITE,3)E01NK,K, IAJCLD(I),IAJCMP(JSIG),
+     :                              IAJCMP(JSIGP),IAJCLD(I)
+            WRITE(IWRITE,4)E01VK,K1,IAJCLD(I),IAJCMP(JSIG),
+     :                              IAJCMP(JSIGP),IAJCLD(I)
+            WRITE(IWRITE,4)E10VK,K1,IAJCMP(JSIG),IAJCLD(I),
+     :                              IAJCLD(I),IAJCMP(JSIGP)
+         ENDIF
+      ELSE
+	 IF (IFULL.NE.0) THEN
+            WRITE(IWRITE,3)E01N2,K2,IAJCMP(JSIG),IAJCMP(JRHO),
+     :                              IAJCMP(JRHO),IAJCMP(JSIGP)
+            WRITE(IWRITE,3)E01NK,K,IAJCMP(JRHO),IAJCMP(JSIG),
+     :                              IAJCMP(JSIGP),IAJCMP(JRHO)
+            WRITE(IWRITE,4)E01VK,K1,IAJCMP(JRHO),IAJCMP(JSIG),
+     :                              IAJCMP(JSIGP),IAJCMP(JRHO)
+            WRITE(IWRITE,4)E10VK,K1,IAJCMP(JSIG),IAJCMP(JRHO),
+     :                              IAJCMP(JRHO),IAJCMP(JSIGP)
+	 END IF
+*        WRITE(JSC1,303)E01N2,K2,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :                           IAJCMP(JRHO),IAJCMP(JSIGP),JB
+*        WRITE(JSC1,303)E01NK,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :                           IAJCMP(JSIGP),IAJCMP(JRHO),JB
+*        WRITE(JSC2,304)E01VK,K1,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :                           IAJCMP(JSIGP),IAJCMP(JRHO),JB
+*        WRITE(JSC2,304)E10VK,K1,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :                           IAJCMP(JRHO),IAJCMP(JSIGP),JB
+	 CALL SAVE(6,E01N2,K2,JSIG,JRHO,JRHO,JSIGP,JA,JB,0)
+	 CALL SAVE(6,E01NK,K,JRHO,JSIG,JSIGP,JRHO,JA,JB,0)
+	 CALL SAVE(7,E01VK,K1,JRHO,JSIG,JSIGP,JRHO,JA,JB,0)
+	 CALL SAVE(7,E10VK,K1,JSIG,JRHO,JRHO,JSIGP,JA,JB,0)
+      ENDIF
+    1 CONTINUE
+      IF(IRHO.EQ.0)THEN
+         I=I+1
+         IF(I.LE.NCLOSD)GO TO 6
+      ENDIF
+    5 IF(ISIG.EQ.0)THEN
+         M=M+1
+         IF(M.LE.IHSH)GO TO 7
+      ENDIF
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	C L S H E L
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE CLSHEL (ISIG, ISIGP, IRHO )
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      COMMON /CLOSED/B1ELC(4),NCLOSD,IAJCLD(NWD),LJCLSD(NWD),IBK
+      COMMON/ENAV/NINTS,KVALUE(15),COEFCT(15)
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/DIAGNL/IDIAG,JA,JB
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/PHASES/SIGNFA(NCD2),ICSTAS
+*
+  101 FORMAT(35X,F14.8,11X,1HF,I2,1H(,A3,1H,,A3,1H))
+  102 FORMAT(35X,F14.8,11X,1HG,I2,1H(,A3,1H,,A3,1H))
+  103 FORMAT(35X,F14.8,11X,1HR,I2,1H(,A3,1H,,A3,1H/,A3,1H,,A3,1H))
+  104 FORMAT(' (CONFIG ',I3,'/Rij/CONFIG ',I3,')')
+  203 FORMAT(F14.8,1HR,I2,1H(,2A3,I3,1H,,2A3,I3,1H))
+*
+      IF (IRHO.EQ.0 .AND. IFULL.EQ.0) RETURN
+      IF (IFULL .NE. 0) WRITE(IWRITE,104) JA,JB
+      ZERO = 0.D0
+      IZERO = 0
+*
+      SIGNCH = 1.
+      IF (ICSTAS .NE. 0) SIGNCH = SIGNFA(JA)*SIGNFA(JB)
+*
+      IF (IRHO .NE. 0) GO TO 20
+      IF (ISIG .NE. 0) GO TO 1
+*
+* --- DIAGONAL CASE - ADD CLOSED SHELL CONTRIBUTIONS
+*
+      DO 2 J = 1,NCLOSD
+      LA = LJCLSD(J)
+      NA = 4*LA + 2
+*
+* --- CLOSED-CLOSED INTERACTIONS
+*
+      DO 3 K = 1,J
+      LB = LJCLSD(K)
+      NB = 4*LB + 2
+      IF (J .EQ. K) GO TO 4
+      IEQUIV = 2
+      AC2 = DFLOAT(NA*NB)
+      GO TO 5
+    4 IEQUIV = 1
+      AC2 = DFLOAT((NA*(NA-1))/2)
+    5 CALL INTACT(LA,LB,IEQUIV)
+      WRITE(IWRITE,101) AC2,IZERO,IAJCLD(J),IAJCLD(K)
+      IF(NINTS .EQ. 0) GO TO 3
+      DO 7 N = 1,NINTS
+      ZA = AC2*COEFCT(N)
+      K1 = KVALUE(N)
+      IF (IEQUIV .EQ. 1) GO TO 8
+      WRITE (IWRITE, 102) ZA,K1,IAJCLD(J),IAJCLD(K)
+      GO TO 7
+    8  WRITE(IWRITE,101)ZA,K1,IAJCLD(J),IAJCLD(K)
+    7 CONTINUE
+    3 CONTINUE
+*
+* --- CLOSED - OPEN INTERACTIONS
+*
+      DO 9 K = 1, IHSH
+      LB = LJ(K)
+      NB = NOSH1(K)
+      JFULL = IJFUL(K)
+      IEQUIV = 2
+      AC2 = DFLOAT(NA*NB)
+      CALL INTACT(LA,LB,IEQUIV)
+      WRITE (IWRITE, 101) AC2,IZERO,IAJCLD(J),IAJCMP(JFULL)
+      IF (NINTS .EQ. 0) GO TO 9
+      DO 10 N = 1,NINTS
+      ZA = AC2*COEFCT(N)
+      K1 = KVALUE(N)
+      WRITE (IWRITE, 102) ZA,K1,IAJCLD(J),IAJCMP(JFULL)
+   10 CONTINUE
+    9 CONTINUE
+    2 CONTINUE
+      RETURN
+*
+* --- OFF-DIAGONAL, ONE-ELECTRON DIFFERENT, ADD COMMON
+*     CLOSED-SHELL CONTRIBUTIONS
+*
+    1 IF (DABS(B1ELC(1)) .LT. 1.D-10) RETURN
+      LB = LJ(ISIG)
+      JSIG = IJFUL(ISIG)
+      JSIGP = IJFUL(ISIGP)
+      IEQUIV = 2
+      DO 11 J = 1,NCLOSD
+      KRHO = J + MAXORB
+      LA = LJCLSD(J)
+      NA = 4*LA + 2
+      AC2 = B1ELC(1)*NA*SIGNCH
+      CALL INTACT(LA,LB,IEQUIV)
+      WRITE(IWRITE,103)AC2,IZERO,IAJCLD(J),
+     :   IAJCMP(JSIG),IAJCLD(J),IAJCMP(JSIGP)
+   15 IF (NINTS .EQ. 0) GO TO 11
+      DO 12 N=1,NINTS
+      ZA = AC2*COEFCT(N)
+      K = KVALUE(N)
+      WRITE (IWRITE,103) ZA,K,IAJCLD(J),IAJCMP(JSIG),
+     :    IAJCMP(JSIGP),IAJCLD(J)
+   12 CONTINUE
+   11 CONTINUE
+      RETURN
+*
+* --- OFF-DIAGONAL, ONE-ELECTRON DIFFERENT, TREAT BY AVERAGE
+*     ENERGY FORMULAE
+*
+   20 IF (DABS(B1ELC(1)) .LT. 1.D-10) RETURN
+      LB = LJ(ISIG)
+      LA = LJ(IRHO)
+      JSIG = IJFUL(ISIG)
+      JSIGP = IJFUL(ISIGP)
+      JRHO = IJFUL(IRHO)
+      IEQUIV = 2
+      CALL INTACT(LA,LB,IEQUIV)
+      NA = 4*LA + 2
+      AC2 = B1ELC(1)*NA*SIGNCH
+      IF (IFULL .NE. 0)
+     :   WRITE(IWRITE,103) AC2,IZERO,IAJCMP(JRHO),
+     :   IAJCMP(JSIG),IAJCMP(JRHO),IAJCMP(JSIGP)
+*     WRITE(ISC2,203) AC2,IZERO,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :                      IAJCMP(JRHO),IAJCMP(JSIGP),JB
+      CALL SAVE(3,AC2,IZERO,JRHO,JSIG,JRHO,JSIGP,JA,JB,0)
+   22 IF (NINTS .EQ. 0) RETURN
+      DO 21 N=1,NINTS
+      ZA = AC2*COEFCT(N)
+      K = KVALUE(N)
+      IF (IFULL .NE. 0)
+     :   WRITE (IWRITE,103) ZA,K,IAJCMP(JRHO),IAJCMP(JSIG),
+     :    IAJCMP(JSIGP),IAJCMP(JRHO)
+*     WRITE(ISC2,203) ZA,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :                      IAJCMP(JSIGP),IAJCMP(JRHO),JB
+      CALL SAVE(3,ZA,K,JRHO,JSIG,JSIGP,JRHO,JA,JB,0)
+   21 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	F A N O
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE FANO(IRHO,ISIG,IRHOP,ISIGP,JA,JB,INCL)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      PARAMETER(KFL1=60,KFL2=12,
+     :          KFL6=120,KFL7=150,KFL8=120,KFL9=40,KFLW=20,
+     :          KFLS=12,KFLN=10,KFLV=40)
+*
+      DIMENSION NBAR(10)
+
+
+      LOGICAL FAILSD,FAILSE,FAILAD,FAILAE,FREE
+C
+      LOGICAL SMVRSD,SMVRSE,SMVRAD,SMVRAE
+      DIMENSION K6SD(KFL6),K7SD(KFL7),K8SD(KFL8),K9SD(KFL9),KWSD(6,KFLW)
+     +          ,LDELSD(KFLW,2),SMVRSD(KFL1)
+      DIMENSION K6SE(KFL6),K7SE(KFL7),K8SE(KFL8),K9SE(KFL9),KWSE(6,KFLW)
+     +          ,LDELSE(KFLW,2),SMVRSE(KFL1)
+      DIMENSION K6AD(KFL6),K7AD(KFL7),K8AD(KFL8),K9AD(KFL9),KWAD(6,KFLW)
+     +          ,LDELAD(KFLW,2),SMVRAD(KFL1)
+      DIMENSION K6AE(KFL6),K7AE(KFL7),K8AE(KFL8),K9AE(KFL9),KWAE(6,KFLW)
+     +          ,LDELAE(KFLW,2),SMVRAE(KFL1)
+C
+      DIMENSION J6PSD(KFLV),J7PSD(KFLV),J8PSD(KFLV),J9PSD(KFLV),
+     + JWRDSD(6,KFLW),
+     + NBJSD(KFLN),NB6JSD(KFLN),K6CPSD(KFLN),K7CPSD(KFLN),K8CPSD(KFLN),
+     + K9CPSD(KFLN),JSM6SD(KFLS),JSM4SD(KFLS,KFLW),JSM5SD(KFLS,KFLW),
+     + IN6JSD(KFLW)
+      DIMENSION J6PSE(KFLV),J7PSE(KFLV),J8PSE(KFLV),J9PSE(KFLV),
+     + JWRDSE(6,KFLW),
+     + NBJSE(KFLN),NB6JSE(KFLN),K6CPSE(KFLN),K7CPSE(KFLN),K8CPSE(KFLN),
+     + K9CPSE(KFLN),JSM6SE(KFLS),JSM4SE(KFLS,KFLW),JSM5SE(KFLS,KFLW),
+     + IN6JSE(KFLW)
+      DIMENSION J6PAD(KFLV),J7PAD(KFLV),J8PAD(KFLV),J9PAD(KFLV),
+     + JWRDAD(6,KFLW),
+     + NBJAD(KFLN),NB6JAD(KFLN),K6CPAD(KFLN),K7CPAD(KFLN),K8CPAD(KFLN),
+     + K9CPAD(KFLN),JSM6AD(KFLS),JSM4AD(KFLS,KFLW),JSM5AD(KFLS,KFLW),
+     + IN6JAD(KFLW)
+      DIMENSION J6PAE(KFLV),J7PAE(KFLV),J8PAE(KFLV),J9PAE(KFLV),
+     + JWRDAE(6,KFLW),
+     + NBJAE(KFLN),NB6JAE(KFLN),K6CPAE(KFLN),K7CPAE(KFLN),K8CPAE(KFLN),
+     + K9CPAE(KFLN),JSM6AE(KFLS),JSM4AE(KFLS,KFLW),JSM5AE(KFLS,KFLW),
+     + IN6JAE(KFLW)
+C
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/DEMULT/DMULT0(12,3),DMULT1(12,3),EMULT0(12,3),EMULT1(12,3),
+     :     MULDSO,MULESO
+      COMMON/DESSNK/D00SNK(12),D11SNK(12),E01SNK(12),E10SNK(12),
+     :     MULDSS,MULDSP,MULESS,MULESP
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/KRON/IDEL(10,10)
+      COMMON/TERMS/NROWS,ITAB(24),JTAB(24),NTAB(333)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/XATION/AMULT(15),BMULT(15),KD1,KD2,KE1,KE2,MULTD,MULTE
+      COMMON/NJLJ/NRHO,LRHO,NSIG,LSIG,NRHOP,LRHOP,NSIGP,LSIGP
+      COMMON/INTERM/J1BAR1(10,3),J1BAR2(10,3),J1TLD1(3),J1TLD2(3)
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/RMEPRD/RMEDIR(15),RMEEX(15)
+      LOGICAL INCL
+*
+*
+*****:******************************************************************
+*
+*
+* --- THE ROUTINE FANO TOGETHER WITH THOSE CALLED BY IT, HAS BEEN
+*     MODIFIED TO EVALUATE THE FOLLOWONG MATRIX ELEMENTS FOR GIVEN
+*     RHO, SIG, RHOP, SIGP
+*
+*     IREL.EQ.0  POTENTIAL MATRIX ELEMENT OF THE NON-RELATIVISTIC
+*                  HAMILTONIAN
+*
+*     IREL.EQ.1  THE RELATIVISTIC OPERATORS OF THE BREIT-PAULI
+*                  HAMILTONIAN
+*
+*     IREL.GE.2  ALL OF THE ABOVE OPERATORS
+*
+*
+*****:******************************************************************
+*
+*
+  301 FORMAT(21H NO POSSIBLE K-VALUES)
+  302 FORMAT(66H SPECTATOR QUANTUM NUMBERS NOT DIAGONAL FOR NON-INTERACT
+     :ING SHELLS)
+  305 FORMAT(23H DIRECT SPIN INTEGRAL =,F10.6)
+  306 FORMAT(25H EXCHANGE SPIN INTEGRAL =,F10.6)
+  307 FORMAT(6H NJ,LJ,4(I8,I4))
+  308 FORMAT(6H KD1 =,I4,6H KD2 =,I4,6H KE1 =,I4,6H KE2 =,I4)
+  309 FORMAT(56H ROWS OF TERM TABLE CONTAINING PARENTS ARE, RESPECTIVELY
+     :,2(I6,I3))
+  310 FORMAT(26H DIRECT ANGULAR INTEGRAL =,F10.6)
+  311 FORMAT(3H J1,I6,36I3)
+  312 FORMAT(28H EXCHANGE ANGULAR INTEGRAL =,F10.6)
+*
+* --- SET USEFUL CONSTANTS
+*
+      M1=ISIG-IRHO
+      M2=ISIGP-IRHOP
+      M19=IRHO-IRHOP
+      M20=ISIG-ISIGP
+      I2HSH=IHSH+IHSH-1
+      MULTD=0
+      MULTE=0
+*
+*     JSNDIR,JANGDI=0  IMPLIES APPROPRIATE J2,J3 ARRAYS FOR CALL OF
+*     NJSYM HAVE NOT BEEN SET
+*
+      JSNDIR=0
+      JANGDI=0
+
+      ISPIND=0
+      ISPINE=0
+      IANGD =0
+      IANGE =0
+      ICALL =0
+*
+* --- Set the FAIL parameters .FALSE. initially so that NJGRAF can
+*     be called
+*     
+      FAILSD = .FALSE.
+      FAILSE = .FALSE.
+      FAILAD = .FALSE.
+      FAILAE = .FALSE.
+*
+* --- SET N,L VALUES OF INTERACTING SHELLS
+*
+      NRHO=NJ(IRHO)
+      LRHO=LJ(IRHO)
+      NSIG=NJ(ISIG)
+      LSIG=LJ(ISIG)
+      NRHOP=NJ(IRHOP)
+      LRHOP=LJ(IRHOP)
+      NSIGP=NJ(ISIGP)
+      LSIGP=LJ(ISIGP)
+      IF(IBUG2.GT.0)
+     : WRITE(IWRITE,307) NRHO,LRHO,NSIG,LSIG,NRHOP,LRHOP,NSIGP,LSIGP
+*
+* --- EVALUATE MULTIPLICATIVE FACTORS
+*
+  160 IL=IDEL(IRHO,ISIG)
+      IR=IDEL(IRHOP,ISIGP)
+      Q=NOSH1(IRHO)*(NOSH1(ISIG)-IL)*NOSH2(IRHOP)*(NOSH2(ISIGP)-IR)
+      XMULT=DSQRT(Q)*HALF
+      FACTOR=DFLOAT((LSIG+LSIG+1)*(LRHOP+LRHOP+1))
+      FACTO1=DFLOAT((LRHO+LRHO+1)*(LSIG+LSIG+1))
+      ADIRCT=(1+(1-IL)*(1-IR))/DSQRT(FACTOR)
+      IEXCHG=2-IL-IR
+      FACTOR=DFLOAT((LSIG+LSIG+1)*(LSIGP+LSIGP+1))
+      AEXCHG=IEXCHG/DSQRT(FACTOR)
+      IF(IREL.EQ.0) GO TO 1
+      XMULT1=DSQRT(Q/FACTO1)*HALF
+      MULDSO=0
+      MULESO=0
+      MULDSS=0
+      MULDSP=0
+      MULESS=0
+      MULESP=0
+    1 DO 13 J=1,IHSH
+      NBAR(J)=NOSH1(J)-IDEL(J,IRHO)-IDEL(J,ISIG)
+   13 CONTINUE
+      IDELP=0
+      IF(M1) 14,15,14
+   14 K1=IRHO+1
+      DO 16 J=K1,ISIG
+      IDELP=IDELP+NBAR(J)
+   16 CONTINUE
+   15 IF(M2) 17,18,17
+   17 K1=IRHOP+1
+      DO 19 J=K1,ISIGP
+      IDELP=IDELP+NBAR(J)
+   19 CONTINUE
+   18 XMULT=XMULT*(-ONE)**IDELP
+      IF(IREL.EQ.0) GO TO 500
+      ACTOR1=DFLOAT(J1QN1(I2HSH,2)*J1QN1(I2HSH,3))
+       XMULT1=XMULT1*(-ONE)**IDELP*DSQRT(ACTOR1)
+*
+* --- DETERMINES RANGES OF K FOR DIRECT AND EXCHANGE INTEGRALS
+*     TRIANGULAR RELATIONS LIMIT (K+1) VALUES TO LIE BETWEEN KD1 AND KD2
+*     FOR =DIRECT= INTEGRALS,  KE1 AND KE2 FOR =EXCHANGE= INTEGRALS
+*
+  500 CONTINUE
+      K1=IABS(LSIG-LSIGP)
+      K2=LSIG+LSIGP
+      K3=IABS(LRHO-LRHOP)
+      K4=LRHO+LRHOP
+      KD1=MAX0(K1,K3)+1
+      KD2=MIN0(K2,K4)+1
+      K1=IABS(LRHOP-LSIG)
+      K2=LRHOP+LSIG
+      K3=IABS(LRHO-LSIGP)
+      K4=LRHO+LSIGP
+      KE1=MAX0(K1,K3)+1
+      KE2=MIN0(K2,K4)+1
+      IF(ISPSPN.EQ.1.AND.INCL) CALL SKLIM(LET)
+      IF(IBUG2.GT.0)
+     : WRITE(IWRITE,308) KD1,KD2,KE1,KE2
+  612 IF(KD1-KD2) 213,213,211
+  211 IF(KE1-KE2) 213,213,212
+  212 IF(IBUG2.GT.0)
+     : WRITE(IWRITE,301)
+  400 IF(ISPSPN.EQ.0) RETURN
+      IF(LET.EQ.0) RETURN
+*
+* --- ZEROIZE MULTIPLYING FACTORS FOR ALLOWED K-VALUES.  THE LOWEST
+*     VALUES  KD1  AND  KD2  ARE ALWAYS ALLOWED (UNLESS THEY ARE
+*     GREATER THAN KD2 AND KE2 RESPECTIVELY).  ALLOWED K-VALUES THEN
+*     STEP BY 2 TO SATISFY THE EVEN CONDITION OF THE REDUCED MATRIX
+*     ELEMENTS, WHICH ARE THEN CALCULATED AND STORED
+*
+  213 IF(KD1-KD2) 231,231,232
+  231 DO 230 JK1=KD1,KD2,2
+      K=JK1-1
+      AMULT(JK1)=ZERO
+      RMEDIR(JK1)=RME(LRHO,LRHOP,K)*RME(LSIG,LSIGP,K)
+  230 CONTINUE
+  232 IF(KE1-KE2) 233,233,241
+  233 DO 234 JK1=KE1,KE2,2
+      K=JK1-1
+      BMULT(JK1)=ZERO
+      RMEEX(JK1)=RME(LRHO,LSIGP,K)*RME(LSIG,LRHOP,K)
+  234 CONTINUE
+  241 IF(ISOORB.EQ.1.AND.INCL) CALL SOORED
+      IF(ISPSPN.EQ.1.AND.INCL) CALL SSRED
+*
+* --- SET SENIORITY, S AND L VALUES OF SPECTATOR SHELLS
+*
+      DO 26 J=1,IHSH
+      IF(IRHO-J) 27,29,27
+   27 IF(ISIG-J) 28,29,28
+   28 DO 128 K=1,3
+      J1BAR1(J,K)=J1QN1(J,K)
+  128 CONTINUE
+   29 IF(IRHOP-J) 30,26,30
+   30 IF(ISIGP-J) 31,26,31
+   31 DO 181 K=1,3
+      J1BAR2(J,K)=J1QN2(J,K)
+  181 CONTINUE
+      IF(IRHO-J) 32,26,32
+   32 IF(ISIG-J) 33,26,33
+*
+*     CHECK THAT SPECTATOR SHELLS HAVE SAME RESPECTIVE QUANTUM NUMBERS
+*
+   33 DO 183 K=1,3
+      IF(J1BAR1(J,K)-J1BAR2(J,K)) 402,183,402
+  183 CONTINUE
+   26 CONTINUE
+      GO TO 405
+  402 IF(IBUG2.GT.0)
+     : WRITE(IWRITE,302)
+  404 RETURN
+*
+* --- FROM WHICH ROWS OF NTAB DO WE FIND THE QUANTUM NUMBERS WITH BARS
+*     OR TILDES
+*
+  405 NELCTS=NOSH1(ISIG)
+      K2=NTAB1(NELCTS,LSIG+1)
+      IF(M1) 20,21,20
+   21 NELCTS=NOSH1(ISIG)-1
+      GO TO 22
+   20 NELCTS=NOSH1(IRHO)
+   22 K1=NTAB1(NELCTS,LRHO+1)
+      NELCTS=NOSH2(ISIGP)
+      K4=NTAB1(NELCTS,LSIGP+1)
+      IF(M2) 23,24,23
+   24 NELCTS=NOSH2(ISIGP)-1
+      GO TO 25
+   23 NELCTS=NOSH2(IRHOP)
+   25 K3=NTAB1(NELCTS,LRHOP+1)
+      IF(IBUG2.GT.0)
+     : WRITE(IWRITE,309) K1,K2,K3,K4
+   59 KK1=ITAB(K1)
+      KK2=ITAB(K2)
+      KK3=ITAB(K3)
+      KK4=ITAB(K4)
+*
+* === SUM OVER QUANTUM NUMBERS WITH BARS OR TILDES
+*
+      DO 151 JJ2=1,KK2
+*
+* --- TEST TO SEE WHICH PARENT TERMS ARE ALLOWABLE.  ONLY TEST THIS ON
+*     L  AND  S  VALUES AT THIS STAGE, BY MEANS OF TRIANGULAR CONDITIONS
+*     FOR TWICE THE QUANTUM NUMBERS, IN ORDER TO USE ONLY INTEGER
+*     QUANTITIES
+*
+      IN3=2*LSIG
+      IJK2=3*(JJ2-1)+JTAB(K2)
+      DO 131 K=2,3
+      IN1=NTAB(IJK2+K)-1
+      IN2=J1QN1(ISIG,K)-1
+      IF(IN1-IN2-IN3) 130,130,151
+  130 IF(IN1-IABS(IN2-IN3)) 151,140,140
+  140 IN3=1
+  131 CONTINUE
+      DO 152 JJ1=1,KK1
+      IN3=2*LRHO
+      IJK1=3*(JJ1-1)+JTAB(K1)
+  162 DO 132 K=2,3
+      IN1=NTAB(IJK1+K)-1
+      IF(M1) 141,142,141
+  141 IN2=J1QN1(IRHO,K)-1
+      GO TO 143
+  142 IN2=NTAB(IJK2+K)-1
+  143 IF(IN1-IN2-IN3) 144,144,152
+  144 IF(IN1-IABS(IN2-IN3)) 152,145,145
+  145 IN3=1
+  132 CONTINUE
+      DO 153 JJ4=1,KK4
+      IN3=2*LSIGP
+      IJK4=3*(JJ4-1)+JTAB(K4)
+      DO 133 K=2,3
+      IN1=NTAB(IJK4+K)-1
+      IN2=J1QN2(ISIGP,K)-1
+      IF(IN1-IN2-IN3) 146,146,153
+  146 IF(IN1-IABS(IN2-IN3)) 153,147,147
+  147 IN3=1
+  133 CONTINUE
+      DO 154 JJ3=1,KK3
+c     PRINT*,' JJ2 = ',JJ2,' JJ1 = ',JJ1,' JJ4 = ',JJ4,' JJ3 = ',JJ3
+
+      IN3=2*LRHOP
+      IJK3=3*(JJ3-1)+JTAB(K3)
+  137 DO 134 K=2,3
+      IN1=NTAB(IJK3+K)-1
+      IF(M2) 138,139,138
+  138 IN2=J1QN2(IRHOP,K)-1
+      GO TO 148
+  139 IN2=NTAB(IJK4+K)-1
+  148 IF(IN1-IN2-IN3) 149,149,154
+  149 IF(IN1-IABS(IN2-IN3)) 154,150,150
+  150 IN3=1
+  134 CONTINUE
+*
+*     SUMMATIONS NOW PERFORMED OVER ALLOWED QUANTUM NUMBERS
+*     THE TILDES CORRESPOND TO  IRHO=ISIG  AND/OR IRHOP=ISIGP
+*
+* --- SET THE REMAINING QUANTUM NUMBERS WITH BARS OR TILDES
+*
+      DO 35 K=1,3
+      J1BAR1(IRHO,K)=NTAB(IJK1+K)
+      J1BAR2(IRHOP,K)=NTAB(IJK3+K)
+      IF(M1) 36,37,36
+   36 J1BAR1(ISIG,K)=NTAB(IJK2+K)
+      GO TO 38
+   37 J1TLD1(K)=NTAB(IJK2+K)
+   38 IF( M2) 39,40,39
+   39 J1BAR2(ISIGP,K)=NTAB(IJK4+K)
+      GO TO 35
+   40 J1TLD2(K)=NTAB(IJK4+K)
+   35 CONTINUE
+*
+* --- IS POTENTIAL DIAG. IN BARRED QU. NOS. FOR INTERACTING SHELLS
+*
+      I5=0
+      I=ISIG
+      GO TO 50
+   42 I=IRHO
+      IF( M1) 43,44,43
+   43 GO TO 50
+   44 I5=I5+1
+   45 I=ISIGP
+      GO TO 50
+   46 I=IRHOP
+      IF(M2) 47,48,47
+   47 GO TO 50
+   50 I5=I5+1
+      DO 51 K=1,3
+      IF(J1BAR1(I,K)-J1BAR2(I,K)) 154,51,154
+   51 CONTINUE
+      GO TO (42,45,46,48),I5
+   48 PICFP=ONE
+*
+* --- EVALUATE FRACTIONAL PARENTAGE COEFFICIENTS
+*
+      I=1
+      CALL MUMDAD (I,ISIG,IRHO,M1,CFPLHS)
+      PICFP=PICFP*CFPLHS
+      IF(DABS(PICFP).LT.EPS) GO TO 154
+   53 I=2
+      CALL MUMDAD(I,ISIGP,IRHOP,M2,CFPRHS)
+      PICFP=PICFP*CFPRHS
+      IF(DABS(PICFP).LT.EPS) GO TO 154
+*
+* === SET UP J1,J2,J3 AND EVALUATE RECOUPLING COEFFICIENTS
+*
+* --- FIRST OF ALL, THE SPIN COEFFICIENTS
+*
+   55 I=3
+      CALL SETJ1(I,IRHO,ISIG,IRHOP,ISIGP,ISPIND,ISPINE,KK1,KK2,KK3,KK4)
+
+      IF (ISPIND.EQ.0) THEN
+         CALL J23SPN(IRHO,ISIG,IRHOP,ISIGP,JSNDIR)
+         ISPIND=1
+      END IF
+      IF(IREL.EQ.1.OR.IELST.EQ.0) GO TO 155
+*
+* --- DIRECT SPIN INTEGRAL
+*
+  570 IF(KD1-KD2) 89,89,90
+   90 SPINDT=ZERO
+      GO TO 78
+
+89    CONTINUE
+      
+      IF (.NOT.FAILSD) THEN
+        IF (ISPIND.NE.2) THEN
+          CALL NJGRAF(SPINDT,FAILSD)
+          ISPIND=2
+          IF(FAILSD) GO TO 78
+          CALL KNJ(J6CSD,J7CSD,J8CSD,J9CSD,JWCSD,K6SD,K7SD,K8SD,K9SD,
+     +             KWSD,JDELSD,LDELSD,SMVRSD,MPSD,
+     +             J6PSD,J7PSD,J8PSD,J9PSD,JWRDSD,NLSMSD,NBJSD,NB6JSD,
+     +             K6CPSD,K7CPSD,K8CPSD,K9CPSD,JSM4SD,JSM5SD,JSM6SD,
+     +             IN6JSD)
+        ELSE
+          CALL GENSUM(J6CSD,J7CSD,J8CSD,J9CSD,JWCSD,K6SD,K7SD,K8SD,K9SD,
+     +               KWSD,JDELSD,LDELSD,SMVRSD,MPSD,
+     +               J6PSD,J7PSD,J8PSD,J9PSD,JWRDSD,NLSMSD,NBJSD,NB6JSD,
+     +               K6CPSD,K7CPSD,K8CPSD,K9CPSD,JSM4SD,JSM5SD,JSM6SD,
+     +               IN6JSD,SPINDT)
+C
+        ENDIF
+      ELSE
+        SPINDT=ZERO
+      ENDIF
+   78 IF(IBUG2.GT.0)
+     : WRITE(IWRITE,305) SPINDT
+*
+*     IEXCHG IS ZERO WHENEVER  M1=0=M2 , IN WHICH CASE THE EXCHANGE
+*     INTEGRAL HAS ZERO COEFFICIENT.  THERE IS THEN NO POINT IN
+*     CALCULATING THIS INTEGRAL, AND SPINEX IS SET ZERO (AT STATEMENT
+*     93) AS A MARKER OF THIS SITUATION
+*
+   91 IF(IEXCHG.EQ.0) GO TO 93
+*
+* --- MODIFY J2 AND J3 TO CALCULATE THE EXCHANGE SPIN INTEGRAL
+*
+
+      IF (ISPINE.NE.0) GOTO 273
+         I=1
+         CALL MODJ23(I)
+         ISPINE=1
+273   CONTINUE
+
+*
+* --- EXCHANGE SPIN INTEGRAL
+*
+      IF(KE1-KE2) 92,92,93
+   93 SPINEX=ZERO
+      GO TO 94
+
+92    CONTINUE
+ 
+      IF (.NOT.FAILSE) THEN
+        IF (ISPINE.NE.2) THEN
+          CALL NJGRAF(SPINEX,FAILSE)
+          ISPINE=2
+          IF (FAILSE) GO TO 94
+          CALL KNJ(J6CSE,J7CSE,J8CSE,J9CSE,JWCSE,K6SE,K7SE,K8SE,K9SE,
+     +             KWSE,JDELSE,LDELSE,SMVRSE,MPSE,
+     +             J6PSE,J7PSE,J8PSE,J9PSE,JWRDSE,NLSMSE,NBJSE,NB6JSE,
+     +             K6CPSE,K7CPSE,K8CPSE,K9CPSE,JSM4SE,JSM5SE,JSM6SE,
+     +             IN6JSE)
+        ELSE
+          CALL GENSUM(J6CSE,J7CSE,J8CSE,J9CSE,JWCSE,K6SE,K7SE,K8SE,K9SE,
+     +               KWSE,JDELSE,LDELSE,SMVRSE,MPSE,
+     +               J6PSE,J7PSE,J8PSE,J9PSE,JWRDSE,NLSMSE,NBJSE,NB6JSE,
+     +               K6CPSE,K7CPSE,K8CPSE,K9CPSE,JSM4SE,JSM5SE,JSM6SE,
+     +               IN6JSE,SPINEX)
+        ENDIF
+      ELSE
+        SPINEX=ZERO
+      ENDIF
+   94 IF(IBUG2.GT.0)
+     : WRITE(IWRITE,306) SPINEX
+*
+* --- MULTIPLY SPIN INTEGRALS BY PRODUCT OF FRACTIONAL PARENTAGE COEFFS
+*
+  171 BDIRCT=SPINDT*PICFP
+      BEXCHG=SPINEX*PICFP
+*
+* --- THE ANGULAR RECOUPLING COEFFICIENTS
+*     SET J1,J2,J3   (COMPARE SPIN INTEGRALS)
+*
+*     IF BOTH SPIN INTEGRALS ARE ZERO,  THERE IS NO PURPOSE IN
+*     CALCULATING THE ANGULAR INTEGRALS
+*
+      IF(DABS(SPINDT).LT.EPS.AND.DABS(SPINEX).LT.EPS) GO TO 155
+*
+   87 I=2
+      CALL SETJ1(I,IRHO,ISIG,IRHOP,ISIGP,IANGD,IANGE,KK1,KK2,KK3,KK4)
+
+      IF (IANGD.EQ.0) CALL J23ANG(IRHO,ISIG,IRHOP,ISIGP,JANGDI)
+
+*
+*     IF THE DIRECT SPIN RECOUPLING COEFFICIENT IS ZERO, WE NEED NOT
+*     CALCULATE THE CORRESPONDING ORBITAL RECOUPLING COEFFICIENT
+*
+      IF(DABS(SPINDT).LT.EPS) GO TO 121
+
+      IF (IANGD.EQ.0) IANGD=1
+*
+* --- DIRECT ANGULAR INTEGRAL
+*
+*     CONSIDER ALL ALLOWED K-VALUES
+*
+
+      IF (.NOT.FAILAD) THEN
+        DO 114 JK1=KD1,KD2,2
+c	PRINT *,' IN DO 114..., JK1 = ',JK1
+
+          J1(NJ1S)=2*JK1-1
+          IF (IANGD.NE.2) THEN
+          IF(KD2.NE.KD1) THEN
+              FREE(NJ1S)=.TRUE.
+          ELSE
+              FREE(NJ1S)=.FALSE.
+          ENDIF
+          CALL NJGRAF(ANGDIR,FAILAD)
+          IANGD=2
+          IF (FAILAD) GO TO 121
+          CALL KNJ(J6CAD,J7CAD,J8CAD,J9CAD,JWCAD,K6AD,K7AD,K8AD,K9AD,
+     +             KWAD,JDELAD,LDELAD,SMVRAD,MPAD,
+     +             J6PAD,J7PAD,J8PAD,J9PAD,JWRDAD,NLSMAD,NBJAD,NB6JAD,
+     +             K6CPAD,K7CPAD,K8CPAD,K9CPAD,JSM4AD,JSM5AD,JSM6AD,
+     +             IN6JAD)
+          ELSE
+          CALL GENSUM(J6CAD,J7CAD,J8CAD,J9CAD,JWCAD,K6AD,K7AD,K8AD,K9AD,
+     +               KWAD,JDELAD,LDELAD,SMVRAD,MPAD,
+     +               J6PAD,J7PAD,J8PAD,J9PAD,JWRDAD,NLSMAD,NBJAD,NB6JAD,
+     +               K6CPAD,K7CPAD,K8CPAD,K9CPAD,JSM4AD,JSM5AD,JSM6AD,
+     +               IN6JAD,ANGDIR)
+          ENDIF
+*
+*     ADD INTO THE COEFFICIENT OF THE SLATER INTEGRAL
+*
+      AMULT(JK1)=AMULT(JK1)+ANGDIR*BDIRCT
+c     PRINT *,' JK1 = ',JK1,' ANGDIR = ',ANGDIR,' BDIRCT = ',BDIRCT
+c     PRINT *,' AMULT(JK1) = ',AMULT(JK1)
+
+*
+*     MULTD=1 WHEN A DIRECT INTEGRAL COEFFICIENT HAS BEEN CALCULATED -
+*     FOR USE, SEE PRNTWT
+*
+      MULTD=1
+      IF(IBUG2.GT.0)
+     : WRITE(IWRITE,310) ANGDIR
+  114 CONTINUE
+      END IF
+*
+*     IF THE EXCHANGE SPIN RECOUPLING COEFFICIENT IS ZERO, WE NEED NOT
+*     CALCULATE THE CORRESPONDING ORBITAL RECOUPLING COEFFICIENT
+*
+  121 IF(DABS(SPINEX).LT.EPS) GO TO 155
+*
+* --- EXCHANGE ANGULAR INTEGRAL
+*
+*     CONSIDER ALL ALLOWED K-VALUES
+*
+
+      IF (IANGE.NE.0) GOTO 279
+         I=2
+         CALL MODJ23(I)
+         IANGE=1
+279   CONTINUE
+
+      IF (.NOT.FAILAE) THEN
+        DO 115 JK1=KE1,KE2,2
+          J1(NJ1S) = 2*JK1-1
+          IF (IANGE.NE.2) THEN
+          IF(KE2.NE.KE1) THEN
+              FREE(NJ1S)=.TRUE.
+          ELSE
+              FREE(NJ1S)=.FALSE.
+          ENDIF
+          CALL NJGRAF(ANGEX,FAILAE)
+          IANGE=2
+          IF (FAILAE) GO TO 155
+          CALL KNJ(J6CAE,J7CAE,J8CAE,J9CAE,JWCAE,K6AE,K7AE,K8AE,K9AE,
+     +             KWAE,JDELAE,LDELAE,SMVRAE,MPAE,
+     +             J6PAE,J7PAE,J8PAE,J9PAE,JWRDAE,NLSMAE,NBJAE,NB6JAE,
+     +             K6CPAE,K7CPAE,K8CPAE,K9CPAE,JSM4AE,JSM5AE,JSM6AE,
+     +             IN6JAE)
+          ELSE
+          CALL GENSUM(J6CAE,J7CAE,J8CAE,J9CAE,JWCAE,K6AE,K7AE,K8AE,K9AE,
+     +               KWAE,JDELAE,LDELAE,SMVRAE,MPAE,
+     +               J6PAE,J7PAE,J8PAE,J9PAE,JWRDAE,NLSMAE,NBJAE,NB6JAE,
+     +               K6CPAE,K7CPAE,K8CPAE,K9CPAE,JSM4AE,JSM5AE,JSM6AE,
+     +               IN6JAE,ANGEX)
+          ENDIF
+      BMULT(JK1)=BMULT(JK1)-ANGEX*BEXCHG
+*
+*     MULTE=1 WHEN AN EXCHANGE INTEGRAL COEFFICIENT HAS BEEN CALCULATED
+*
+      MULTE=1
+      IF(IBUG2.GT.0)
+     : WRITE(IWRITE,312) ANGEX
+  115 CONTINUE
+      END IF
+  501 CONTINUE
+  155 IF (.NOT.INCL) GO TO 154
+      IF(ISOORB.EQ.1.OR.ISPSPN.EQ.1) CALL RELREC(IRHO,ISIG,IRHOP,ISIGP,
+     :     PICFP,ICALL,KK1,KK2,KK3,KK4)
+  154 CONTINUE
+  153 CONTINUE
+  152 CONTINUE
+  151 CONTINUE
+*
+* === INCLUDE MULTIPLICATIVE FACTORS COMMON TO ALL TERMS WITHIN THIS
+*     FOUR-FOLD SUMMATION
+*
+      IF(IREL.EQ.1) GO TO 527
+      IF(MULTD) 524,525,524
+  524 DO 518 JK1=KD1,KD2,2
+      AMULT(JK1)=AMULT(JK1)*XMULT*RMEDIR(JK1)*ADIRCT
+c     PRINT *,' IN DO 518..., JK1 = ',JK1,' XMULT = ',XMULT
+c     PRINT *,' RMEDIR(JK1) = ',RMEDIR(JK1),' ADIRCT = ',ADIRCT
+c     PRINT *,' AMULT(JK1) = ',AMULT(JK1)
+
+  518 CONTINUE
+  525 IF(MULTE) 526,527,526
+  526 DO 519 JK1=KE1,KE2,2
+      BMULT(JK1)=BMULT(JK1)*XMULT*RMEEX(JK1)*AEXCHG
+  519 CONTINUE
+*
+* --- PRINT OUT THE VALUES OF THE COEFFICIENTS OF THE SLATER INTEGRALS
+*
+*     THE SUBROUTINE PRNTWT IS CALLED FROM RKWTS
+*
+  527 IF (.NOT.INCL) RETURN
+      IF (IREL.EQ.0) RETURN
+      IF(ISOORB.EQ.1) CALL SOOPAR(XMULT1)
+      IF(ISPSPN.EQ.1) CALL SSPAR(XMULT1)
+*
+* *** DEFINITION OF DIMENSION LIST
+*
+*     RMEDIR(K),K=KD1,KD2,2  -  DIRECT REDUCED MATRIX ELEMENT PRODUCT
+*     RMEEX(K),K=KE1,KE2,2  -  EXCHANGE REDUCED MATRIX ELEMENT PRODUCT
+*     KD1,KE1   ARE ALWAYS .GE. 1
+*     KD2,KE2   ARE .LE.  1+2*MAX(L-VALUE)
+*     NBAR(I), I=1,IHSH  -  NUMBER OF SPECTATOR ELECTRONS IN EACH SHELL
+*      THE K6,K7,K8,KW ARRAYS ARE DEFINED IN NJSYM
+*
+*
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	H 0 W T S
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE H0WTS
+      IMPLICIT REAL *8(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      PARAMETER(KFL1=60,KFL2=12)
+      LOGICAL FAIL,FREE
+*
+      COMMON/DIAGNL/IDIAG,JA,JB
+      COMMON /CLOSED/B1ELC(4),NCLOSD,IAJCLD(NWD),LJCLSD(NWD),IBK
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/HOLD/J2STO(33),J3STO(33),J2ANG(36),J3ANG(36)
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+*
+  300 FORMAT(' (CONFIG ',I3,'/H0 /CONFIG ',I3,')')
+  303 FORMAT(7H ISIG =,I3,8H ISIGP =,I3)
+  306 FORMAT(5H J1 =,I8,36I3)
+  307 FORMAT(3H J2,18X,2HJ3)
+  308 FORMAT(3I5,I10,2I5)
+  309 FORMAT(4H Y =,F10.6,8H RECUP =,F10.6)
+  310 FORMAT(4H Y =,F10.6,8H IDELP =,I3)
+  311 FORMAT(35X,F14.8,11X,'I  (', A3,',', A3,')')
+  312 FORMAT(F14.8,2HL(,A3,I3,1H,,A3,I3,1H))
+   10 FORMAT(8H COEFP =,F15.9)
+      B1ELC(1) = 0.D0
+      IF (IFULL.NE.0) WRITE(IWRITE,300) JA, JB
+      IF(IDIAG .NE.1) GO TO 1
+* --- DIAGONAL HAMILTONIAN MATRIX ELEMENT
+      DO 302 J=1,IHSH
+      ISIG=IJFUL(J)
+      ISIGP=ISIG
+      X=NOSH1(J)
+      IF (IFULL.NE.0) WRITE(IWRITE,311) X,IAJCMP(ISIG),IAJCMP(ISIGP)
+      IF (DABS(X) .GT. 1.D-10)
+*    :    WRITE(ISC3,312) -X/2., IAJCMP(ISIG),JA,IAJCMP(ISIGP),JB
+     :    CALL SAVE(4,-X/2.,0,0,ISIG,0,ISIGP,JA,JB,0)
+ 302  CONTINUE
+      IF (NCLOSD .EQ. 0 .OR. IFULL.EQ.0 ) GO TO 7
+      DO 301 J = 1,NCLOSD
+      L = LJCLSD(J)
+      A = 4*L + 2
+      WRITE(IWRITE,311) A, IAJCLD(J), IAJCLD(J)
+301   CONTINUE
+    7 RETURN
+*
+* --- OFF-DIAGONAL HAMILTONIAN MATRIX ELEMENT
+*
+    1 CALL ALLADD(IHSH,M3,M4,M5,M6,M7,M8,M9,M10,
+     :M11,M12,M13,M14,M15,M16,M17,M18)
+      ICOUNT=0
+*
+*     TEST THAT FINAL ANGULAR MOMENTA ARE EQUAL
+*
+      DO 8 K=2,3
+      IF(J1QN1(M6,K).NE.J1QN2(M6,K)) GO TO 7
+    8 CONTINUE
+*
+* --- DETERMINE INTERACTING SHELLS,  ISIG ON L.H.S., ISIGP ON R.H.S.,
+*     FOR NON-ZERO 1-ELECTRON MATRIX ELEMENT,  N-1  ELECTRONS MUST BE
+*     COMMON TO BOTH SIDES.  THUS THE SUM OF  N(I) = NOSH1(I)-NOSH2(I),
+*     I=1,IHSH   MUST BE EQUAL TO  0  OR  2 .   THUS AT NO STAGE CAN
+*     N(I) BE GREATER THAN  1 .  IF THIS SUM IS ZERO, THE TWO
+*     CONFIGURATIONS ARE MADE UP FROM THE SAME ELECTRONS, WITH TWO
+*     DIFFERENT COUPLING SCHEMES.  SINCE THE SPHERICAL HARMONICS ARE
+*     EIGENFUNCTIONS OF  DEL**2 ,  THE ORTHOGONALITY OF THE TWO COUPLING
+*     SCHEMES WILL BE MAINTAINED AND ORTHOGONALITY GIVES A ZERO RESULT.
+*
+      DO 9 I=1,IHSH
+      N=NOSH1(I)-NOSH2(I)
+      IF(IABS(N).GT.1) GO TO 7
+      IF(N) 11,9,12
+   11 ISIGP=I
+      GO TO 13
+   12 ISIG=I
+   13 ICOUNT=ICOUNT+1
+    9 CONTINUE
+      IF(ICOUNT.NE.2) GO TO 7
+      IF(IBUG1.GT.0)WRITE(IWRITE,303) ISIG,ISIGP
+      LSIG=LJ(ISIG)
+      LSIGP=LJ(ISIGP)
+*
+*     THE ANGULAR MOMENTUM OF THE INTERACTING ELECTRONS MUST BE EQUAL
+*
+      IF(LSIG-LSIGP) 7,93,7
+*
+*     THE SPECTATOR SHELLS MUST HAVE MATCHING QUANTUM NUMBERS
+*
+   93 DO 16 J=1,IHSH
+      IF(J.EQ.ISIG.OR.J.EQ.ISIGP) GO TO 16
+      DO 19 K=1,3
+      IF(J1QN1(J,K).NE.J1QN2(J,K)) GO TO 7
+   19 CONTINUE
+   16 CONTINUE
+*
+* --- TEST ON TRIANGULAR CONDITIONS
+*
+      IN3=2*LSIG
+      DO 20 K=2,3
+      IN1=J1QN1(ISIG,K)
+      IN2=J1QN2(ISIG,K)
+      IN4=J1QN1(ISIGP,K)
+      IN5=J1QN2(ISIGP,K)
+      IF(IN1.GT.(IN2+IN3).OR.IN1.LT.IABS(IN2-IN3)) GO TO 7
+      IF(IN4.GT.(IN5+IN3).OR.IN4.LT.IABS(IN5-IN3)) GO TO 7
+      IN3=1
+   20 CONTINUE
+*
+* --- CALCULATE FRACTIONAL PARENTAGE COEFFICIENTS
+*
+      Y=1.D0
+      IF(LSIG.EQ.0) GO TO 26
+      N=NOSH1(ISIG)
+      IVI=J1QN1(ISIG,1)
+      ILI=(J1QN1(ISIG,2)-1)/2
+      ISI=J1QN1(ISIG,3)
+      IVJ=J1QN2(ISIG,1)
+      ILJ=(J1QN2(ISIG,2)-1)/2
+      ISJ=J1QN2(ISIG,3)
+      CALL CFP(LSIG,N,IVI,ILI,ISI,IVJ,ILJ,ISJ,COEFP)
+      IF(IBUG1.GT.0) WRITE(IWRITE,10) COEFP
+      Y=Y*COEFP
+      N=NOSH2(ISIGP)
+      IVI=J1QN2(ISIGP,1)
+      ILI=(J1QN2(ISIGP,2)-1)/2
+      ISI=J1QN2(ISIGP,3)
+      IVJ=J1QN1(ISIGP,1)
+      ILJ=(J1QN1(ISIGP,2)-1)/2
+      ISJ=J1QN1(ISIGP,3)
+      CALL CFP(LSIG,N,IVI,ILI,ISI,IVJ,ILJ,ISJ,COEFP)
+      IF(IBUG1.GT.0) WRITE(IWRITE,10) COEFP
+      Y=Y*COEFP
+*
+* --- SET UP  J2  AND  J3  ARRAYS
+*
+   26 M1=IHSH-2
+      M2=M6-2
+      J2(1,1)=ISIG
+      J2(1,2)=M11
+      J2(1,3)=M9
+      J3(1,1)=ISIGP
+      J3(1,2)=M11
+      J3(1,3)=M10
+      IF(ISIG.EQ.1) GO TO 29
+      J2(2,1)=1
+      GO TO 30
+   29 J2(2,1)=M9
+   30 IF(ISIG.EQ.2) GO TO 32
+      J2(2,2)=2
+      GO TO 33
+   32 J2(2,2)=M9
+   33 J2(2,3)=M4
+      IF(ISIGP.EQ.1) GO TO 35
+      J3(2,1)=1
+      GO TO 36
+   35 J3(2,1)=M10
+   36 IF(ISIGP.EQ.2) GO TO 38
+      J3(2,2)=2
+      GO TO 39
+   38 J3(2,2)=M10
+   39 J3(2,3)=M7
+      IF(IHSH.LT.3) GO TO 40
+      DO 42 J=3,IHSH
+      J2(J,1)=M1+J
+      J2(J,3)=M1+J+1
+      J3(J,1)=M2+J
+      IF(J.EQ.IHSH) GO TO 44
+      J3(J,3)=M2+J+1
+      GO TO 45
+   44 J3(J,3)=M1+J+1
+   45 IF(J.EQ.ISIG) GO TO 47
+      J2(J,2)=J
+      GO TO 48
+   47 J2(J,2)=M9
+   48 IF(J.EQ.ISIGP) GO TO 50
+      J3(J,2)=J
+      GO TO 42
+   50 J3(J,2)=M10
+   42 CONTINUE
+*
+* --- STORE  J2  AND  J3  ARRAYS FOR USE IN SPIN RECOUPLING COEFFICIENT
+*
+   40 I1=0
+      DO 51 J=1,IHSH
+      DO 52 K=1,3
+      I1=I1+1
+      J2STO(I1)=J2(J,K)
+      J3STO(I1)=J3(J,K)
+   52 CONTINUE
+   51 CONTINUE
+*
+* --- ORBITAL RECOUPLING COEFFICIENT
+*
+      J1(M11)=LSIG+LSIG+1
+      K=2
+*
+* --- SET  J1  ARRAY
+*
+   64 DO 53 J=1,IHSH
+      IF(ISIG.EQ.J) GO TO 55
+      J1(J)=J1QN1(J,K)
+      GO TO 53
+   55 J1(J)=J1QN2(ISIG,K)
+   53 CONTINUE
+      DO 56 J=M4,M6
+      J1(J)=J1QN1(J,K)
+   56 CONTINUE
+      DO 57 J=M7,M8
+      J1(J)=J1QN2(J-M3,K)
+   57 CONTINUE
+      J1(M9)=J1QN1(ISIG,K)
+      J1(M10)=J1QN2(ISIGP,K)
+      NJ1S=M11
+      NJ23S=M4
+      DO 100 J = 1,M11
+	 FREE(J) = .FALSE.
+  100 CONTINUE
+      IF(IBUG1.LT.1.OR.IBUG3.EQ.1) GO TO 77
+      WRITE(IWRITE,306) (J1(J),J=1,M11)
+      WRITE(IWRITE,307)
+      DO 80 J=1,IHSH
+      WRITE(IWRITE,308) (J2(J,KL),KL=1,3),(J3(J,KL),KL=1,3)
+   80 CONTINUE
+*
+* --- CALCULATE RECOUPLING COEFFICIENT
+*
+   77 CALL NJGRAF(RECUP,FAIL)
+      Y=Y*RECUP
+      IF(IBUG1.GT.0)WRITE(IWRITE,309) Y,RECUP
+*
+* --- SPIN RECOUPLING COEFFICIENT
+*
+      IF(K.EQ.3) GO TO 60
+      J1(M11 )=2
+      K=3
+      I1=0
+      DO 62 J=1,IHSH
+      DO 63 KK=1,3
+      I1=I1+1
+      J2(J,KK)=J2STO(I1)
+      J3(J,KK)=J3STO(I1)
+   63 CONTINUE
+   62 CONTINUE
+      GO TO 64
+*
+* --- INCLUDE MULTIPLICATIVE FACTORS
+*
+   60 IDELP=0
+      IF(ISIG-ISIGP) 65,70,66
+   65 JSIG=ISIG+1
+      DO 67 J=JSIG,ISIGP
+      IDELP=IDELP+NOSH1(J)
+   67 CONTINUE
+      GO TO 70
+   66 JSIGP=ISIGP+1
+      DO 68 J=JSIGP,ISIG
+      IDELP=IDELP+NOSH2(J)
+   68 CONTINUE
+   70 Y=Y*(-1.D0)**IDELP*DSQRT(DFLOAT(NOSH1(ISIG)*NOSH2(ISIGP)))
+      IF(IBUG1.GT.0)WRITE(IWRITE,310) Y,IDELP
+      A=X+Y
+      JSIG=IJFUL(ISIG)
+      JSIGP=IJFUL(ISIGP)
+      IF(DABS(Y).GE.1.D-10 .AND. IFULL.NE.0) WRITE(IWRITE,311)
+     :  Y,IAJCMP(JSIG),IAJCMP(JSIGP)
+      B1ELC(1) = Y
+      IF(DABS(Y).LT.1.D-10) GO TO 400
+      Y=-Y/2.
+*     WRITE(ISC3,312) Y,IAJCMP(JSIG),JA,IAJCMP(JSIGP),JB
+      CALL SAVE(4,Y,0,0,JSIG,0,JSIGP,JA,JB,0)
+ 400  CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	J 2 3 A N G
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE J23ANG(IRHO,ISIG,IRHOP,ISIGP,JANGDI)
+      PARAMETER(KFL1=60,KFL2=12)
+      LOGICAL FREE
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/HOLD/J2SPIN(33),J3SPIN(33),J2ANG(36),J3ANG(36)
+*
+* === SETS UP J2 AND J3 ARRAYS FOR DIRECT ANGULAR INTEGRAL CALL OF NJSYM
+*
+  303 FORMAT(3H J2,18X,2HJ3)
+  304 FORMAT(3I5,I10,2I5)
+*
+*     HAVE THE J2 AND J3 ARRAYS ALREADY BEEN  SET.  IF NOT, THEN GO TO 2
+*
+      IF(JANGDI) 2,2,1
+*
+* --- ROWS 3 TO M4 OF SPIN J2 AND J3 ARE SAME AS ROWS 4 TO (M4+1) OF
+*     ANGULAR J2 AND J3
+*
+    2 I1=6
+      DO 103 J=3,M4
+      JP1=J+1
+      DO 104 K=1,3
+      I1=I1+1
+      J2(JP1,K)=J2SPIN(I1)
+      J3(JP1,K)=J3SPIN(I1)
+  104 CONTINUE
+  103 CONTINUE
+*
+* --- SET ROWS 1, 2 AND 3
+*
+      IF(M1) 105,106,105
+  105 J2(3,1)=ISIG
+      GO TO 107
+  106 J2(3,1)=M9
+  107 IF(M2) 109,110,109
+  109 J3(3,1)=ISIGP
+      GO TO 111
+  110 J3(3,1)=M11
+  111 J2(2,3)=M9
+      J2(2,1)=IRHO
+      J2(2,2)=M13
+      J2(1,3)=M14
+      J2(3,2)=M14
+      J2(3,3)=M10
+      J2(1,1)=M16
+      J2(1,2)=M17
+      J3(3,2)=M16
+      J3(3,3)=M12
+      J3(1,2)=M13
+      J3(1,1)=M17
+      J3(1,3)=M15
+      J3(2,3)= M11
+      J3(2,1)=IRHOP
+      J3(2,2)=M15
+*
+* --- STORE J2 AND J3 FOR USE IN CALCULATING THE EXCHANGE TERM
+*
+      I1=0
+      DO 535 J=1,M5
+      DO 536 K=1,3
+      I1=I1+1
+      J2ANG(I1)=J2(J,K)
+      J3ANG(I1)=J3(J,K)
+  536 CONTINUE
+  535 CONTINUE
+      JANGDI=1
+    3 IF(IBUG2-1) 209,209,206
+*
+*     PRINT-OUT OF VALUES IN NJSYM  IF IBUG3=1
+*
+  206 IF(IBUG3-1) 209,207,207
+  207 WRITE(IWRITE,303)
+      DO 208 J=1,M5
+      WRITE(IWRITE,304) (J2(J,K),K=1,3),(J3(J,K),K=1,3)
+  208 CONTINUE
+  209 RETURN
+*
+* --- SET J2 AND J3 ARRAYS FROM STORE OF PREVIOUS CALCULATIONS
+*
+    1 I1=0
+      DO 4 J=1,M5
+      DO 5 K=1,3
+      I1=I1+1
+      J2(J,K)=J2ANG(I1)
+      J3(J,K)=J3ANG(I1)
+    5 CONTINUE
+    4 CONTINUE
+      GO TO 3 
+      END
+*
+*     ------------------------------------------------------------------
+*	J 2 3 S P 1
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE J23SP1(J23REL)
+*
+      PARAMETER(KFL1=60,KFL2=12)
+      LOGICAL FREE
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/HOLD/J2SPIN(33),J3SPIN(33),J2ANG(36),J3ANG(36)
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/J23R  /J2REL(39),J3REL(39)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+*
+  303 FORMAT(3H J2,18X,2HJ3)
+  304 FORMAT(3I5,I10,2I5)
+*
+* --- MODIFY THE J2 AND J3 ARRAYS FOR THE DIRECT SPIN INTEGRAL
+*     (SPIN-OTHER-ORBIT AND/OR SPIN-SPIN INTERACTION(S)) CALL OF NJSYM
+*
+*
+* --- ROWS 1 TO M4 OF SPIN J3(J23SPN) ARE THE SAME AS ROWS 1 TO M4 OF
+*     SPIN J3(J23SP1)
+*
+      IF(J23REL.EQ.1) GO TO 10
+      I1=0
+      DO 1 J=1,M4
+      DO 2 K=1,3
+      I1=I1+1
+      J3(J,K)=J3SPIN(I1)
+    2 CONTINUE
+    1 CONTINUE
+*
+*     ROWS 1 TO M4 OF SPIN J2(J23SPN) ARE THE SAME AS ROWS 3 TO M4+2 OF
+*     SPIN J2(J23SP1)
+*
+      I1=0
+      DO 3 J=1,M4
+      JP1=J+2
+      DO 4 K=1,3
+      I1=I1+1
+      J2(JP1,K)=J2SPIN(I1)
+    4 CONTINUE
+    3 CONTINUE
+*
+* --- SET FIRST TWO ROWS OF J2, CORRESPONDING TO THE COUPLING OF
+*     INTERACTING ELECTRONS WITHIN THEIR SHELLS
+*
+      J2(1,1)=M15
+      J2(1,2)=M17
+      J2(1,3)=M13
+      J2(2,1)=M16
+      J2(2,2)=M17+1
+      J2(2,3)=M14
+*
+* --- RESET THE FOLLOWING ELEMENTS IN THE J3 ARRAY
+*
+      J3(1,2)=M15
+      J3(2,2)=M16
+      J3(M4,3)=M8
+*
+* --- SET ROWS M5 AND M5+1 OF J3
+*
+      J3(M5,1)=M17
+      J3(M5,2)=M17+1
+      J3(M5,3)=NJ1S
+      J3(M18,1)=M8
+      J3(M18,2)=NJ1S
+      J3(M18,3)=M6
+*
+* --- Special Case: IHSH = 1
+*
+	  IF (IHSH .EQ. 1) THEN
+		 J3(2,3) = M12
+		 J3(4,1) = M12
+		 J3(4,3) = M10
+	  END IF
+*
+* --- STORE THE ARRAYS J2 AND J3 FOR FUTURE RESETTING OF J2 AND J3
+*
+      I1=0
+      DO 21 J=1,M18
+      DO 22 K=1,3
+      I1=I1+1
+      J2REL(I1)=J2(J,K)
+      J3REL(I1)=J3(J,K)
+   22 CONTINUE
+   21 CONTINUE
+      J23REL=1
+   26 IF(IBUG2.LT.2.OR.IBUG3.EQ.1) RETURN
+      WRITE(IWRITE,303)
+      DO 23 J=1,M18
+      WRITE(IWRITE,304) (J2(J,K),K=1,3),(J3(J,K),K=1,3)
+   23 CONTINUE
+      RETURN
+*
+* --- RESET THE ARRAYS J2 AND J3 FROM STORE
+*
+   10 I1=0
+      DO 24 J=1,M18
+      DO 25 K=1,3
+      I1=I1+1
+      J2(J,K)=J2REL(I1)
+      J3(J,K)=J3REL(I1)
+   25 CONTINUE
+   24 CONTINUE
+      GO TO 26
+      END
+*
+*     ------------------------------------------------------------------
+*	J 2 3 S P N
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE J23SPN(IRHO,ISIG,IRHOP,ISIGP,JSNDIR)
+      PARAMETER(KFL1=60,KFL2=12)
+      LOGICAL FREE
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/HOLD/J2SPIN(33),J3SPIN(33),J2ANG(36),J3ANG(36)
+*
+* === SET UP THE J2 AND J3 ARRAYS FOR THE DIRECT SPIN INTEGRAL CALL
+*     OF NJSYM
+*
+  303 FORMAT(3H J2,18X,2HJ3)
+  304 FORMAT(3I5,I10,2I5)
+*
+*     HAVE THE J2 AND J3 ARRAYS ALREADY BEEN  SET.  IF NOT, THEN GO TO 2
+*
+      IF(JSNDIR) 2,2,1
+*
+* --- SET THIRD ROW OF J2 AND J3
+*
+    2 IF(IRHO-1) 271,272,271
+  271 J2(3,1)=1
+      GO TO 273
+  272 IF(M1) 274,275,274
+  275 J2(3,1)=M10
+      GO TO 276
+  274 J2(3,1)=M9
+      GO TO 276
+  273 IF(IRHO-2) 277,278,277
+  277 J2(3,2)=2
+      GO TO 284
+  278 IF(M1) 280,281,280
+  280 J2(3,2)=M9
+      GO TO 284
+  281 J2(3,2)=M10
+      GO TO 284
+  276 IF(ISIG-2) 277,281,277
+  284 J2(3,3)=M4
+      IF(IRHOP-1) 285,286,285
+  285 J3(3,1)=1
+      GO TO 287
+  286 IF(M2) 288,289,288
+  288 J3(3,1)=M11
+      GO TO 290
+  289 J3(3,1)=M12
+      GO TO 290
+  287 IF(IRHOP-2) 291,292,291
+  291 J3(3,2)=2
+      GO TO 293
+  292 IF(M2) 294,295,294
+  295 J3(3,2)=M12
+      GO TO 293
+  294 J3(3,2)=M11
+      GO TO 293
+  290 IF(ISIGP-2) 291,295,291
+  293 J3(3,3)=M7
+*
+* --- SET ROWS 4,5,.. ETC.
+*
+      IF(M4-4) 203,202,202
+  202 DO 470 J=4,M4
+      J2(J,1)=M4 +J-4
+      J2(J,3)=M4+J-3
+      IF(ISIG+1-J) 471,472,471
+  471 IF(M1) 473,474,473
+  473 IF(IRHO+1-J) 474,475,474
+  474 J2(J,2)=J-1
+      GO TO 476
+  472 J2(J,2)=M10
+      GO TO 476
+  475 J2(J,2)=M9
+  476 J3(J,1)=M7+J-4
+      IF(J-M4 ) 482,483,482
+  483 J3(J,3)=J2(J,3)
+      GO TO 484
+  482 J3(J,3)=M7+J-3
+  484 IF(ISIGP+1-J) 477,478,477
+  477 IF(M2) 479,480,479
+  479 IF(IRHOP+1-J) 480,481,480
+  480 J3(J,2)=J-1
+      GO TO 470
+  478 J3(J,2)=M12
+      GO TO 470
+  481 J3(J,2)=M11
+  470 CONTINUE
+*
+* --- SET FIRST TWO ROWS, CORRESPONDING TO COUPLING OF INTERACTING
+*     ELECTRONS WITHIN THEIR SHELLS
+*
+  203 J2(2,3)=M10
+      J2(1,2) = M13
+      J2(2,2) = M14
+      J2(1,3) = M9
+      IF(M1) 82,83,82
+   82 J2(1,1) = IRHO
+      J2(2,1) = ISIG
+      GO TO 84
+   83 J2(1,1) = ISIG
+      J2(2,1) = M9
+   84 J3(2,3) = M12
+      J3(1,2) = M13
+      J3(2,2) = M14
+      J3(1,3) = M11
+      IF(M2) 85,86,85
+   85 J3(1,1) = IRHOP
+      J3(2,1) = ISIGP
+      GO TO 187
+   86 J3(1,1) = ISIGP
+      J3(2,1) = M11
+*
+* --- STORE J2,J3 ARRAYS FOR USE IN CALCULATING EXCHANGE INTEGRAL
+*
+  187 I1=0
+      DO 451 J=1,M4
+      DO 452 K=1,3
+      I1=I1+1
+      J2SPIN(I1)=J2(J,K)
+      J3SPIN(I1)=J3(J,K)
+  452 CONTINUE
+  451 CONTINUE
+      JSNDIR=1
+    3 IF(IBUG2-1) 570,570,6
+*
+*     PRINT-OUT OF VALUES IN NJSYM  IF IBUG3=1
+*
+    6 IF(IBUG3-1) 200,570,200
+  200 WRITE(IWRITE,303)
+      DO 201 J=1,M4
+      WRITE(IWRITE,304) (J2(J,K),K=1,3),(J3(J,K),K=1,3)
+  201 CONTINUE
+  570 RETURN
+*
+* --- SET J2 AND J3 ARRAYS FROM STORE OF PREVIOUS CALCULATIONS
+*
+    1 I1=0
+      DO 4 J=1,M4
+      DO 5 K=1,3
+      I1=I1+1
+      J2(J,K)=J2SPIN(I1)
+      J3(J,K)=J3SPIN(I1)
+    5 CONTINUE
+    4 CONTINUE
+      GO TO 3
+      END
+*
+*     ------------------------------------------------------------------
+*	K L I M
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE KLIM(L1,L2,L3,L4,L,KA,KB)
+*
+* --- DETERMINATION OF THE TRIANGULAR CONDITIONS
+*
+      K1=IABS(L1-L2)-L
+      K2=L1+L2-L
+      K3=IABS(L3-L4)
+      K4=L3+L4
+      KA=MAX0(K1,K3)
+      KB=MIN0(K2,K4)
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	M A G I N T
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE MAGINT(LET1,LET2,LET3,JVAL)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+*
+   22 FORMAT(/1X,104H TRIANGULAR RELATION (S,SS,KA) IS NOT SATISFIED FOR
+     : THE SPIN-ORBIT AND THE SPIN-OTHER-ORBIT INTERACTIONS)
+   23 FORMAT(/1X,104H TRIANGULAR RELATION (L,LL,KA) IS NOT SATISFIED FOR
+     : THE SPIN-ORBIT AND THE SPIN-OTHER-ORBIT INTERACTIONS)
+   26 FORMAT(/1X,77H TRIANGULAR RELATION (S,SS,KA) IS NOT SATISFIED FOR 
+     :THE SPIN-SPIN INTERACTION)
+   27 FORMAT(/1X,77H TRIANGULAR RELATION (L,LL,KA) IS NOT SATISFIED FOR 
+     :THE SPIN-SPIN INTERACTION)
+   31 FORMAT(/1X,83H TRIANGULAR RELATION BETWEEN J VALUE AND THE TOTAL A
+     :NGULAR MOMENTA IS NOT SATISFIED)
+*
+*
+* --- EVALUATION OF THE RELATIVISTIC OPERATORS OF THE BREIT-PAULI
+*     HAMILTONIAN.    TEST ON THE TRIANGULAR CONDITIONS.
+*
+*
+      LET1=1
+      LET2=1
+      LET3=1
+*
+* --- TEST FOR TRIANGULAR RELATION BETWEEN J, L AND S
+*
+      I2HSH=IHSH+IHSH-1
+      L=J1QN1(I2HSH,2)-1
+      LS=J1QN1(I2HSH,3)-1
+      JV=JVAL-1
+      VJTST=TRITST(JV,LS,L)
+      IF(DABS(VJTST).LT.EPS) GO TO 8
+   32 LET1=0
+      LET2=0
+      LET3=0
+      GO TO 9
+*
+* --- TEST FOR TRIANGULAR RELATION BETWEEN J, LL AND SS
+*
+    8 LL=J1QN2(I2HSH,2)-1
+      LSS=J1QN2(I2HSH,3)-1
+      VJJTST=TRITST(JV,LSS,LL)
+      IF(DABS(VJJTST).LT.EPS) GO TO 10
+      GO TO 32
+*
+* --- TEST FOR TRIANGULAR CONDITIONS FOR THE SPIN-ORBIT AND/OR THE
+*     SPIN-OTHER-ORBIT INTERACTION(S)
+*
+   10 IF(ISPORB+ISOORB) 12,12,29
+   29 KA=2
+   25 K=3
+   19 IL=J1QN1(I2HSH,K)-1
+      IR=J1QN2(I2HSH,K)-1
+      BTST=TRITST(IL,IR,KA)
+      IF(DABS(BTST).GT.EPS) GO TO 14
+   13 IF(K-2) 15,15,16
+   15 IF(KA-2) 12,12,28
+   16 K=2
+      GO TO 19
+   14 IF(KA-2) 20,20,21
+   20 IF(K.EQ.3.AND.NBUG7.GE.1) WRITE(IWRITE,22)
+      IF(K.EQ.2.AND.NBUG7.GE.1) WRITE(IWRITE,23)
+      LET1=0
+      LET2=0
+      GO TO 12
+   21 IF(K.EQ.3.AND.NBUG7.EQ.1) WRITE(IWRITE,26)
+      IF(K.EQ.2.AND.NBUG7.EQ.1) WRITE(IWRITE,27)
+      LET3=0
+      GO TO 28
+*
+* --- TEST FOR TRIANGULAR CONDITIONS FOR THE SPIN-SPIN INTERACTION
+*
+   12 IF(ISPSPN.NE.1) GO TO 28
+      KA=4
+      GO TO 25
+    9 IF(NBUG7.EQ.1) WRITE(IWRITE,31)
+   28 RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	M E K E E P
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE MEKEEP(IRHO,ISIG,IRHOP,ISIGP)
+      COMMON/MEDEFN/J(165)
+      COMMON/STORE/I(165),I1,I2,I3,I4
+*
+*     STORES THE COMMON BLOCK MEDEFN , AND IRHO,ISIG,IRHOP,ISIGP
+*
+      DO 1 K=1,165
+      I(K)=J(K)
+    1 CONTINUE
+      I1=IRHO
+      I2=ISIG
+      I3=IRHOP
+      I4=ISIGP
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	M E R E S T
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE MEREST(IRHO,ISIG,IRHOP,ISIGP)
+      COMMON/MEDEFN/J(165)
+      COMMON/STORE/I(165),I1,I2,I3,I4
+*
+*     RESTORES THE COMMON BLOCK MEDEFN, AND IRHO,ISIG,IRHOP,ISIGP
+*
+      DO 1 K=1,165
+      J(K)=I(K)
+    1 CONTINUE
+      IRHO=I1
+      ISIG=I2
+      IRHOP=I3
+      ISIGP=I4
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	M O D J 2 3
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE MODJ23(K)
+      PARAMETER(KFL1=60,KFL2=12)
+      LOGICAL FREE
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/HOLD/J2SPIN(33),J3SPIN(33),J2ANG(36),J3ANG(36)
+*
+* === MODIFIES THE DIRECT J2 AND J3 ARRAYS FOR EXCHANGE CALL OF NJSYM
+*
+    7 FORMAT(3H J2,18X,2HJ3)
+    8 FORMAT(3I5,I10,2I5)
+      GO TO (1,2),K
+*
+* --- K=1  -  SPIN INTEGRALS
+*
+    1 MK=M4
+      I1=0
+      DO 11 J=1,MK
+      DO 12 K=1,3
+      I1=I1+1
+      J2(J,K)=J2SPIN(I1)
+      J3(J,K)=J3SPIN(I1)
+   12 CONTINUE
+   11 CONTINUE
+      J3(1,2)=M14
+      J3(2,2)=M13
+      GO TO 3
+*
+* --- K=2  -  ANGULAR INTEGRALS
+*
+    2 MK=M5
+      I1=0
+      DO 21 J=1,MK
+      DO 22 K=1,3
+      I1=I1+1
+      J2(J,K)=J2ANG(I1)
+      J3(J,K)=J3ANG(I1)
+   22 CONTINUE
+   21 CONTINUE
+      J2(1,1)=M15
+      J3(1,3)=M16
+    3 IF(IBUG2-1) 4,4,9
+*
+*     PRINT-OUT OF VALUES IN NJSYM  IF IBUG3=1
+*
+    9 IF(IBUG3-1 ) 5,4,5
+    5 WRITE(IWRITE,7)
+      DO 6 J=1,MK
+      WRITE(IWRITE,8) (J2(J,K),K=1,3),(J3(J,K),K=1,3)
+    6 CONTINUE
+    4 RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	M O D R E L
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE MODREL
+*
+*
+* --- MODIFIES THE DIRECT J2 ARRAY FOR EXCHANGE CALL OF NJSYM
+*     FOR THE (SPIN-OTHER-ORBIT INTERACTION AND/OR SPIN-SPIN
+*     INTERACTION(S))
+*
+*
+      PARAMETER(KFL1=60,KFL2=12)
+      LOGICAL FREE
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+*
+    7 FORMAT(3H J2,18X,2HJ3)
+    8 FORMAT(3I5,I10,2I5)
+*
+      J2(1,1)=M16
+      J2(2,1)=M15
+      IF(IBUG2.LE.1.OR.IBUG3.EQ.1) RETURN
+      WRITE(IWRITE,7)
+      DO 6 J=1,M18
+      WRITE(IWRITE,8) (J2(J,K),K=1,3),(J3(J,K),K=1,3)
+    6 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	O R T H O G
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE ORTHOG(LET,INCL)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      LOGICAL INCL
+*
+*     THIS SUBROUTINE CHECKS FOR POSSIBLE ORTHOGONALITY DUE TO
+*     COUPLING DIFFERENCES OR UNEVEN PARITY
+*
+  101 FORMAT(37H DIFFERING RESULTANT ANGULAR MOMENTUM)
+  102 FORMAT(52H ORTHOGONALITY IN COUPLING SCHEMES OF CONFIGURATIONS)
+  103 FORMAT(59H THE TWO CONFIGURATIONS HAVE DIFFERING NUMBERS OF ELECTR
+     :ONS)
+  104 FORMAT(51H THE TWO CONFIGURATIONS HAVE DIFFERING TOTAL PARITY)
+*
+* --- DO PSI AND PSIP CONTAIN THE SAME NUMBERS OF ELECTRONS
+*     DO PSI AND PSIP HAVE THE SAME TOTAL PARITY
+*
+      N5=0
+      N6=0
+      N7=0
+      IELST=1
+      DO 20 I=1,IHSH
+      L1=LJ(I)
+      L2=NOSH1(I)
+      L3=NOSH2(I)
+      N5=N5+L2
+      N6=N6+L3
+      N7=N7+L1*(L2-L3)
+   20 CONTINUE
+*
+*     CHECK ON NUMBER OF ELECTRONS
+*
+      IF (N5-N6) 21,22,21
+   21 IF(IBUG2-1) 11,28,28
+   28 WRITE(IWRITE,103)
+      GO TO 11
+*
+*     CHECK ON PARITY
+*
+   22 IF(N7-N7/2*2) 23,24,23
+   23 IF(IBUG2-1) 11,25,25
+   25 WRITE(IWRITE,104)
+      GO TO 11
+   24 N1=2*IHSH-1
+      N2=IHSH+1
+      N3=IHSH-1
+      N4=IHSH-2
+*
+* --- IS THE FINAL STATE THE SAME FOR PSI AND PSIP
+*
+      DO 1 K=2,3
+      IF(J1QN1(N1,K)-J1QN2(N1,K))2,1,2
+    1 CONTINUE
+      GO TO 3
+    2 IF(IBUG2.EQ.0) GO TO 13
+   26 WRITE(IWRITE,101)
+   13 IELST=0
+      IF(IREL.NE.0) GO TO 12
+*
+* --- THE TWO CONFIGURATIONS WILL HAVE ZERO HAMILTONIAN MATRIX ELEMENT
+*
+   11 LET=0
+      RETURN
+    3 CONTINUE
+*
+* --- NO OBVIOUS ANGULAR MOMENTUM ORTHOGONALITY
+*
+   12 LET=1
+      IF (IELST.EQ.0.AND. .NOT.INCL) LET = 0
+      RETURN
+      END
+
+*     ------------------------------------------------------------------
+*	O U T L S J
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE OUTLSJ
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+      COMMON /CLOSED/B1ELC(4),NCLOSD,IAJCLD(NWD),LJCLSD(NWD),IBK
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON /FOUT/NOV(2),IOVLAP(10,2),NF,NG,NR,NL,NZ,NN,NV,NS,IFLAG,NIJ
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(4),JSC(3),IALL
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+      PARAMETER (NCDIM4=12000,LSTACK=20)
+      DIMENSION C(NCDIM4),IPACK(NCDIM4),JA(NCDIM4),JB(NCDIM4),
+     :          IPTR(NCDIM4),IPT(NCDIM4)
+      INTEGER NCOUNT(8),ISTACK(LSTACK),II(4),IEL(4)
+      EQUIVALENCE (NCOUNT(1),NF),(II(1),I1),(II(2),I2),(II(3),I3),
+     :            (II(4),I4)
+      CHARACTER*1 INT(8)
+      DATA INT/'F','G','R','L','Z','N','V','S'/
+*
+*     Formats for Integrals
+*
+   10 FORMAT(1X,A1,I2,'(',A3,',',A3,')',I5)
+   11 FORMAT(1X,A1,I2,'(',2A3,',',2A3,')',I5)
+   12 FORMAT(1X,A1,2X,'(',A3,',',A3,')',I5)
+*     
+*     Format for Coefficients
+*
+   20 FORMAT(F14.8,A1,3I3)
+*
+*     Format for Coefficient terminator
+*
+   30 FORMAT(14X,'*',16X,' ')
+   31 FORMAT(1X,'*')
+*
+* --- TERMINATE  INTEGERAL LISTS and Rewind
+*
+      DO 1 J = 1,8
+	 ENDFILE(UNIT=ISC(J))
+	 REWIND(UNIT=ISC(J))
+    1 CONTINUE
+*
+*     Test if current dimensions are big enough
+*
+      N = MAX(NF,NG,NR,NL,NZ,NN,NV,NS)
+      IF (N .GT. NCDIM4) THEN
+	 WRITE(0,'(A/A,I10)') ' NCDIM4 dimension in OUTLSJ too small',
+     :    ' Must be increased to at least',N
+	 STOP 1
+      END IF
+*
+*===  Begin processing data
+*
+      NINT = 0
+      DO 100 ICASE = 1,8
+	 N = NCOUNT(ICASE)
+	 IF (ICASE .NE. 3 .AND. ICASE .NE. 4) THEN
+	    DO 102 J = 1,N
+	      READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J)
+  102       CONTINUE
+	 ELSE 
+	    DO 104 J = 1,N
+	       READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J),IPTR(J)
+  104       CONTINUE
+	 END IF
+	 CALL QSORT(N,IPACK,IPT,ISTACK,LSTACK,IERR)
+	 IF (IERR .EQ. 1) THEN
+	    WRITE(0,*) ' Stack dimension not large enough for sort'
+	    STOP 1
+	 END IF
+*
+*        Output the list of integrals with pointers to the data
+*
+	 LAST = 0
+  110    J = LAST +1
+	 LAST = J
+	 IF (J .LE. N) THEN
+*
+*          Unpack electron data
+*
+           K = IPACK(IPT(J))
+   	   I4 = MOD(K,64)
+   	   K = K/64
+     	   IF (ICASE.LE.2 .OR. ICASE.EQ.4 .OR. ICASE.EQ.5) THEN
+   	     I2 = MOD(K,64)
+   	     K = K/64
+	   ELSE
+	      I3 = MOD(K,64)
+	      K = K/64
+	      I2 = MOD(K,64)
+	      K = K/64
+	      I1 = MOD(K,64)
+	      K = K/64
+	      IF (ICASE .GT. 5) K = K - 1
+	   END IF
+*
+*           Find  last item in the list with this integral
+*           
+  120      LAST = LAST + 1
+           IF (LAST .LE. N) THEN
+             IF (IPACK(IPT(J)) .EQ. IPACK(IPT(LAST))) GO TO 120
+           END IF
+           LAST = LAST -1
+	   NINT = NINT + 1
+           IF (ICASE .LE. 2) THEN
+             WRITE(IOUT,10) INT(ICASE),K,IAJCMP(I2),IAJCMP(I4),LAST
+           ELSE IF (ICASE .EQ. 4 .OR. ICASE .EQ. 5) THEN
+             WRITE(IOUT,12) INT(ICASE),IAJCMP(I2),IAJCMP(I4),LAST
+           ELSE
+	     DO 140 J = 1,4
+	       IF (II(J) .LT. 32) THEN
+	         IEL(J) = IAJCMP(II(J))
+	       ELSE
+	         IEL(J) = IAJCLD(64-II(J))
+	       END IF
+  140        CONTINUE
+	     WRITE(IOUT,11) INT(ICASE),K,(IEL(J),J=1,4),LAST
+           END IF
+	   GO TO 110
+	END IF
+        WRITE(IOUT,31) 
+*
+*             Write out the data for the integrals
+*
+        DO 150 J = 1,N
+  	  K = IPT(J)
+          WRITE(IOUT,20) C(K),INT(ICASE),JA(K),JB(K)
+  150   CONTINUE
+        WRITE(IOUT,30) 
+	IF (ICASE .EQ. 2) THEN
+          WRITE(IOUT,31) 
+          WRITE(IOUT,31) 
+	END IF
+  100 CONTINUE
+      WRITE(0,*) 'The total number of integrals =',NINT
+      RETURN
+      END
+*     MCHF_BREIT (Part 2 of 2)
+*     ------------------------------------------------------------------
+*	P R N T W T
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE PRNTWT(IRHO,ISIG,IRHOP,ISIGP)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/DIAGNL/IDIAG,JA,JB
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/ENAV/NINTS,KVALUE(15),COEFCT(15)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN(19,3,2)
+     :,IJFUL(10)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/NJLJ/NRHO,LRHO,NSIG,LSIG,NRHOP,LRHOP,NSIGP,LSIGP
+      COMMON/PHASES/SIGNFA(NCD2),ICSTAS
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+      COMMON/XATION/AMULT(15),BMULT(15),KD1,KD2,KE1,KE2,MULTD,MULTE
+*
+* --- PRINTS OUT THE COEFFICIENTS OF SLATER INTEGRALS
+*
+    1 FORMAT(//23H INTERACTING SHELLS ARE,6X,6H RHO =,A3,6X,6H SIG =,A3,
+     :6X,7H RHOP =,A3,6X,7H SIGP =,A3//)
+    2 FORMAT(35X,F14.8,11X,1HF,I2,1H(,A3,1H,,A3,1H))
+    3 FORMAT(35X,F14.8,11X,1HG,I2,1H(,A3,1H,,A3,1H))
+    4 FORMAT(35X,F14.8,11X,1HR,I2,1H(,A3,1H,,A3,1H/,A3,1H,,A3,1H))
+  100 FORMAT(F14.8,1HF,I2,1H(,A3,I3,1H,,A3,I3,1H))
+  101 FORMAT(F14.8,1HG,I2,1H(,A3,I3,1H,,A3,I3,1H))
+  102 FORMAT(F14.8,1HR,I2,1H(,2A3,I3,1H,,2A3,I3,1H))
+  103 FORMAT(' (CONFIG ',I3,'/Rij/CONFIG ',I3,')')
+      JRHO=IJFUL(IRHO)
+      JSIG=IJFUL(ISIG)
+      JRHOP=IJFUL(IRHOP)
+      JSIGP=IJFUL(ISIGP)
+*
+      SIGNCH = 1.
+      IF (ICSTAS .NE. 0) SIGNCH = SIGNFA(JA)*SIGNFA(JB)
+*
+* --- DETERMINE THE AVERAGE ENERGY CONTRIBUTIONS IF  IDIAG  IS NON-ZERO
+*
+      IF(KD1.GT.KD2.AND.KE1.GT.KE2) GO TO 41
+      IF(IDIAG.EQ.0) GO TO 50
+      LA=LJ(IRHO)
+      LB=LJ(ISIG)
+      IF(M1.EQ.0) GO TO 51
+      IEQUIV=2
+      NMULT=NOSH1(IRHO)*NOSH1(ISIG)
+      GO TO 52
+   51 IEQUIV=1
+      NA=NOSH1(IRHO)
+      NMULT=NA*(NA-1)/2
+*
+*     CALCULATE THE INTERACTION ENERGY
+*
+   52 CALL INTACT(LA,LB,IEQUIV)
+      INTS=1
+   50 IF(IBUG2-1)  6,7,7
+    7 WRITE(IWRITE,1) IAJCMP(JRHO),IAJCMP(JSIG),IAJCMP(JRHOP),
+     :                IAJCMP(JSIGP)
+    6 CONTINUE
+* --- DIRECT INTEGRALS
+*
+ 8    IF(KD1.GT.KD2) GO TO 20
+      IF (IFULL .NE. 0) WRITE(IWRITE,103) JA,JB
+      DO 11 JK1=KD1,KD2,2
+      K=JK1-1
+      A=AMULT(JK1)*SIGNCH
+      IF(IDIAG.NE.0) GO TO 53
+*
+*     NON-DIAGONAL MATRIX ELEMENT
+*
+      IF(M19.EQ.0.AND.M20.EQ.0) GO TO 15
+*     IF((M1+M2).EQ.0) GO TO 16
+      GO TO 13
+*
+*     DIAGONAL MATRIX ELEMENT.  F0 TERM IS THE ONLY ONE WITH K=0
+*
+   53 IF(K.NE.0) GO TO 57
+      GO TO 15
+*
+*     OTHER  FK  INTEGRALS,  ONLY OCCUR IF  RHO=SIG
+*
+   57 IF(IEQUIV.EQ.1.AND.INTS.LE.NINTS) GO TO 58
+      GO TO 15
+   58 IF(K.NE.KVALUE(INTS)) GO TO 15
+      INTS=INTS+1
+   15 IF(DABS(A).GE.1.D-10 .AND. IFULL.NE.0)
+     : WRITE(IWRITE,2) A,K,IAJCMP(JRHO),IAJCMP(JSIG)
+      IF(DABS(A).LT.1.D-10) GO TO 11
+*     WRITE(IOUT,100) A,K,IAJCMP(JRHO),JA,IAJCMP(JSIG),JB
+      CALL SAVE(1,A,K,0,JRHO,0,JSIG,JA,JB,0)
+      GO TO 11
+   16 IF(DABS(A).GE.1.D-10 .AND. IFULL.NE.0)
+     :  WRITE(IWRITE,3) A,K,IAJCMP(JRHO),IAJCMP(JRHOP)
+      IF(DABS(A).LT.1.D-10) GO TO 11
+*     WRITE(ISC1,101) A,K,IAJCMP(JRHO),JA,IAJCMP(JRHOP),JB
+      CALL SAVE(2,A,K,0,JRHO,0,JRHOP,JA,JB,0)
+      GO TO 11
+   13 IF(DABS(A).GE.1.D-10 .AND. IFULL.NE.0) WRITE(IWRITE,4) A,K,
+     :   IAJCMP(JRHO),IAJCMP(JSIG),IAJCMP(JRHOP),IAJCMP(JSIGP)
+      IF(DABS(A).LT.1.D-10) GO TO 11
+*     WRITE(ISC2,102) A,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :                     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(3,A,K,JRHO,JSIG,JRHOP,JSIGP,JA,JB,0)
+   11 CONTINUE
+*
+* --- EXCHANGE INTEGRALS
+*
+ 20   IF(KE1.GT.KE2) GO TO 41
+      IF (KD1.GT.KD2 .AND. IFULL.NE.0) WRITE(IWRITE,103) JA,JB
+      DO 21 JK1=KE1,KE2,2
+      K=JK1-1
+      B=BMULT(JK1)*SIGNCH
+*
+* --- DIVIDE THE WEIGHTS INTO AVERAGE ENERGY AND NON-AVERAGE ENERGY
+*     PARTS
+*
+      IF(IDIAG.NE.0) GO TO 60
+*
+*     NON-DIAGONAL MATRIX ELEMENT
+*
+      IF(M19.EQ.0.AND.M20.EQ.0) GO TO 25
+      IF(M1 .EQ.0.AND.M2 .EQ.0) GO TO 31
+      GO TO 23
+*
+*     DIAGONAL MATRIX ELEMENT
+*
+   60 IF(INTS.LE.NINTS) GO TO 61
+      GO TO 25
+   61 IF(K.NE.KVALUE(INTS)) GO TO 25
+      INTS=INTS+1
+   25 IF (DABS(B).GE.1.D-10 .AND. IFULL.NE.0)
+     :  WRITE(IWRITE,3) B,K,IAJCMP(JRHO),IAJCMP(JSIG)
+      IF(DABS(B).LT.1.D-10) GO TO 21
+*     WRITE(ISC1,101) B,K,IAJCMP(JRHO),JA,IAJCMP(JSIG),JB
+      CALL SAVE(2,B,K,0,JRHO,0,JSIG,JA,JB,0)
+      GO TO 21
+   31 IF (DABS(B).GE.1.D-10 .AND. IFULL.NE.0)
+     : WRITE(IWRITE,3) B,K,IAJCMP(JRHO),IAJCMP(JSIGP)
+      IF(DABS(B).LT.1.D-10) GO TO 21
+*     WRITE(ISC1,101) B,K,IAJCMP(JRHO),JA,IAJCMP(JSIGP),JB
+      CALL SAVE(2,B,K,0,JRHO,0,JSIGP,JA,JB,0)
+      GO TO 21
+   23 IF(DABS(B).GE.1.D-10 .AND. IFULL.NE.0) WRITE(IWRITE,4) B,K,
+     : IAJCMP(JRHO),IAJCMP(JSIG),IAJCMP(JSIGP),IAJCMP(JRHOP)
+      IF(DABS(B).LT.1.D-10) GO TO 21
+*     WRITE(ISC2,102) B,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :                     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(3,B,K,JRHO,JSIG,JSIGP,JRHOP,JA,JB,0)
+   21 CONTINUE
+   41 RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	R A D W T S
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE RADWTS(IRHO,ISIG,IRHOP,ISIGP,ICOUNT)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      COMMON/PHASES/SIGNFA(NCD2),ICSTAS
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/DEMULT/DMULT0(12,3),DMULT1(12,3),EMULT0(12,3),EMULT1(12,3),
+     :     MULDSO,MULESO
+      COMMON/DENKVK/D00N2(12),D00NK(12),D00VK(12),D11N2(12),D11NK(12),
+     :     D11VK(12),E01N2(12),E01NK(12),E01VK(12),E10N2(12),E10NK(12),
+     :     E10VK(12)
+      COMMON/DESSNK/D00SNK(12),D11SNK(12),E01SNK(12),E10SNK(12),
+     :     MULDSS,MULDSP,MULESS,MULESP
+      COMMON/DIAGNL/IDIAG,JA,JB
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+      COMMON/SSKLIM/KDS1,KDS2,KDS3,KDS4,KES1,KES2,KES3,KES4
+      COMMON/XATION/AMULT(15),BMULT(15),KD1,KD2,KE1,KE2,MULTD,MULTE
+*
+    3 FORMAT(35X,F14.8,11X,1HN,I2,1H(,A3,1H,,A3,1H/,A3,1H,,A3,1H))
+    4 FORMAT(35X,F14.8,11X,1HV,I2,1H(,A3,1H,,A3,1H/,A3,1H,,A3,1H))
+  303 FORMAT(F14.8,1HN,I2,1H(,2A3,I3,1H,,2A3,I3,1H))
+  304 FORMAT(F14.8,1HV,I2,1H(,2A3,I3,1H,,2A3,I3,1H))
+  305 FORMAT(F14.8,1HS,I2,1H(,2A3,I3,1H,,2A3,I3,1H))
+  320 FORMAT(9H (CONFIG ,I3,12H/SS /CONFIG ,I3,1H))
+  330 FORMAT(9H (CONFIG ,I3,12H/SS /CONFIG ,I3,1H),
+     : /35X,F14.8,11X,1HN,I2,1H(,A3,1H,,A3,1H/,A3,1H,,A3,1H))
+  340 FORMAT(9H (CONFIG ,I3,12H/SOO/CONFIG ,I3,1H))
+*
+*
+* --- THIS SUBROUTINE CATEGORIZES THE COEFFICIENTS (SPIN-OTHER-ORBIT
+*      AND/OR SPIN-SPIN INTERACTION(S)) ASSOCIATED WITH THE INTERACTING
+*     SUBSHELLS RHO, SIG, RHOP, SIGP INTO TYPES NK AND VK, AND, IF
+*     REQUIRED, PRINTS OUT THEIR VALUES, TOGETHER WITH THE ALPHANUMERIC
+*     FORM OF EACH INTEGRAL
+*
+*
+      ICHANG=0
+      MAXBAS=MAXORB+1
+*
+* --- CHANGE THE SIGN IF CONDON AND SHORTLEY CONVENTION ...
+*
+      SIGNCH = 1.0
+      IF (ICSTAS .NE. 0) SIGNCH = SIGNFA(JA)*SIGNFA(JB)
+*
+* --- SPECIFY THE POSITION OF THE INTERACTING SUBSHELLS IN ORIGINAL
+*     LIST OF ORBITALS
+*
+   53 JRHO=IJFUL(IRHO)
+      JSIG=IJFUL(ISIG)
+      JRHOP=IJFUL(IRHOP)
+      JSIGP=IJFUL(ISIGP)
+*
+* --- EVALUATE THE RADIAL INTEGRALS ASSOCIATED WITH THE SPIN-OTHER-ORBIT
+*     IMTERACTION
+*
+      IF (ICOUNT .GT. 1) ICOUNT = 1
+      IF(ISOORB.EQ.0) GO TO 100
+      IF ((MULDSO+MULESO).NE.0 .AND. IFULL .NE. 0)
+     :    WRITE(IWRITE,340) JA,JB
+      IF((MULDSO+MULESO).NE.0) ICOUNT=2
+*
+* --- DIRECT INTEGRALS
+*
+*
+* --- IF MULDSO=0 MEANS NO =DIRECT= COEFFICIENTS
+*
+      IF(MULDSO.EQ.0) GO TO 2
+      L=0
+      DO 5 J=KD1,KD2,2
+      L=L+1
+      K=J-1
+      K1=K-1
+      K2=K-2
+      IF(K) 5,6,7
+    7 A=D00N2(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 102
+      IF (IFULL.NE.0) WRITE(IWRITE,3) A,K2,IAJCMP(JSIG),IAJCMP(JRHO),
+     :     IAJCMP(JSIGP),IAJCMP(JRHOP)
+*     WRITE(JSC1,303) A,K2,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(6,A,K2,JSIG,JRHO,JSIGP,JRHOP,JA,JB,0)
+  102 A=D00VK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 104
+      IF (IFULL.NE.0) WRITE(IWRITE,4) A,K1,IAJCMP(JRHO),IAJCMP(JSIG),
+     :     IAJCMP(JRHOP),IAJCMP(JSIGP)
+*     WRITE(JSC2,304) A,K1,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(7,A,K1,JRHO,JSIG,JRHOP,JSIGP,JA,JB,0)
+  104 IF(M1.EQ.0.OR.M2.EQ.0) GO TO 6
+      A=D11N2(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 106
+      IF (IFULL.NE.0) WRITE(IWRITE,3) A,K2,IAJCMP(JRHO),IAJCMP(JSIG),
+     :     IAJCMP(JRHOP),IAJCMP(JSIGP)
+*     WRITE(JSC1,303) A,K2,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(6,A,K2,JRHO,JSIG,JRHOP,JSIGP,JA,JB,0)
+  106 A=D11VK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 6
+      IF (IFULL.NE.0) WRITE(IWRITE,4) A,K1,IAJCMP(JSIG),IAJCMP(JRHO),
+     :     IAJCMP(JSIGP),IAJCMP(JRHOP)
+*     WRITE(JSC2,304) A,K1,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(7,A,K1,JSIG,JRHO,JSIGP,JRHOP,JA,JB,0)
+    6 A=D00NK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 110
+      IF (IFULL.NE.0) WRITE(IWRITE,3) A,K,IAJCMP(JRHO),IAJCMP(JSIG),
+     :     IAJCMP(JRHOP),IAJCMP(JSIGP)
+*     WRITE(JSC1,303) A,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(6,A,K,JRHO,JSIG,JRHOP,JSIGP,JA,JB,0)
+  110 IF(M1.EQ.0.OR.M2.EQ.0) GO TO 5
+      A=D11NK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 5
+      IF (IFULL.NE.0) WRITE(IWRITE,3) A,K,IAJCMP(JSIG),IAJCMP(JRHO),
+     :     IAJCMP(JSIGP),IAJCMP(JRHOP)
+*     WRITE(JSC1,303) A, K, IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(6,A,K,JSIG,JRHO,JSIGP,JRHOP,JA,JB,0)
+    5 CONTINUE
+*
+* --- EXCHANGE INTEGRALS
+*
+*
+* --- IF MULESO=0 MEANS NO =EXCHANGE= COEFFICIENTS
+*
+    2 IF(MULESO.EQ.0) GO TO 100
+      L=0
+      DO 13 J=KE1,KE2,2
+      L=L+1
+      K=J-1
+      K1=K-1
+      K2=K-2
+      IF(K) 13,16,17
+   17 A=E01N2(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 114
+      IF (IFULL.NE.0) WRITE(IWRITE,3) A,K2,IAJCMP(JSIG),IAJCMP(JRHO),
+     :     IAJCMP(JRHOP),IAJCMP(JSIGP)
+*     WRITE(JSC1,303) A,K2,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(6,A,K2,JSIG,JRHO,JRHOP,JSIGP,JA,JB,0)
+  114 A=E01VK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 116
+      IF (IFULL.NE.0) WRITE(IWRITE,4) A,K1,IAJCMP(JRHO),IAJCMP(JSIG),
+     :     IAJCMP(JSIGP),IAJCMP(JRHOP)
+*     WRITE(JSC2,304) A,K1,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(7,A,K1,JRHO,JSIG,JSIGP,JRHOP,JA,JB,0)
+  116 A=E10N2(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 118
+      IF (IFULL.NE.0) WRITE(IWRITE,3) A,K2,IAJCMP(JRHO),IAJCMP(JSIG),
+     :     IAJCMP(JSIGP),IAJCMP(JRHOP)
+*     WRITE(JSC1,303) A,K2,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(6,A,K2,JRHO,JSIG,JSIGP,JRHOP,JA,JB,0)
+  118 A=E10VK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 16
+      IF (IFULL.NE.0) WRITE(IWRITE,4) A,K1,IAJCMP(JSIG),IAJCMP(JRHO),
+     :     IAJCMP(JRHOP),IAJCMP(JSIGP)
+*     WRITE(JSC2,304) A,K1,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(7,A,K1,JSIG,JRHO,JRHOP,JSIGP,JA,JB,0)
+   16 A=E01NK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 122
+      IF (IFULL.NE.0) WRITE(IWRITE,3) A,K,IAJCMP(JRHO),IAJCMP(JSIG),
+     :     IAJCMP(JSIGP),IAJCMP(JRHOP)
+*     WRITE(JSC1,303) A,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(6,A,K,JRHO,JSIG,JSIGP,JRHOP,JA,JB,0)
+  122 A=E10NK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 13
+      IF (IFULL.NE.0) WRITE(IWRITE,3) A,K,IAJCMP(JSIG),IAJCMP(JRHO),
+     :     IAJCMP(JRHOP),IAJCMP(JSIGP)
+*     WRITE(JSC1,303) A,K,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(6,A,K,JSIG,JRHO,JRHOP,JSIGP,JA,JB,0)
+   13 CONTINUE
+*
+* --- EVALUATE THE RADIAL INTEGRALS ASSOCIATED WITH THE SPIN-SPIN
+*     INTERACTION
+*
+  100 IF(ISPSPN.EQ.0) GO TO 200
+      MDE=MULDSS+MULDSP+MULESS+MULESP
+      IF(ICOUNT.NE.0) GO TO 401
+  400 IF(MDE.NE.0 .AND. IFULL.NE.0) WRITE(IWRITE,320) JA,JB
+      IF(MDE.NE.0) ICOUNT=3
+*
+* --- DIRECT INTEGRALS
+*
+*
+* --- IF MULDSS AND MULDSP = 0 MEANS NO =DIRECT= COEFFICIENTS
+*
+  401 IF(MULDSS.EQ.0) GO TO 22
+      L=0
+      DO 23 J=KDS1,KDS2,2
+      L=L+1
+      K=J-1
+      A=D00SNK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 23
+      IF(ICOUNT-2) 404,404,403
+  404 IF (IFULL.NE.0) WRITE(IWRITE,330) JA,JB,A,K,IAJCMP(JRHO),
+     :     IAJCMP(JSIG),IAJCMP(JRHOP),IAJCMP(JSIGP)
+      ICOUNT=3
+*     WRITE(JSC3,305) A,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(8,A,K,JRHO,JSIG,JRHOP,JSIGP,JA,JB,0)
+      GO TO 23
+  403 IF (IFULL.NE.0) WRITE(IWRITE,3) A,K,IAJCMP(JRHO),IAJCMP(JSIG),
+     :     IAJCMP(JRHOP),IAJCMP(JSIGP)
+*     WRITE(JSC3,305) A,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(8,A,K,JRHO,JSIG,JRHOP,JSIGP,JA,JB,0)
+   23 CONTINUE
+   22 IF(M1.EQ.0.OR.M2.EQ.0) GO TO 32
+      IF(MULDSP.EQ.0) GO TO 32
+      L=0
+      DO 33 J=KDS3,KDS4,2
+      L=L+1
+      K=J-1
+      A=D11SNK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 33
+      IF(ICOUNT-2) 408,408,407
+  408 IF (IFULL.NE.0) WRITE(IWRITE,330) JA,JB,A,K,IAJCMP(JSIG),
+     :     IAJCMP(JRHO),IAJCMP(JSIGP),IAJCMP(JRHOP)
+      ICOUNT=3
+*     WRITE(JSC3,305) A,K,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(8,A,K,JSIG,JRHO,JSIGP,JRHOP,JA,JB,0)
+      GO TO 33
+  407 IF (IFULL.NE.0) WRITE(IWRITE,3) A,K,IAJCMP(JSIG),IAJCMP(JRHO),
+     :     IAJCMP(JSIGP),IAJCMP(JRHOP)
+*     WRITE(JSC3,305) A,K,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(8,A,K,JSIG,JRHO,JSIGP,JRHOP,JA,JB,0)
+   33 CONTINUE
+*
+* --- EXCHANGE INTEGRALS
+*
+   32 IF(M1.EQ.0.AND.M2.EQ.0) GO TO 200
+*
+* --- IF MULESS AND MULESP = 0 MEANS NO =EXCHANGE= COEFFICIENTS
+*
+      IF(MULESS.EQ.0) GO TO 42
+      L=0
+      DO 43 J=KES1,KES2,2
+      L=L+1
+      K=J-1
+      A=E01SNK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 43
+      IF(ICOUNT-2) 412,412,411
+  412 IF (IFULL.NE.0) WRITE(IWRITE,330) JA,JB,A,K,IAJCMP(JRHO),
+     :     IAJCMP(JSIG),IAJCMP(JSIGP),IAJCMP(JRHOP)
+      ICOUNT=3
+*     WRITE(JSC3,305) A,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(8,A,K,JRHO,JSIG,JSIGP,JRHOP,JA,JB,0)
+      GO TO 43
+  411 IF (IFULL.NE.0) WRITE(IWRITE,3) A,K,IAJCMP(JRHO),IAJCMP(JSIG),
+     :     IAJCMP(JSIGP),IAJCMP(JRHOP)
+*     WRITE(JSC3,305) A,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
+*    :     IAJCMP(JSIGP),IAJCMP(JRHOP),JB
+      CALL SAVE(8,A,K,JRHO,JSIG,JSIGP,JRHOP,JA,JB,0)
+   43 CONTINUE
+   42 IF(MULESP.EQ.0) GO TO 200
+      L=0
+      DO 54 J=KES3,KES4,2
+      L=L+1
+      K=J-1
+      A=E10SNK(L)*SIGNCH
+      IF(DABS(A).LT.EPS) GO TO 54
+      IF(ICOUNT-2) 416,416,415
+  416 IF (IFULL.NE.0) WRITE(IWRITE,330) JA,JB,A,K,IAJCMP(JSIG),
+     :     IAJCMP(JRHO),IAJCMP(JRHOP),IAJCMP(JSIGP)
+      ICOUNT=3
+*     WRITE(JSC3,305) A,K,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(8,A,K,JSIG,JRHO,JRHOP,JSIGP,JA,JB,0)
+      GO TO 54
+  415 IF (IFULL.NE.0) WRITE(IWRITE,3) A,K,IAJCMP(JSIG),IAJCMP(JRHO),
+     :     IAJCMP(JRHOP),IAJCMP(JSIGP)
+*     WRITE(JSC3,305) A,K,IAJCMP(JSIG),IAJCMP(JRHO),JA,
+*    :     IAJCMP(JRHOP),IAJCMP(JSIGP),JB
+      CALL SAVE(8,A,K,JSIG,JRHO,JRHOP,JSIGP,JA,JB,0)
+   54 CONTINUE
+200   RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	R E D U C E
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE REDUCE(IRHO,ISIG,IRHOP,ISIGP,LESSEN)
+      DIMENSION LEAVE(10)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+*
+*     THIS SUBROUTINE REMOVES SPECTATOR SINGLET  S  SHELLS WHICH HAVE
+*     NO EFFECT IN ANGULAR OR SPIN INTEGRALS
+*
+*     LMIN  INITIALLY SET LARGE
+*
+      LMIN=99
+      ICOUNT=0
+      DO 1 I=1,IHSH
+*
+*     NO INTERACTING SHELL MAY BE REMOVED
+*
+      IF(I.EQ.IRHO.OR.I.EQ.ISIG.OR.I.EQ.IRHOP.OR.I.EQ.ISIGP) GO TO 2
+*
+*     IF A SPECTATOR SHELL HAS   SINGLET  S   COUPLING ON BOTH SIDES OF
+*     THE MATRIX ELEMENT,  IT MAY, IN GENERAL,  BE REMOVED, AS IT HAS NO
+*     EFFECT IN FANO
+*
+      IF(J1QN1(I,1).EQ.0.AND.J1QN2(I,1).EQ.0) GO TO 7
+    2 ICOUNT=ICOUNT+1
+      LEAVE(ICOUNT)=I
+      GO TO 1
+    7 IF(LJ(I).GE.LMIN) GO TO 1
+      LMIN=LJ(I)
+      ILMIN=I
+    1 CONTINUE
+      IF(ICOUNT.EQ.IHSH) GO TO 8
+*
+*     IF A CHANGE IN THE COMMON BLOCK  MEDEFN  IS TO BE MADE,
+*     ITS PRESENT SITUATION MUST BE PRESERVED BY A CALL OF MEKEEP
+*
+      CALL MEKEEP(IRHO,ISIG,IRHOP,ISIGP)
+*
+*     IF ONLY ONE SHELL WOULD BE LEFT IN THIS WAY, THE ONE, DESTINED
+*     FOR REMOVAL, WITH THE LOWEST L-VALUE MUST BE RETAINED TO DEFINE A
+*     COUPLING
+*
+      IF(ICOUNT.EQ.1) GO TO 10
+*
+* --- MODIFY THE COMMON BLOCK  MEDEFN
+*
+   13 CONTINUE
+      DO 3 I=1,ICOUNT
+      J=LEAVE(I)
+      IF(J.EQ.IRHO) IRHO=I
+      IF(J.EQ.ISIG) ISIG=I
+      IF(J.EQ.IRHOP) IRHOP=I
+      IF(J.EQ.ISIGP) ISIGP=I
+      NJ(I)=NJ(J)
+      LJ(I)=LJ(J)
+      NOSH1(I)=NOSH1(J)
+      NOSH2(I)=NOSH2(J)
+      DO 4 K=1,3
+      J1QN1(I,K)=J1QN1(J,K)
+      J1QN2(I,K)=J1QN2(J,K)
+    4 CONTINUE
+    3 CONTINUE
+      ISUBH=IHSH-1
+      DO 5 I=2,ICOUNT
+      J=LEAVE(I)
+      II=ICOUNT+I-1
+      IJ=ISUBH+J
+      DO 6 K=1,3
+      J1QN1(II,K)=J1QN1(IJ,K)
+      J1QN2(II,K)=J1QN2(IJ,K)
+    6 CONTINUE
+    5 CONTINUE
+      IHSH=ICOUNT
+      GO TO 20
+*
+*     THIS SITUATION ONLY OCCURS IF IRHO=ISIG=IRHOP=ISIGP
+*
+   10 J=LEAVE(1)
+      II=MIN0(J,ILMIN)
+      LEAVE(1)=II
+      LEAVE(2)=J+ILMIN-II
+      ICOUNT=2
+      GO TO 13
+   20 IF(IBUG2.LE.1) GO TO 9
+      I2HSH=IHSH+IHSH-1
+      WRITE(IWRITE,35)
+      WRITE(IWRITE,40) ((J1QN1(J,K),K=1,3),J=1,I2HSH)
+      WRITE(IWRITE,36)
+      WRITE(IWRITE,40) ((J1QN2(J,K),K=1,3),J=1,I2HSH)
+   35 FORMAT(/35H NEW DEFINITION OF COUPLING SCHEMES/38H FOR THIS SET OF
+     :  RHO, SIG, RHOP, SIGP//10X,48H L.H.S. OF HAMILTONIAN MATRIX ELEME
+     :NT DEFINED BY)
+   36 FORMAT(10X,48H R.H.S. OF HAMILTONIAN MATRIX ELEMENT DEFINED BY)
+   40 FORMAT(10X,6H J1QN ,9(I5,2I3))
+*
+*     LESSEN = 0   IF NO CHANGE IN MEDEFN
+*            = 1   OTHERWISE
+*
+    9 LESSEN=1
+      RETURN
+    8 LESSEN=0
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*        R E L R E C
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE RELREC(IRHO,ISIG,IRHOP,ISIGP,PICFP,ICALL,KK1,KK2,
+     :                          KK3,KK4)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+*
+      PARAMETER(KFL1=60,KFL2=12,
+     :          KFL6=120,KFL7=150,KFL8=120,KFL9=40,KFLW=20,
+     :          KFLS=12,KFLN=10,KFLV=40)
+      LOGICAL FREE,FAILSD,FAILSE,FAILAD,FAILAE
+C
+C
+      LOGICAL SMVRSD,SMVRSE,SMVRAD,SMVRAE
+      DIMENSION K6SD(KFL6),K7SD(KFL7),K8SD(KFL8),K9SD(KFL9),KWSD(6,KFLW)
+     +          ,LDELSD(KFLW,2),SMVRSD(KFL1)
+      DIMENSION K6SE(KFL6),K7SE(KFL7),K8SE(KFL8),K9SE(KFL9),KWSE(6,KFLW)
+     +          ,LDELSE(KFLW,2),SMVRSE(KFL1)
+      DIMENSION K6AD(KFL6),K7AD(KFL7),K8AD(KFL8),K9AD(KFL9),KWAD(6,KFLW)
+     +          ,LDELAD(KFLW,2),SMVRAD(KFL1)
+      DIMENSION K6AE(KFL6),K7AE(KFL7),K8AE(KFL8),K9AE(KFL9),KWAE(6,KFLW)
+     +          ,LDELAE(KFLW,2),SMVRAE(KFL1)
+C
+      DIMENSION J6PSD(KFLV),J7PSD(KFLV),J8PSD(KFLV),J9PSD(KFLV),
+     + JWRDSD(6,KFLW),
+     + NBJSD(KFLN),NB6JSD(KFLN),K6CPSD(KFLN),K7CPSD(KFLN),K8CPSD(KFLN),
+     + K9CPSD(KFLN),JSM6SD(KFLS),JSM4SD(KFLS,KFLW),JSM5SD(KFLS,KFLW),
+     + IN6JSD(KFLW)
+      DIMENSION J6PSE(KFLV),J7PSE(KFLV),J8PSE(KFLV),J9PSE(KFLV),
+     + JWRDSE(6,KFLW),
+     + NBJSE(KFLN),NB6JSE(KFLN),K6CPSE(KFLN),K7CPSE(KFLN),K8CPSE(KFLN),
+     + K9CPSE(KFLN),JSM6SE(KFLS),JSM4SE(KFLS,KFLW),JSM5SE(KFLS,KFLW),
+     + IN6JSE(KFLW)
+      DIMENSION J6PAD(KFLV),J7PAD(KFLV),J8PAD(KFLV),J9PAD(KFLV),
+     + JWRDAD(6,KFLW),
+     + NBJAD(KFLN),NB6JAD(KFLN),K6CPAD(KFLN),K7CPAD(KFLN),K8CPAD(KFLN),
+     + K9CPAD(KFLN),JSM6AD(KFLS),JSM4AD(KFLS,KFLW),JSM5AD(KFLS,KFLW),
+     + IN6JAD(KFLW)
+      DIMENSION J6PAE(KFLV),J7PAE(KFLV),J8PAE(KFLV),J9PAE(KFLV),
+     + JWRDAE(6,KFLW),
+     + NBJAE(KFLN),NB6JAE(KFLN),K6CPAE(KFLN),K7CPAE(KFLN),K8CPAE(KFLN),
+     + K9CPAE(KFLN),JSM6AE(KFLS),JSM4AE(KFLS,KFLW),JSM5AE(KFLS,KFLW),
+     + IN6JAE(KFLW)
+C
+*  
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/DEMULT/DMULT0(12,3),DMULT1(12,3),EMULT0(12,3),EMULT1(12,3),
+     :     MULDSO,MULESO
+      COMMON/DESSNK/D00SNK(12),D11SNK(12),E01SNK(12),E10SNK(12),
+     :     MULDSS,MULDSP,MULESS,MULESP
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/SSKLIM/KDS1,KDS2,KDS3,KDS4,KES1,KES2,KES3,KES4
+      COMMON/SSMULT/DMULS0(12),DMULS1(12),EMULS0(12),EMULS1(12)
+      COMMON/XATION/AMULT(15),BMULT(15),KD1,KD2,KE1,KE2,MULTD,MULTE
+*
+  301 FORMAT(24H DIRECT SPIN INTEGRALS =,2F12.6)
+  302 FORMAT(26H EXCHANGE SPIN INTEGRALS =,2F12.6)
+  303 FORMAT(3H J1,I6,36I3)
+  304 FORMAT(26H DIRECT ANGULAR INTEGRAL =,F12.6)
+  305 FORMAT(28H EXCHANGE ANGULAR INTEGRAL =,F12.6)
+  306 FORMAT(5X,8H PICFP =,F12.6)
+  307 FORMAT(5X,9H SPIND0 =,F12.6,5X,9H SPIND1 =,F12.6)
+  308 FORMAT(5X,9H SPINE0 =,F12.6,5X,9H SPINE1 =,F12.6)
+  309 FORMAT(5X,9H DMULTN =,6F12.6)
+  310 FORMAT(5X,9H EMULTN =,6F12.6)
+*
+*
+* --- THIS SUBROUTINE EVALUATES THE DIRECT AND EXCHANGE SPIN AND
+*     ORBITAL RECOUPLING COEFFICIENTS FOR THE SPIN-OTHER-ORBIT
+*     AND/OR SPIN-SPIN INTERACTION(S)
+*
+*
+      M21=M17+1
+*
+* --- SET UP J1, J2, AND J3 ARRAYS
+*
+*  FIRST OF ALL, THE  RECOUPLING COEFFICIENT
+*
+*
+*
+      IF (ICALL.EQ.0) THEN
+         I = 2
+         CALL SETJ1(I,IRHO,ISIG,IRHOP,ISIGP,
+     :        			  0,0,KK1,KK2,KK3,KK4)
+         MLIMIT=M16
+         NJ1S=M8+11
+         NJ23S=M18+1
+         IF(IBUG2-1) 113,113,116
+  116    IF(IBUG3.NE.1) WRITE(IWRITE,303) (J1(J),J=1,MLIMIT)
+  113    CONTINUE
+         FAILAD = .FALSE.
+         FAILAE = .FALSE.
+C
+         FREE(M17) = .TRUE.
+         FREE(M21) = .TRUE.
+         FREE(NJ1S) = .TRUE.
+		 J1(M17) = 1
+		 J1(M21) = 1
+		 J1(NJ1S) = 1
+         J23REL=0
+         CALL J23SP1(J23REL)
+cdbg print*,(j1(ik),ik=1,nj1s)
+cdbg print*,' free in relrec = ',(free(ik),ik=1,nj1s)
+         CALL NJGRAF(ANG,FAILAD)
+cdbg print*,' ang = ',ang,' failad = ',failad
+C ICI KNJAD
+          CALL KNJ(J6CAD,J7CAD,J8CAD,J9CAD,JWCAD,K6AD,K7AD,K8AD,K9AD,
+     +             KWAD,JDELAD,LDELAD,SMVRAD,MPAD,
+     +             J6PAD,J7PAD,J8PAD,J9PAD,JWRDAD,NLSMAD,NBJAD,NB6JAD,
+     +             K6CPAD,K7CPAD,K8CPAD,K9CPAD,JSM4AD,JSM5AD,JSM6AD,
+     +             IN6JAD)
+         CALL J23SP1(J23REL)
+         CALL MODREL
+         CALL NJGRAF(ANG,FAILAE)
+cdbg print*,' ang = ',ang,' failae = ',failae
+C ICI KNJAE
+          CALL KNJ(J6CAE,J7CAE,J8CAE,J9CAE,JWCAE,K6AE,K7AE,K8AE,K9AE,
+     +             KWAE,JDELAE,LDELAE,SMVRAE,MPAE,
+     +             J6PAE,J7PAE,J8PAE,J9PAE,JWRDAE,NLSMAE,NBJAE,NB6JAE,
+     +             K6CPAE,K7CPAE,K8CPAE,K9CPAE,JSM4AE,JSM5AE,JSM6AE,
+     +             IN6JAE)
+      ENDIF
+*
+      I=3
+      CALL SETJ1(I,IRHO,ISIG,IRHOP,ISIGP,0,0,KK1,KK2,
+     :                                KK3,KK4)		       
+      J1(M15)=2
+      J1(M16)=2
+      MLIMIT=M16
+      NJ1S = M8+11
+      NJ23S = M18+1
+*
+      IF(IBUG2-1) 13,13,16
+   16 IF(IBUG3.NE.1) WRITE(IWRITE,303) (J1(J),J=1,MLIMIT)
+   13 CONTINUE
+      IF (ICALL.EQ.0) THEN
+         ICALL=1
+             FAILSD = .FALSE.
+             FAILSE = .FALSE.
+             FREE(M17) = .TRUE.
+             FREE(M21) = .TRUE.
+             FREE(NJ1S) = .TRUE.
+		     J1(M17) = 1
+		     J1(M21) = 1
+		     J1(NJ1S) = 1
+             J23REL=0
+             CALL J23SP1(J23REL)
+cdbg  print*,(j1(ik),ik=1,nj1s)
+cdbg  print*,' free in relrec = ',(free(ik),ik=1,nj1s)
+cdbg  print*,((j2(ik,jk),jk=1,3),ik=1,nj23s-1)
+cdbg  print*,((j3(ik,jk),jk=1,3),ik=1,nj23s-1)
+cdbg  print*,' I will probably be looping...'
+         CALL NJGRAF(SPNDT1,FAILSD)
+cdbg  print*,' I am not looping here...'
+cdbg  print*,' spndt1 = ',spndt1,' failsd = ',failsd
+C ICI KNJSD
+          CALL KNJ(J6CSD,J7CSD,J8CSD,J9CSD,JWCSD,K6SD,K7SD,K8SD,K9SD,
+     +             KWSD,JDELSD,LDELSD,SMVRSD,MPSD,
+     +             J6PSD,J7PSD,J8PSD,J9PSD,JWRDSD,NLSMSD,NBJSD,NB6JSD,
+     +             K6CPSD,K7CPSD,K8CPSD,K9CPSD,JSM4SD,JSM5SD,JSM6SD,
+     +             IN6JSD)
+         CALL J23SP1(J23REL)
+         CALL MODREL
+         CALL NJGRAF(SPNDT1,FAILSE)
+cdbg  print*,' spndt1 = ',spndt1,' failse = ',failse
+C ICI KNJSE
+          CALL KNJ(J6CSE,J7CSE,J8CSE,J9CSE,JWCSE,K6SE,K7SE,K8SE,K9SE,
+     +             KWSE,JDELSE,LDELSE,SMVRSE,MPSE,
+     +             J6PSE,J7PSE,J8PSE,J9PSE,JWRDSE,NLSMSE,NBJSE,NB6JSE,
+     +             K6CPSE,K7CPSE,K8CPSE,K9CPSE,JSM4SE,JSM5SE,JSM6SE,
+     +             IN6JSE)
+      ENDIF
+*
+* --- SPIN-OTHER-ORBIT INTERACTION
+*
+      IF(ISOORB.EQ.0) GO TO 100
+*
+* --- EVALUATION OF THE DIRECT SPIN RECOUPLING COEFFICIENTS
+*
+      IF(KD1-KD2) 1,1,2
+    2 SPNDT1=ZERO
+      SPNDT2=ZERO
+      GO TO 3
+    1 IF (.NOT.FAILSD) THEN
+      J1(M17)=3
+      J1(M21)=1
+      J1(NJ1S)=3
+C ICI GENSUMSD
+          CALL GENSUM(J6CSD,J7CSD,J8CSD,J9CSD,JWCSD,K6SD,K7SD,K8SD,K9SD,
+     +               KWSD,JDELSD,LDELSD,SMVRSD,MPSD,
+     +               J6PSD,J7PSD,J8PSD,J9PSD,JWRDSD,NLSMSD,NBJSD,NB6JSD,
+     +               K6CPSD,K7CPSD,K8CPSD,K9CPSD,JSM4SD,JSM5SD,JSM6SD,
+     +               IN6JSD,SPNDT1)
+      J1(M17)=1
+      J1(M21)=3
+C ICI GENSUMSD
+          CALL GENSUM(J6CSD,J7CSD,J8CSD,J9CSD,JWCSD,K6SD,K7SD,K8SD,K9SD,
+     +               KWSD,JDELSD,LDELSD,SMVRSD,MPSD,
+     +               J6PSD,J7PSD,J8PSD,J9PSD,JWRDSD,NLSMSD,NBJSD,NB6JSD,
+     +               K6CPSD,K7CPSD,K8CPSD,K9CPSD,JSM4SD,JSM5SD,JSM6SD,
+     +               IN6JSD,SPNDT2)
+      ELSE
+         SPNDT1 = ZERO
+         SPNDT2 = ZERO
+      END IF
+    3 IF(IBUG2.GT.0) WRITE(IWRITE,301) SPNDT1,SPNDT2
+*
+* --- MULTIPLY SPIN RECOUPLING COEFFICIENTS BY PRODUCT OF
+*     FRACTIONAL PARENTAGE COEFFICIENTS
+*
+      SPIND0=(SPNDT1+SPNDT2+SPNDT2)*PICFP
+      SPIND1=(SPNDT1+SPNDT1+SPNDT2)*PICFP
+*
+* --- EVALUATION OF THE EXCHANGE SPIN RECOUPLING COEFFICIENTS
+*
+*
+* --- IF M1=0=M2 THE EXCHANGE SPIN RECOUPLING COEFFICIENT HAS ZERO
+*     COEFFICIENT.  THERE IS THEN NO POINT IN CALCULATING THIS
+*     COEFFICIENT AND SPNEX1 AND SPNEX2 ARE SET ZERO
+*
+      IF(M1.NE.0.OR.M2.NE.0) GO TO 4
+    7 SPNEX1=ZERO
+      SPNEX2=ZERO
+      GO TO 5
+    4 IF(KE1-KE2) 6,6,7
+    6 CONTINUE
+*
+* --- MODIFY J2 AND J3 ARRAYS TO CALCULATE THE EXCHANGE SPIN
+*     RECOUPLING COEFFICIENT
+*
+      IF (.NOT.FAILSE) THEN
+      J1(M17)=3
+      J1(M21)=1
+      J1(NJ1S)=3
+C ICI GENSUMSE
+          CALL GENSUM(J6CSE,J7CSE,J8CSE,J9CSE,JWCSE,K6SE,K7SE,K8SE,K9SE,
+     +               KWSE,JDELSE,LDELSE,SMVRSE,MPSE,
+     +               J6PSE,J7PSE,J8PSE,J9PSE,JWRDSE,NLSMSE,NBJSE,NB6JSE,
+     +               K6CPSE,K7CPSE,K8CPSE,K9CPSE,JSM4SE,JSM5SE,JSM6SE,
+     +               IN6JSE,SPNEX1)
+      J1(M17)=1
+      J1(M21)=3
+C ICI GENSUMSE
+          CALL GENSUM(J6CSE,J7CSE,J8CSE,J9CSE,JWCSE,K6SE,K7SE,K8SE,K9SE,
+     +               KWSE,JDELSE,LDELSE,SMVRSE,MPSE,
+     +               J6PSE,J7PSE,J8PSE,J9PSE,JWRDSE,NLSMSE,NBJSE,NB6JSE,
+     +               K6CPSE,K7CPSE,K8CPSE,K9CPSE,JSM4SE,JSM5SE,JSM6SE,
+     +               IN6JSE,SPNEX2)
+      ELSE
+         SPNEX1 = ZERO
+         SPNEX2 = ZERO
+      END IF
+    5 IF(IBUG2.GT.0) WRITE(IWRITE,302) SPNEX1,SPNEX2
+*
+* --- MULTIPLY SPIN RECOUPLING COEFFICIENTS BY PRODUCT OF
+*     FRACTIONAL PARENTAGE COEFFICIENTS
+*
+      SPINE0=(SPNEX1+SPNEX2+SPNEX2)*PICFP
+      SPINE1=(SPNEX2+SPNEX1+SPNEX1)*PICFP
+*
+* --- IF THE DIRECT AND EXCHANGE SPIN RECOUPLING COEFFICIENTS ARE
+*     ZERO,  WE NEED NOT CALCULATE THE CORRESPONDING ORBITAL RECOUPLING
+*     COEFFICIENTS
+*
+      IF(DABS(SPIND0).LT.EPS.AND.DABS(SPIND1).LT.EPS.AND.DABS(SPINE0).LT
+     :     .EPS.AND.DABS(SPINE1).LT.EPS) GO TO 100
+      I=2
+      CALL SETJ1(I,IRHO,ISIG,IRHOP,ISIGP,2,2,KK1,KK2,KK3,KK4)
+      NJ1S=M8+11
+      NJ23S=M18+1
+      IF(IBUG2-1) 17,17,18
+   18 IF(IBUG3.NE.1) WRITE(IWRITE,303) (J1(J),J=1,MLIMIT)
+*
+* --- EVALUATION OF THE DIRECT ORBITAL RECOUPLING COEFFICIENTS
+*
+*
+* --- IF THE DIRECT SPIN RECOUPLING COEFFICIENT IS ZERO, WE NEED NOT
+*     CALCULATE THE CORRESPONDING ORBITAL RECOUPLING COEFFICIENT
+*
+   17 IF(DABS(SPIND0).LT.EPS.AND.DABS(SPIND1).LT.EPS) GO TO 19
+      IF (FAILAD) GO TO 19
+      L=0
+      DO 20 J=KD1,KD2,2
+*
+* --- CONSIDER ALL ALLOWED K-VALUES
+*
+      N=0
+      L=L+1
+      K=J-1
+      JI=J+2
+      DO 21 JJ=J,JI
+      N=N+1
+      I=JJ-2
+      ICS=I+K+1
+      IF(I.LE.0.AND.K.EQ.0) GO TO 21
+      J1(M17)=I+I+1
+      J1(M21)=K+K+1
+cdbg  print*,' in do 20,before 1 call gensum , j1 = '
+cdbg  print*,(j1(ik),ik=1,nj1s)
+C ICI GENSUMAD
+          CALL GENSUM(J6CAD,J7CAD,J8CAD,J9CAD,JWCAD,K6AD,K7AD,K8AD,K9AD,
+     +               KWAD,JDELAD,LDELAD,SMVRAD,MPAD,
+     +               J6PAD,J7PAD,J8PAD,J9PAD,JWRDAD,NLSMAD,NBJAD,NB6JAD,
+     +               K6CPAD,K7CPAD,K8CPAD,K9CPAD,JSM4AD,JSM5AD,JSM6AD,
+     +               IN6JAD,ANGDIR)
+      IF(IBUG2.GT.0) WRITE(IWRITE,304) ANGDIR
+      DMULT0(L,N)=DMULT0(L,N)+ANGDIR*SPIND0*(-ONE)**ICS
+      IF(I.NE.K) GO TO 22
+      DMULT1(L,N)=DMULT1(L,N)+ANGDIR*SPIND1
+      GO TO 121
+   22 CONTINUE
+      J1(M17)=K+K+1
+      J1(M21)=I+I+1
+cdbg  print*,' in do 20,before 2 call gensum , j1 = '
+cdbg  print*,(j1(ik),ik=1,nj1s)
+C ICI GENSUMAD
+          CALL GENSUM(J6CAD,J7CAD,J8CAD,J9CAD,JWCAD,K6AD,K7AD,K8AD,K9AD,
+     +               KWAD,JDELAD,LDELAD,SMVRAD,MPAD,
+     +               J6PAD,J7PAD,J8PAD,J9PAD,JWRDAD,NLSMAD,NBJAD,NB6JAD,
+     +               K6CPAD,K7CPAD,K8CPAD,K9CPAD,JSM4AD,JSM5AD,JSM6AD,
+     +               IN6JAD,ANGDIR)
+      IF(IBUG2.GT.0) WRITE(IWRITE,304) ANGDIR
+      DMULT1(L,N)=DMULT1(L,N)+ANGDIR*SPIND1
+*
+* --- MULDSO=1 WHEN A DIRECT INTEGRAL COEFFICIENT HAS BEEN CALCULATED
+*     FOR USE, SEE RADWTS
+*
+  121 MULDSO=1
+   21 CONTINUE
+   20 CONTINUE
+*
+* --- EVALUATION OF THE EXCHANGE ORBITAL RECOUPLING COEFFICIENTS
+*
+*
+* --- IF THE EXCHANGE SPIN RECOUPLING COEFFICIENT IS ZERO, WE NEED NOT
+*     CALCULATE THE CORRESPONDING ORBITAL RECOUPLING COEFFICIENT
+*
+   19 IF(DABS(SPINE0).LT.EPS.AND.DABS(SPINE1).LT.EPS) GO TO 99
+      IF(M1.EQ.0.AND.M2.EQ.0) GO TO 99
+*
+* --- CONSIDER ALL ALLLOWED K-VALUES
+*
+      IF(KE1.GT.KE2 .OR. FAILAE) GO TO 99
+      L=0
+      DO 30 J=KE1,KE2,2
+      N=0
+      L=L+1
+      K=J-1
+      JI=J+2
+      DO 31 JJ=J,JI
+      N=N+1
+      I=JJ-2
+      ICS=I+K+1
+      IF(I.LE.0.AND.K.EQ.0) GO TO 31
+*
+* --- MODIFY J2 AND J3 ARRAYS TO CALCULATE THE EXCHANGE ORBITAL
+*     RECOUPLING COEFFICIENT
+*
+      J1(M17)=I+I+1
+      J1(M21)=K+K+1
+C ICI GENSUMAE
+          CALL GENSUM(J6CAE,J7CAE,J8CAE,J9CAE,JWCAE,K6AE,K7AE,K8AE,K9AE,
+     +               KWAE,JDELAE,LDELAE,SMVRAE,MPAE,
+     +               J6PAE,J7PAE,J8PAE,J9PAE,JWRDAE,NLSMAE,NBJAE,NB6JAE,
+     +               K6CPAE,K7CPAE,K8CPAE,K9CPAE,JSM4AE,JSM5AE,JSM6AE,
+     +               IN6JAE,ANGEX)
+      IF(IBUG2.GT.0) WRITE(IWRITE,305) ANGEX
+      EMULT0(L,N)=EMULT0(L,N)-ANGEX*SPINE0*(-ONE)**ICS
+      IF(I.NE.K) GO TO 32
+      EMULT1(L,N)=EMULT1(L,N)-ANGEX*SPINE1
+      GO TO 131
+   32 CONTINUE
+      J1(M17)=K+K+1
+      J1(M21)=I+I+1
+C ICI GENSUMAE
+          CALL GENSUM(J6CAE,J7CAE,J8CAE,J9CAE,JWCAE,K6AE,K7AE,K8AE,K9AE,
+     +               KWAE,JDELAE,LDELAE,SMVRAE,MPAE,
+     +               J6PAE,J7PAE,J8PAE,J9PAE,JWRDAE,NLSMAE,NBJAE,NB6JAE,
+     +               K6CPAE,K7CPAE,K8CPAE,K9CPAE,JSM4AE,JSM5AE,JSM6AE,
+     +               IN6JAE,ANGEX)
+      IF(IBUG2.GT.0) WRITE(IWRITE,305) ANGEX
+      EMULT1(L,N)=EMULT1(L,N)-ANGEX*SPINE1
+*
+* --- MULESO=1 WHEN AN EXCHANGE INTEGRAL COEFFICIENT HAS BEEN CALCULATED
+*     FOR USE,  SEE RADWTS
+*
+  131 MULESO=1
+   31 CONTINUE
+   30 CONTINUE
+*
+* --- SPIN-SPIN INTERACTION
+*
+   99 IF(ISPSPN.EQ.0) RETURN
+      I=3
+      CALL SETJ1(I,IRHO,ISIG,IRHOP,ISIGP,2,2,KK1,KK2,KK3,KK4)
+      J1(M15)=2
+      J1(M16)=2
+      NJ1S=M8+11
+      NJ23S=M18+1
+      IF(IBUG2-1) 100,100,33
+   33 IF(IBUG3.NE.1) WRITE(IWRITE,303)(J1(J),J=1,MLIMIT)
+*
+* --- EVALUATION OF THE DIRECT  SPIN RECOUPLING COEFFICIENT
+*
+  100 IF(ISPSPN.EQ.0) RETURN
+      IF(KDS1.LE.KDS2.OR.KDS3.LE.KDS4) GO TO 101
+      SPINDT=ZERO
+      GO TO 102
+  101 IF (.NOT.FAILSD) THEN
+      J1(M17)=3
+      J1(M21)=3
+      J1(NJ1S)=5
+C ICI GENSUMSD
+          CALL GENSUM(J6CSD,J7CSD,J8CSD,J9CSD,JWCSD,K6SD,K7SD,K8SD,K9SD,
+     +               KWSD,JDELSD,LDELSD,SMVRSD,MPSD,
+     +               J6PSD,J7PSD,J8PSD,J9PSD,JWRDSD,NLSMSD,NBJSD,NB6JSD,
+     +               K6CPSD,K7CPSD,K8CPSD,K9CPSD,JSM4SD,JSM5SD,JSM6SD,
+     +               IN6JSD,SPINDT)
+      ELSE
+         SPINDT = ZERO
+      END IF
+  102 IF(IBUG2.GT.0) WRITE(IWRITE,301) SPINDT
+*
+* --- MULTIPLY SPIN RECOUPLING COEFFICIENT BY PRODUCT OF FRACTIONAL
+*     PARENTAGE COEFFICIENTS
+*
+      SPINDT=SPINDT*PICFP
+*
+* --- EVALUATION OF THE EXCHANGE SPIN RECOUPLING COEFFICIENT
+*
+*
+* --- IF M1=0=M2 THE EXCHANGE SPIN RECOUPLING COEFFICIENT HAS ZERO
+*     COEFFICIENT.  THERE IS THEN NO POINT IN CALCULATING THIS
+*     COEFFICIENT AND SPINEX IS SET ZERO
+*
+      IF(M1.NE.0.OR.M2.NE.0) GO TO 103
+  106 SPINEX=ZERO
+      GO TO 104
+  103 IF(KES1.LE.KES2.OR.KES3.LE.KES4) GO TO 105
+      GO TO 106
+  105 CONTINUE
+*
+* --- MODIFY J2 AND J3 ARRAYS TO CALCULATE THE EXCHANGE SPIN RECOUPLING
+*     COEFFICIENT
+*
+      IF (.NOT.FAILSE) THEN
+      J1(M17)=3
+      J1(M21)=3
+      J1(NJ1S)=5
+C ICI GENSUMSE
+          CALL GENSUM(J6CSE,J7CSE,J8CSE,J9CSE,JWCSE,K6SE,K7SE,K8SE,K9SE,
+     +               KWSE,JDELSE,LDELSE,SMVRSE,MPSE,
+     +               J6PSE,J7PSE,J8PSE,J9PSE,JWRDSE,NLSMSE,NBJSE,NB6JSE,
+     +               K6CPSE,K7CPSE,K8CPSE,K9CPSE,JSM4SE,JSM5SE,JSM6SE,
+     +               IN6JSE,SPINEX)
+      ELSE
+         SPINEX = ZERO
+      END IF
+  104 IF(IBUG2.GT.0) WRITE(IWRITE,302) SPINEX
+*
+* --- MULTIPLY SPIN RECOUPLING COEFFICIENT BY PRODUCTS OF FRACTIONAL
+*     PARENTAGE COEFFICIENTS
+*
+      SPINEX=SPINEX*PICFP
+*
+* --- IF THE DIRCET AND EXCHANGE SPIN RECOUPLING COEFFICIENTS ARE
+*     ZERO, WE NEED NOT CALCULATE THE CORRESPONDING ORBITAL RECOUPLING
+*     COEFFICIENTS
+*
+      IF(DABS(SPINDT).LT.EPS.AND.DABS(SPINEX).LT.EPS) RETURN
+      I=2
+      CALL SETJ1(I,IRHO,ISIG,IRHOP,ISIGP,2,2,KK1,KK2,KK3,KK4)
+      NJ1S=M8+11
+      NJ23S=M18+1
+      IF(IBUG2-1) 34,34,35
+   35 IF(IBUG3.NE.1) WRITE(IWRITE,303) (J1(J),J=1,MLIMIT)
+*
+* --- EVALUATION OF THE DIRECT RECOUPLING COEFFICIENTS
+*
+*
+* --- IF THE DIRECT SPIN RECOUPLING COEFFICIENT IS ZERO, WE NEED NOT
+*     CALCULATE THE CORRESPONDING ORBITAL RECOUPLING COEFFICIENT
+*
+   34 IF(DABS(SPINDT).LT.EPS) GO TO 50
+      IF(KDS1.GT.KDS2 .OR. FAILAD) GO TO 40
+      L=0
+*
+* --- CONSIDER ALL ALLOWED K-VALUES
+*
+      DO 36 J=KDS1,KDS2,2
+      K=J-1
+      L=L+1
+      J1(M17)=K+K+5
+      J1(M21)=K+K+1
+C ICI GENSUMAD
+          CALL GENSUM(J6CAD,J7CAD,J8CAD,J9CAD,JWCAD,K6AD,K7AD,K8AD,K9AD,
+     +               KWAD,JDELAD,LDELAD,SMVRAD,MPAD,
+     +               J6PAD,J7PAD,J8PAD,J9PAD,JWRDAD,NLSMAD,NBJAD,NB6JAD,
+     +               K6CPAD,K7CPAD,K8CPAD,K9CPAD,JSM4AD,JSM5AD,JSM6AD,
+     +               IN6JAD,ANGDIR)
+      IF(IBUG2.GT.0) WRITE(IWRITE,304) ANGDIR
+      DMULS0(L)=DMULS0(L)+ANGDIR*SPINDT
+*
+* --- MULDSS=1 WHEN A DIRECT RECOUPLING COEFFICIENT HAS BEEN CALCULATED
+*     FOR USE, SEE RADWTS
+*
+      MULDSS=1
+   36 CONTINUE
+   40 IF(KDS3.GT.KDS4) GO TO 50
+      IF(M1.EQ.0.OR.M2.EQ.0 .OR. FAILAD) GO TO 50
+      L=0
+*
+* --- CONSIDER ALL ALLOWED K-VALUES
+*
+      DO 37 J=KDS3,KDS4,2
+      K=J-1
+      L=L+1
+      J1(M17)=K+K+1
+      J1(M21)=K+K+5
+C ICI GENSUMAD
+          CALL GENSUM(J6CAD,J7CAD,J8CAD,J9CAD,JWCAD,K6AD,K7AD,K8AD,K9AD,
+     +               KWAD,JDELAD,LDELAD,SMVRAD,MPAD,
+     +               J6PAD,J7PAD,J8PAD,J9PAD,JWRDAD,NLSMAD,NBJAD,NB6JAD,
+     +               K6CPAD,K7CPAD,K8CPAD,K9CPAD,JSM4AD,JSM5AD,JSM6AD,
+     +               IN6JAD,ANGDIR)
+      IF(IBUG2.GT.0) WRITE(IWRITE,304) ANGDIR
+      DMULS1(L)=DMULS1(L)+ANGDIR*SPINDT
+*
+* --- MULDSP=1 WHEN A DIRECT RECOUPLING COEFFICIENT HAS BEEN CALCULATED
+*
+      MULDSP=1
+   37 CONTINUE
+*
+* --- EVALUATION OF THE EXCHANGE ORBITAL RECOUPLING COEFFICIENTS
+*
+*
+* --- IF THE EXCHANGE SPIN RECOUPLING COEFFICIENT IS ZERO, WE NEED NOT
+*     CALCULATE THE CORRESPONDING ORBITAL RECOUPLING COEFFICIENT
+*
+   50 IF(DABS(SPINEX).LT.EPS) RETURN
+      IF(KES1.GT.KES2.OR.M2.EQ.0 .OR. FAILAE) GO TO 60
+      L=0
+*
+* --- CONSIDER ALL ALLOWED K-VALUES
+*
+      DO 51 J=KES1,KES2,2
+      K=J-1
+      L=L+1
+*
+* --- MODIFY J2 AND J3 ARRAYS TO CALCULATE THE EXCHANGE ORBITAL
+*     RECOUPLING COEFFICIENT
+*
+      J1(M17)=K+K+5
+      J1(M21)=K+K+1
+C ICI GENSUMAE
+          CALL GENSUM(J6CAE,J7CAE,J8CAE,J9CAE,JWCAE,K6AE,K7AE,K8AE,K9AE,
+     +               KWAE,JDELAE,LDELAE,SMVRAE,MPAE,
+     +               J6PAE,J7PAE,J8PAE,J9PAE,JWRDAE,NLSMAE,NBJAE,NB6JAE,
+     +               K6CPAE,K7CPAE,K8CPAE,K9CPAE,JSM4AE,JSM5AE,JSM6AE,
+     +               IN6JAE,ANGEX)
+      IF(IBUG2.GT.0) WRITE(IWRITE,305) ANGEX
+      EMULS0(L)=EMULS0(L)-ANGEX*SPINEX
+*
+* --- MULESS=1 WHEN AN EXCHANGE RECOUPLING COEFFICIENT HAS BEEN
+*     CALCULATED FOR USE, SEE RADWTS
+*
+      MULESS=1
+   51 CONTINUE
+   60 IF(KES3.GT.KES4.OR.M1.EQ.0 .OR. FAILAE) RETURN
+      L=0
+*
+* --- CONSIDER ALL ALLOWED K-VALUES
+*
+      DO 61 J=KES3,KES4,2
+      K=J-1
+      L=L+1
+*
+* --- MODIFY J2 AND J3 ARRAYS TO CALCULATE THE EXCHANGE ORBITAL
+*     RECOUPLING COEFFICIENT
+*
+      J1(M17)=K+K+1
+      J1(M21)=K+K+5
+C ICI GENSUMAE
+          CALL GENSUM(J6CAE,J7CAE,J8CAE,J9CAE,JWCAE,K6AE,K7AE,K8AE,K9AE,
+     +               KWAE,JDELAE,LDELAE,SMVRAE,MPAE,
+     +               J6PAE,J7PAE,J8PAE,J9PAE,JWRDAE,NLSMAE,NBJAE,NB6JAE,
+     +               K6CPAE,K7CPAE,K8CPAE,K9CPAE,JSM4AE,JSM5AE,JSM6AE,
+     +               IN6JAE,ANGEX)
+      IF(IBUG2.GT.0) WRITE(IWRITE,305) ANGEX
+      EMULS1(L)=EMULS1(L)-ANGEX*SPINEX
+*
+* --- MULESP=1 WHEN AN EXCHANGE RECOUPLING COEFFICIENT HAS BEEN
+*     CALCULATED FOR USE, SEE RADWTS
+*
+      MULESP=1
+   61 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	R K W T S
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE RKWTS(ICOUNT,JA,JB,INCL)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON /CLOSED/B1ELC(4),NCLOSD,IAJCLD(NWD),LJCLSD(NWD),IBK
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      LOGICAL INCL
+*
+*
+*****:******************************************************************
+*
+*
+* --- THE ROUTINE RKWTS, TOGETHER WITH THOSE CALL BY IT, HAS BEEN
+*     MODIFIED TO EVALUATE THE FOLLOWING INTERACTIONS
+*
+*     IREL.EQ.0  THE NON-RELATIVISTIC HAMILTONIAN
+*
+*     IREL.NE.0  THE RELATIVISTIC OPERATORS OF THE BREIT-PAULI
+*     HAMILTONIAN
+*
+*
+*****:******************************************************************
+*
+*
+*     THE MATRIX ELEMENT OF THE TWO-ELECTRON POTENTIAL BETWEEN TWO
+*     STATES (LABELLED 1 AND 2) MAY BE EXPRESSED AS A SUM OF WEIGHTED
+*     RK (SLATER) INTEGRALS.  THIS SUBROUTINE, TOGETHER WITH THOSE
+*     CALLED BY IT, DETERMINES THESE WEIGHTS, WHICH ARISE FROM AN
+*     INTEGRATION OVER THE ANGULAR AND SPIN CO-ORDINATES
+*     FOR DETAILS, SEE   U. FANO, PHYS. REV.,140,A67,(1965)
+*
+*     THE =INTERACTING= SHELLS ARE DESIGNATED  IRHO,ISIG,IRHOP,ISIGP.
+*     THE FIRST TWO REFER TO THE L.H.S. OF     (PSI/V/PSIP)     , WHILE
+*     THE SECOND TWO REFER TO THE R.H.S.  FOR DIAGONAL AND CERTAIN OFF-
+*     DIAGONAL MATRIX ELEMENTS, THESE MAY NOT BE UNIQUE, AND EACH
+*     POSSIBILITY MUST BE CONSIDERED IN TURN
+*     THE CONDITION =IRHO .LE. ISIG ,  IRHOP .LE. ISIGP=  IS TO BE
+*     SATISFIED
+*
+   61 FORMAT(//10X,7H IRHO =,I3,4X,7H ISIG =,I3,4X,8H IRHOP =,I3,3X,8H I
+     :SIGP =,I3)
+*
+* === DETERMINE THE INTERACTING SHELLS AS FAR AS POSSIBLE BY
+*     CONSIDERING THE DIFFERENCES BETWEEN PSI AND PSIP
+*
+      IZERO = 0
+      IX=0
+      IRHO=0
+      ISIG=0
+      IRHOP=0
+      ISIGP=0
+      DO 4 J=1,IHSH
+      N=NOSH1(J)-NOSH2(J)
+      IF(IABS(N)-2) 5,5,1
+    5 IF(N) 7,4,6
+    6 IF(N-1) 4,8,9
+*
+* --- TO SATISFY =IRHO.LE.ISIG=  IRHO IS SET FIRST,  ETC.
+*
+    8 IF(IRHO) 10,10,11
+   10 IRHO = J
+      GO TO 12
+   11 ISIG=J
+   12 IX =IX+1
+      GO TO 4
+    9 IRHO=J
+      IX=IX+2
+      GO TO 4
+    7 IF(N+1) 13,14,4
+   14 IF(IRHOP) 15,15,16
+   15 IRHOP = J
+      GO TO 17
+   16 ISIGP=J
+   17 IX=IX+1
+      GO TO 4
+   13 IRHOP=J
+      IX=IX+2
+    4 CONTINUE
+*
+*     IX MEASURES THE TOTAL NUMBER OF ELECTRONS IN EITHER CONFIGURATION
+*     WHICH DO NOT OCCUR IN THE OTHER.  THEN IF  IX  IS GREATER THAN 4,
+*     ORTHOGONALITY OF THE ORBITALS PREVENTS A NON-ZERO MATRIX ELEMENT.
+*     IF  IX  IS LESS THAN 4, THEN WE DIVIDE IX BY 2 AND NOW IX MEASURES
+*     THE NUMBER OF ELECTRONS WHICH HAVE BEEN CHANGED IN GOING FROM PSI
+*     TO PSIP.  IF NOW IX=0, WE HAVE A DIAGONAL MATRIX ELEMENT.  RHO AND
+*     SIG MAY TAKE ON ANY VALUES LESS THAN IHSH.  IF IX=1, ONE INTER-
+*     ACTING SHELL ON EACH SIDE IS FIXED, WHILE THE OTHER MAY VARY.  IF
+*     IX=2, ALL INTERACTING SHELLS ARE DETERMINED
+*
+      IF(IX-4) 18,18,1
+   18 IX=IX/2
+      IF(IX-1) 19,20,21
+*
+* === UNIQUE SPECIFICATION OF INTERACTING SHELLS
+*
+   21 IF(ISIG) 22,23,22
+   23 ISIG=IRHO
+   22 IF(ISIGP) 24,25,24
+   25 ISIGP = IRHOP
+   24 IF(IBUG2.GT.0) WRITE(IWRITE,61) IRHO,ISIG,IRHOP,ISIGP
+*
+* --- CALCULATE COEFFICIENTS OF SLATER INTEGRALS
+*     AND/OR THE COEFFICIENTS OF THE RADIAL INTEGRALS FOR THE
+*     RELATIVISTIC OPERATORS
+*
+   70 CALL REDUCE(IRHO,ISIG,IRHOP,ISIGP,LESSEN)
+      CALL SETM
+   75 CALL FANO(IRHO,ISIG,IRHOP,ISIGP,JA,JB,INCL)
+      IF(LESSEN.NE.0) CALL MEREST(IRHO,ISIG,IRHOP,ISIGP)
+      IF(IREL.NE.1) CALL PRNTWT(IRHO,ISIG,IRHOP,ISIGP)
+      IF(IREL.NE.0.AND.INCL) CALL RADWTS(IRHO,ISIG,IRHOP,ISIGP,ICOUNT)
+      RETURN
+*
+* === ONE INTERACTING SHELL SPECIFIED ON EACH SIDE. SUMMATION OVER OTHER
+*
+   20 IRSTO=IRHO
+      IRPSTO=IRHOP
+      DO 125 K1=1,IHSH
+      IF(NOSH1(K1)) 26,125,26
+   26 ISIG=K1
+      IF(NOSH2(K1)) 29,125,29
+   29 ISIGP = K1
+      IRHO=IRSTO
+      IRHOP=IRPSTO
+*
+*     ORTHOGONALITY OF THE ORBITALS REQUIRES THAT THE VARYING INTER-
+*     ACTING SHELL BE THE SAME ON BOTH SIDES OF THE MATRIX ELEMENT
+*
+* --- IRHO.LE.ISIG,   IRHOP.LE.ISIGP
+*
+      IF(IRHO-ISIG) 27,127,227
+  227 ISTO=IRHO
+      IRHO=ISIG
+      ISIG = ISTO
+      GO TO 27
+  127 IF(NOSH1(ISIG)-1) 125,125,27
+   27 IF(IRHOP-ISIGP) 30,130,31
+   31 ISTO=IRHOP
+      IRHOP = ISIGP
+      ISIGP = ISTO
+      GO TO 30
+  130 IF(NOSH2(ISIGP)-1) 125,125,30
+   30 IF(IBUG2.GT.0) WRITE(IWRITE,61) IRHO,ISIG,IRHOP,ISIGP
+      LC = 4*LJ(K1)+2
+      IF (NOSH1(K1) .NE. LC) GO TO 71
+      IF (IREL .NE. 1 .AND. IELST .NE. 0) CALL CLSHEL(IRSTO,IRPSTO,K1)
+      IF (IREL.NE.0.AND.INCL) CALL CLSHBW(IRSTO,IRPSTO,K1)
+      GO TO 125
+*
+* --- CALCULATE COEFFICIENTS OF SLATER INTEGRALS
+*     AND/OR THE COEFFICIENTS OF THE RADIAL INTEGRALS FOR THE
+*     RELATIVISTIC OPERATORS
+*
+   71 CALL REDUCE(IRHO,ISIG,IRHOP,ISIGP,LESSEN)
+      CALL SETM
+   76 CALL FANO(IRHO,ISIG,IRHOP,ISIGP,JA,JB,INCL)
+      IF(LESSEN.NE.0) CALL MEREST(IRHO,ISIG,IRHOP,ISIGP)
+      IF(IREL.NE.1) CALL PRNTWT(IRHO,ISIG,IRHOP,ISIGP)
+      IF(IREL.NE.0.AND.INCL) CALL RADWTS(IRHO,ISIG,IRHOP,ISIGP,ICOUNT)
+  125 CONTINUE
+      IF (NCLOSD.NE.0 .AND. IFULL.NE.0) THEN
+         IF (IREL.NE.1 .AND. IELST.NE.0) CALL CLSHEL(IRSTO,IRPSTO,IZERO)
+         IF(IREL.NE.0.AND.INCL) CALL CLSHBW(IRSTO,IRPSTO,IZERO)
+      END IF
+      RETURN
+*
+* === NO INTERACTING SHELLS SPECIFIED
+*     SUMMATION OVER ALL POSSIBLE COMBINATIONS
+*     IN THIS CASE, ORTHOGONALITY OF ORBITALS PRECLUDES ALL CASES
+*     EXCEPT  IRHO=IRHOP    AND    ISIG=ISIGP
+*
+   19 DO 32 K1=1,IHSH
+      IF(NOSH1(K1)) 36,32,36
+   36 ISIG=K1
+      DO 33 K2=1,K1
+      IF(NOSH1(K2)) 37,33,37
+   37 IRHO=K2
+      IF(IRHO-ISIG) 50,51,50
+   51 IF(NOSH1(ISIG)-1) 33,33,50
+   50 IRHOP=IRHO
+      ISIGP=ISIG
+      IF(IBUG2.GT.0) WRITE(IWRITE,61) IRHO,ISIG,IRHOP,ISIGP
+*
+* --- CALCULATE COEFFICIENTS OF SLATER INTEGRALS
+*     AND/OR/THE COEFFICIENTS OF THE RADIAL INTEGRALS FOR THE
+*     RELATIVISTIC OPERATORS
+*
+    2 N1 = NOSH1(IRHO)
+      N2 = NOSH1(ISIG)
+      L1 = 4*LJ(IRHO) + 2
+      L2 = 4*LJ(ISIG) + 2
+      IF(JA.NE.JB) GO TO 78
+      IF(N1.NE.L1.AND.N2.NE.L2) GO TO 78
+      IF (IREL.NE.0 .AND. (N1.NE.L1.OR.N2.NE.L2) .AND.
+     :    INCL) CALL BLMWAT(IRHO,ISIG)
+      IF (IREL.NE.1) CALL USEEAV(IRHO,ISIG)
+      GO TO 33
+   78 CONTINUE
+      CALL REDUCE(IRHO,ISIG,IRHOP,ISIGP,LESSEN)
+      CALL SETM
+   77 CALL FANO(IRHO,ISIG,IRHOP,ISIGP,JA,JB,INCL)
+      IF(LESSEN.NE.0) CALL MEREST(IRHO,ISIG,IRHOP,ISIGP)
+      IF(IREL.NE.1) CALL PRNTWT(IRHO,ISIG,IRHOP,ISIGP)
+      IF(IREL.NE.0.AND.INCL) CALL RADWTS(IRHO,ISIG,IRHOP,ISIGP,ICOUNT)
+   33 CONTINUE
+   32 CONTINUE
+      IF (NCLOSD .NE. 0 .AND. IFULL .NE. 0) THEN
+         IF (IREL.NE.1 .AND. IELST.NE.0) CALL CLSHEL(IZERO,IZERO,IZERO)
+         IF (IREL.NE.0.AND.INCL) CALL CLSHBW(IZERO,IZERO,IZERO)
+      END IF
+    1 RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	R M E C L L
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE RMECLL(L,LP,K,K1,RMECL)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+*
+*     EVALUATES THE REDUCED MATRIX ELEMENT  (L//(C(K1)*L)(K)//LP)
+*
+      RMECL=ZERO
+      IF(LP.EQ.0) RETURN
+      ALP=DFLOAT(LP)
+      RMEL=DSQRT(ALP*(ALP+ONE)*(ALP+ALP+ONE))
+      L2=L+L
+      LP2=LP+LP
+      K12=K1+K1
+      IL2=2
+      K2=K+K
+      AK12=K12+ONE
+      ISIGN=LP-L+K
+      CALL GRACAH(LP2,LP2,K12,K2,IL2,L2,RACAH)
+      RMECL=RACAH*RMEL*DSQRT(AK12)*(-ONE)**ISIGN
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S E T J 1
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SETJ1(K,IRHO,ISIG,IRHOP,ISIGP,ITST1,ITST2,K1,K2,K3,K4)
+      PARAMETER(KFL1=60,KFL2=12)
+      LOGICAL FREE
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/NJLJ/NRHO,LRHO,NSIG,LSIG,NRHOP,LRHOP,NSIGP,LSIGP
+      COMMON/INTERM/J1BAR1(10,3),J1BAR2(10,3),J1TLD1(3),J1TLD2(3)
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+*
+* === SETS J1 ARRAYS FOR DIRECT INTEGRAL CALLS OF NJSYM
+*
+   14 FORMAT('  J1:  ',36I3)
+   15 FORMAT('FREE:  ',36I3)
+      DO 1 J=1,IHSH
+      J1(J)=J1BAR1(J,K)
+    1 CONTINUE
+      DO 2 J=M4,M6
+      J1(J)=J1QN1(J,K)
+    2 CONTINUE
+      DO 3 J=M7,M8
+      J1(J)=J1QN2(J-M3,K)
+    3 CONTINUE
+      J1(M10)=J1QN1(ISIG,K)
+      J1(M12)=J1QN2(ISIGP,K)
+      IF(M1) 4,5,4
+    4 J1(M9)=J1QN1(IRHO,K)
+      GO TO 6
+    5 J1(M9)=J1TLD1(K)
+    6 IF(M2) 7,8,7
+    7 J1(M11)=J1QN2(IRHOP,K)
+      GO TO 9
+    8 J1(M11)=J1TLD2(K)
+*
+*     K=2  IMPLIES ANGULAR TERMS   ,   K=3  IMPLIES SPIN TERMS
+*
+    9 IF(K-2) 11,11,10
+   10 J1(M13)=2
+      J1(M14)=2
+      MLIMIT=M14
+      NJ1S=M14
+      NJ23S=M5
+      GO TO 12
+   11 J1(M13)=2*LRHO+1
+      J1(M14)=2*LSIG+1
+      J1(M15)=2*LRHOP+1
+      J1(M16)=2*LSIGP+1
+      MLIMIT=M16
+      NJ1S=M17
+      NJ23S=M18
+   12 IF(IBUG2-1) 13,13,16
+*
+*     PRINT-OUT OF VALUES IN NJSYM  IF IBUG3=1
+*
+   16 IF(IBUG3.NE.1) WRITE(IWRITE,14)(J1(J),J=1,MLIMIT)
+C
+C     IF ITST1.NE.2 OR ITST2.NE.2 THEN NJGRAF IS BEING CALLED, SO SET
+C     THE ELEMENTS OF THE FREE ARRAY.
+C
+C
+   13 IF ((ITST1.NE.2).OR.(ITST2.NE.2)) THEN
+C
+      DO 21 J=1,MLIMIT
+          FREE(J)=.FALSE.
+   21 CONTINUE
+      IF(K1.NE.1) FREE(IRHO)=.TRUE.
+      IF(M1.EQ.0) THEN
+          IF(K2.NE.1) FREE(M9)=.TRUE.
+      ELSE
+          IF(K2.NE.1) FREE(ISIG)=.TRUE.
+      ENDIF
+      IF(M2.EQ.0.AND.K4.NE.1) FREE(M11)=.TRUE.
+C
+C     PRINT-OUT OF VALUES IN NJGRAF  IF IBUG3=1
+C
+      IF(IBUG1.GT.1) THEN
+          IF(IBUG3.NE.1) WRITE(IWRITE,15)(FREE(J),J=1,MLIMIT)
+      ENDIF
+C
+      ENDIF
+C
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S E T M
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SETM
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+*
+* --- SET CONSTANTS USEFUL IN INNER SUBROUTINES
+*
+      M3=IHSH-1
+      M4=IHSH+1
+      M5=IHSH+2
+      M6=2*IHSH-1
+      M7=M6+1
+      M8=M3+M6
+      M9=M8+1
+      M10=M8+2
+      M11=M8+3
+      M12=M8+4
+      M13=M8+5
+      M14=M8+6
+      M15=M8+7
+      M16=M8+8
+      M17=M8+9
+      M18=IHSH+3
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S E T U P
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SETUP(JA,JB)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH(10,2),J1QN(19,3,2),IJFUL(10)
+*
+*     NOTICE THE DIFFERENT NAMES IN THE COMMON BLOCK MEDEFN  -  WE
+*      STORE NOSH1(I=1,10) AS NOSH((I=1,10),1) AND NOSH2(I=1,10) AS
+*     NOSH((I=1,10),2)   AND USE THE FACT THAT NOSH1 AND NOSH2 WILL THEN
+*     BE EQUIVALENT TO THE SINGLE 2-DIMENSIONAL ARRAY NOSH.  SIMILARLY
+*     FOR J1QN
+*
+* === GENERATES THE ARRAYS  NJ,LJ - DEFINING THE QUANTUM NUMBERS OF THE
+*     SHELLS,   NOSH - DEFINING THE OCCUPATION OF THE SHELLS,  J1QN -
+*     DEFINING THE COUPLING OF THE SHELLS,   FOR EACH OF THE TWO
+*     CONFIGURATIONS CONSIDERED.    ONLY THOSE SHELLS OCCURRING IN AT
+*     LEAST ONE CONFIGURATION ARE INCLUDED.
+*                   AT LEAST TWO SHELLS MUST BE CONSIDERED OCCUPIED.
+*     THUS (1S)**2    HELIUM  MUST BE TREATED AS ,E.G., (1S)**2(2S)**0
+*     THE SIZE OF THE ARRAYS HERE CALCULATED IS ARRANGED TO BE NO
+*     GREATER THAN IS NECESSARY TO INCLUDE ALL ORBITALS WHICH ARE
+*     DEEMED TO BE OCCUPIED IN EITHER OR BOTH OF THE CONFIGURATIONS
+*     JA,JB
+*
+* --- INITIALIZE BASIC QUANTITIES - (I1+1) RUNS OVER 1,MAXORB,  IHSH IS
+*     THE CURRENT VALUE OF THE HIGHEST OCCUPIED SHELL YET CONSIDERED,
+*     WHILE I2HSH=2*IHSH-1
+*
+*
+*     INITIALIZE J1 AND J2
+*
+      J1=0
+      J2=0
+      I1=0
+      IHSH=0
+      I2HSH=-1
+      IA=NOCCSH(JA)
+      IB=NOCCSH(JB)
+*
+* --- TEST ON WHETHER LIMIT OF I1 HAS BEEN REACHED
+*
+    1 IF(I1-MAXORB) 101,100,100
+*
+* --- INCREASE BASIC QUANTITIES
+*
+  101 I1=I1+1
+      I3=IHSH+1
+      I5=I2HSH+I3
+*
+* --- IS THE SHELL I1 OCCUPIED IN JA
+*
+      DO 2 J=1,IA
+      IF(I1-NOCORB(J,JA)) 2,3,2
+    2 CONTINUE
+      NA=1
+      GO TO 4
+    3 NA=2
+      J1=J
+*
+* --- IS THE SHELL I1 OCCUPIED IN JB
+*
+    4 DO 5 J=1,IB
+      IF(I1-NOCORB(J,JB)) 5,6,5
+    5 CONTINUE
+      NB=1
+      GO TO 7
+    6 NB=2
+      J2=J
+*
+*     IF THE SHELL I1 IS NOT OCCUPIED IN EITHER JA OR JB, IGNORE THE
+*     SHELL, DO NOT INCREASE IHSH, AND CONSIDER NEXT SHELL BY INCREASING
+*     I1
+*
+    7 IF(NA-1) 8,8,9
+    8 IF(NB-1) 1,1,9
+*
+* --- IF THE SHELL I1 IS OCCUPIED IN EITHER JA OR JB -
+*     (1)   IF IHSH.GT.1, THEN ALREADY AT LEAST TWO SHELLS AND THE
+*     RESULTING COUPLINGS HAVE BEEN STORED. WE MUST THUS MAKE ROOM FOR
+*     THE QUANTUM NUMBERS OF THIS NEW SHELL BETWEEN THE QUANTUM NUMBERS
+*     OF THE PREVIOUS SHELLS AND THE QUANTUM NUMBERS OF THE INTERMEDIATE
+*     COUPLINGS OF THE CONFIGURATIONS.  THUS THE LATTER SET ARE =MOVED
+*     ALONG= TO MAKE ROOM FOR THE NEW SHELL
+*     (2)   IF IHSH.LE.1, THERE ARE NO INTERMEDIATE COUPLING QUANTUM
+*     NUMBERS, AND SO THERE IS NOTHING TO MOVE
+*
+    9 IF(IHSH-1) 11,11,10
+   10 DO 12 I=1,2
+      DO 13 J=I3,I2HSH
+      I4=I5-J
+      DO 14 K=1,3
+      J1QN(I4+1,K,I)=J1QN(I4,K,I)
+   14 CONTINUE
+   13 CONTINUE
+   12 CONTINUE
+   11 IHSH=I3
+      I2HSH=I2HSH+2
+      NC=NA
+      I=1
+      IC=J1
+      JC=JA
+*
+* --- FIRST CONSIDER THE L.H.S. (I=1) OF THE MATRIX ELEMENT.  NC=1 MEANS
+*     UNOCCUPIED, REPRESENTED BY A DUMMY SINGLET S SHELL, AND THE
+*     ADDITIONAL SET OF COUPLING QUANTUM NUMBERS WILL BE THE SAME AS THE
+*     LAST SET OF COUPLING QUANTUM NUMBERS ALREADY OBTAINED.
+*     NC=2 MEANS OCCUPIED.  THEN ALL THE NEW QUANTUM NUMBERS (BOTH FOR
+*     THE SHELL AND FOR THE COUPLING OF THIS SHELL TO THE RESULTANT OF
+*     THE PREVIOUS ONES) ARE DEFINED IN THE CORRESPONDING J1QNRD ARRAY.
+*     NOSH - THE NUMBER OF ELECTRONS IN THIS SHELL, IS DEFINED BY THE
+*     APPROPRIATE ENTRY IN NELCSH .  THE R.H.S. IS THEN CONSIDERED
+*     SIMILARLY (I=2)
+*
+   25 GO TO (15,16),NC
+   15 NOSH(IHSH,I)=0
+      J1QN(IHSH,1,I)=0
+      J1QN(IHSH,2,I)=1
+      J1QN(IHSH,3,I)=1
+      IF(IHSH-2) 22,18,19
+   18 J1QN(3,1,I)=0
+      J1QN(3,2,I)=J1QN(1,2,I)
+      J1QN(3,3,I)=J1QN(1,3,I)
+      GO TO 22
+   19 DO 27 K=1,3
+      J1QN(I2HSH,K,I)=J1QN(I2HSH-1,K,I)
+   27 CONTINUE
+      GO TO 22
+   16 NOSH(IHSH,I)=NELCSH(IC,JC)
+      JD = J1QNRD(IC,JC)
+      J1QN(IHSH,1,I)=MOD(JD,64)
+      JD = JD/64
+      J1QN(IHSH,2,I) = MOD(JD,64)
+      J1QN(IHSH,3,I) = JD/64
+*
+*     IS THIS THE FIRST OCCUPIED SHELL OF EITHER CONFIGURATION. IF SO,
+*     THEN THERE ARE NO INTERMEDIATE COUPLINGS TO CONSIDER AT THIS STAGE
+*
+      IF(IHSH .GT. 1) THEN
+*
+*     IS THIS THE FIRST OCCUPIED SHELL OF THIS CONFIGURATION, THOUGH NOT
+*     THE FIRST OF THE OTHER CONFIGURATION.  IF SO, THE INTERMEDIATE
+*     COUPLING FORMED HAS THE SAME  L,S  VALUES AS THIS OCCUPIED SHELL,
+*     SINCE WE COUPLE THE SHELL TO A DUMMY SINGLET S.
+*
+         IF(IC .LE.1) THEN 
+	    I2 = 1
+         ELSE
+	    I2 = NOCCSH(JC)+IC-1
+         END IF
+         JD = J1QNRD(I2,JC)
+         IF (IC .LE. 1) THEN
+	    J1QN(I2HSH,1,I) = 0
+         ELSE
+	    J1QN(I2HSH,1,I) = MOD(JD,64)
+         END IF
+         JD = JD/64
+         J1QN(I2HSH,2,I) = MOD(JD, 64)
+         J1QN(I2HSH,3,I) = JD/64
+      END IF
+*
+*     SENIORITY SET (ARBITRARILY) ZERO FOR INTERMEDIATE COUPLING
+*
+   22 IF(I-2) 23,24,24
+   23 NC=NB
+      I=2
+      IC=J2
+      JC=JB
+      GO TO 25
+*
+* --- SET THE NJ AND LJ VALUES OF THE OCCUPIED SHELLS
+*
+   24 NJ(IHSH)=NJCOMP(I1)
+      LJ(IHSH)=LJCOMP(I1)
+      IJFUL(IHSH)=I1
+*
+* --- RETURN TO 1  TO SEE IF MAXORB HAS BEEN REACHED
+*
+      GO TO 1
+  100 RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S K L I M
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SKLIM(LET)
+*
+*
+* --- DETERMINES RANGES OF K FOR DIRECT AND EXCHANGE INTEGRALS FOR
+*     THE SPIN-SPIN INTERACTION
+*
+*
+      COMMON/NJLJ/NRHO,LRHO,NSIG,LSIG,NRHOP,LRHOP,NSIGP,LSIGP
+      COMMON/SSKLIM/KDS1,KDS2,KDS3,KDS4,KES1,KES2,KES3,KES4
+*
+      LET=1
+      LA=2
+      CALL KLIM(LRHO,LRHOP,LSIG,LSIGP,LA,K1,K2)
+      KDS1=K1+1
+      KDS2=K2+1
+      CALL KLIM(LSIG,LSIGP,LRHO,LRHOP,LA,K1,K2)
+      KDS3=K1+1
+      KDS4=K2+1
+      CALL KLIM(LRHO,LSIGP,LSIG,LRHOP,LA,K1,K2)
+      KES1=K1+1
+      KES2=K2+1
+      CALL KLIM(LSIG,LRHOP,LRHO,LSIGP,LA,K1,K2)
+      KES3=K1+1
+      KES4=K2+1
+      IF(KDS1.GT.KDS2.AND.KDS3.GT.KDS4.AND.KES1.GT.KES2.AND.KES3.GT.
+     :     KES4) LET=0
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S O O P A R
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SOOPAR(XMULT1)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DEMULT/DMULT0(12,3),DMULT1(12,3),EMULT0(12,3),EMULT1(12,3),
+     :     MULDSO,MULESO
+      COMMON/DENKVK/D00N2(12),D00NK(12),D00VK(12),D11N2(12),D11NK(12),
+     :     D11VK(12),E01N2(12),E01NK(12),E01VK(12),E10N2(12),E10NK(12),
+     :     E10VK(12)
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/RMEPRD/RMEDIR(15),RMEEX(15)
+      COMMON/SOORME/RMEDR0(12,3),RMEDR1(12,3),RMEEX0(12,3),RMEEX1(12,3)
+      COMMON/XATION/AMULT(15),BMULT(15),KD1,KD2,KE1,KE2,MULTD,MULTE
+*
+*
+* --- EVALUATE THE COEFFICIENTS FOR THE SPIN-OTHER-ORBIT INTERACTION
+*
+*
+*
+* --- ZEROIZE THE SPIN-OTHER-ORBIT PARAMETERS
+*
+      CALL SOOZER
+*
+      XC=XMULT1*TWO
+*
+* --- DIRECT INTEGRAL
+*
+*
+* --- IF MULDSO=0 MEANS NO =DIRECT= COEFFICIENTS
+*
+      IF(MULDSO-1) 2,1,1
+    1 L=0
+      DO 3 J=KD1,KD2,2
+      L=L+1
+      K=J-1
+*
+* --- INCLUDE MULTIPLICATIVE FACTORS COMMON TO ALL TERMS WITHIN THE
+*     FOUR-FOLD SUMMATION
+*
+      FLOAT1=DFLOAT(K+1)
+      FLOAT2=DFLOAT(K+K-1)
+      FLOAT3=DFLOAT(K+K+1)
+      FLOAT4=DFLOAT(K+K+3)
+      IF(K.EQ.0) GO TO 50
+      AN21=FLOAT3*DSQRT(FLOAT2)
+   50 AN22=-FLOAT1*DSQRT(FLOAT3)
+      ANK2=DFLOAT(K)*DSQRT(FLOAT3)
+      ANK3=-FLOAT3*DSQRT(FLOAT4)
+      AVK=DSQRT(K*FLOAT1*FLOAT3)
+      IF(K) 3,6,7
+    7 D00N2(L)=(AN21*DMULT0(L,1)*RMEDR0(L,1)+AN22*DMULT0(L,2)*RMEDR0(L,2
+     :))*XC
+    6 D00NK(L)=(ANK2*DMULT0(L,2)*RMEDR0(L,2)+ANK3*DMULT0(L,3)*RMEDR0(L,3
+     :))*XC
+      IF(K.EQ.0) GO TO 5
+      D00VK(L)=AVK*DMULT0(L,2)*RMEDIR(J)*XC
+    5 IF(M1.EQ.0.OR.M2.EQ.0) GO TO 3
+      IF(K) 3,8,9
+    9 D11N2(L)=(AN21*DMULT1(L,1)*RMEDR1(L,1)+AN22*DMULT1(L,2)*RMEDR1(L,2
+     :))*XC
+    8 D11NK(L)=(ANK2*DMULT1(L,2)*RMEDR1(L,2)+ANK3*DMULT1(L,3)*RMEDR1(L,3
+     :))*XC
+      IF(K.EQ.0) GO TO 3
+      D11VK(L)=AVK*DMULT1(L,2)*RMEDIR(J)*XC
+    3 CONTINUE
+*
+* --- EXCHANGE INTEGRAL
+*
+*
+* --- IF MULESO=0 MEANS NO =EXCHANGE= COEFFICIENTS
+*
+    2 IF(MULESO-1) 10,11,11
+   11 L=0
+      DO 12 J=KE1,KE2,2
+      L=L+1
+      K=J-1
+*
+* --- INCLUDE MULTIPLICATIVE FACTORS COMMON TO ALL TERMS WITHIN THE
+*     FOUR-FOLD SUMMATION
+*
+      FLOAT1=DFLOAT(K+1)
+      FLOAT2=DFLOAT(K+K-1)
+      FLOAT3=DFLOAT(K+K+1)
+      FLOAT4=DFLOAT(K+K+3)
+      IF(K.EQ.0) GO TO 60
+      AN21=FLOAT3*DSQRT(FLOAT2)
+   60 AN22=-FLOAT1*DSQRT(FLOAT3)
+      ANK2=DFLOAT(K)*DSQRT(FLOAT3)
+      ANK3=-FLOAT3*DSQRT(FLOAT4)
+      AVK=DSQRT(K*FLOAT1*FLOAT3)
+      IF(M2.EQ.0) GO TO 14
+      IF(K) 12,15,16
+   16 E01N2(L)=(AN21*EMULT0(L,1)*RMEEX0(L,1)+AN22*EMULT0(L,2)*RMEEX0(L,2
+     :))*XC
+   15 E01NK(L)=(ANK2*EMULT0(L,2)*RMEEX0(L,2)+ANK3*EMULT0(L,3)*RMEEX0(L,3
+     :))*XC
+      IF(K.EQ.0) GO TO 14
+      E01VK(L)=AVK*EMULT0(L,2)*RMEEX(J)*XC
+   14 IF(M1.EQ.0) GO TO 12
+      IF(K) 12,17,18
+   18 E10N2(L)=(AN21*EMULT1(L,1)*RMEEX1(L,1)+AN22*EMULT1(L,2)*RMEEX1(L,2
+     :))*XC
+   17 E10NK(L)=(ANK2*EMULT1(L,2)*RMEEX1(L,2)+ANK3*EMULT1(L,3)*RMEEX1(L,3
+     :))*XC
+      IF(K.EQ.0) GO TO 12
+      E10VK(L)=AVK*EMULT1(L,2)*RMEEX(J)*XC
+   12 CONTINUE
+   10 RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S O O R E D
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SOORED
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DEMULT/DMULT0(12,3),DMULT1(12,3),EMULT0(12,3),EMULT1(12,3),
+     :     MULDSO,MULESO
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/NJLJ/NRHO,LRHO,NSIG,LSIG,NRHOP,LRHOP,NSIGP,LSIGP
+      COMMON/RMEPRD/RMEDIR(15),RMEEX(15)
+      COMMON/SOORME/RMEDR0(12,3),RMEDR1(12,3),RMEEX0(12,3),RMEEX1(12,3)
+      COMMON/XATION/AMULT(15),BMULT(15),KD1,KD2,KE1,KE2,MULTD,MULTE
+*
+*
+*     THIS SUBROUTINE ZEROIZES MULTIPLYING FACTORS FOR ALLOWED K-VALUES
+*     FOR THE SPIN-OTHER-ORBIT INTERACTION.  THE LOWEST KD1 AND KE1
+*     VALUES ARE ALWAYS ALLOWED (UNLESS THEY ARE GREATER THAN KD2 AND
+*     KE2 RESPECTIVELY).  ALLOWED K-VALUES  THEN STEP UP BY 2 TO SATISFY
+*     THE EVEN CONDITION OF THE REDUCED MATRIX ELEMENTS, WHICH ARE THEN
+*     CALCULATED AND STORED
+*
+*
+* --- DIRECT INTEGRALS
+*
+      IF(KD1-KD2) 1,1,2
+    1 L=0
+      DO 3 J=KD1,KD2,2
+      RMEP=RMEDIR(J)
+      N=0
+      L=L+1
+      K=J-1
+      J2=J+2
+      DO 4 JJ=J,J2
+      N=N+1
+      I=JJ-2
+      DMULT0(L,N)=ZERO
+      DMULT1(L,N)=ZERO
+      RMEDR0(L,N)=ZERO
+      RMEDR1(L,N)=ZERO
+      IF(LRHOP.EQ.0.AND.LSIGP.EQ.0) GO TO 4
+      IF(I.LE.0.AND.K.EQ.0) GO TO 4
+*
+* --- EPSILON=ZERO, EPSILONP=ZERO,  /EPSILON-EPSILONP/=ZERO
+*
+      IF(LRHOP.EQ.0) GO TO 5
+      CALL RMECLL(LRHO,LRHOP,K,I,RMECL)
+      RMEDR0(L,N)=RMECL*RMEP
+    5 IF(M1.EQ.0.OR.M2.EQ.0) GO TO 4
+*
+* --- EPSILON=ONE, EPSILONP=ONE ,  /EPSILON-EPSILONP/=ZERO
+*
+      IF(LSIGP.EQ.0) GO TO 4
+      CALL RMECLL(LSIG,LSIGP,K,I,RMECL)
+      RMEDR1(L,N)=RMECL*RMEP
+    4 CONTINUE
+    3 CONTINUE
+*
+* --- EXCHANGE INTEGTALS
+*
+    2 IF(M1.EQ.0.AND.M2.EQ.0) RETURN
+      L=0
+      IF(KE1-KE2) 6,6,7
+    6 DO 8 J=KE1,KE2,2
+      RMEP=RMEEX(J)
+      N=0
+      L=L+1
+      K=J-1
+      J2=J+2
+      DO 9 JJ=J,J2
+      N=N+1
+      I=JJ-2
+      EMULT0(L,N)=ZERO
+      EMULT1(L,N)=ZERO
+      RMEEX0(L,N)=ZERO
+      RMEEX1(L,N)=ZERO
+      IF(LRHOP.EQ.0.AND.LSIGP.EQ.0) GO TO 9
+      IF(I.LE.0.AND.K.EQ.0) GO TO 9
+      IF(M2.EQ.0.OR.LSIGP.EQ.0) GO TO 10
+*
+* --- EPSILON=ZERO, EPSILONP=ONE,  /EPSILON-EPSILONP/=ONE
+*
+      CALL RMECLL(LRHO,LSIGP,K,I,RMECL)
+      RMEEX0(L,N)=RMECL*RMEP
+   10 IF(M1.EQ.0.OR.LRHOP.EQ.0) GO TO 9
+*
+* --- EPSILON=ONE, EPSILONP=ZERO, /EPSILON-EPSILONP/=ONE
+*
+      CALL RMECLL(LSIG,LRHOP,K,I,RMECL)
+      RMEEX1(L,N)=RMECL*RMEP
+    9 CONTINUE
+    8 CONTINUE
+    7 RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S O O Z E R
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SOOZER
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DENKVK/D00N2(12),D00NK(12),D00VK(12),D11N2(12),D11NK(12),
+     :     D11VK(12),E01N2(12),E01NK(12),E01VK(12),E10N2(12),E10NK(12),
+     :     E10VK(12)
+      COMMON/XATION/AMULT(15),BMULT(15),KD1,KD2,KE1,KE2,MULTD,MULTE
+*
+*
+* -- :EROIZE THE ARRAYS FOR THE SPIN-OTHER-ORBIT INTERACTION
+*
+*
+      L=0
+      DO 3 J=KD1,KD2,2
+      L=L+1
+      D00N2(L)=ZERO
+      D00NK(L)=ZERO
+      D00VK(L)=ZERO
+      D11N2(L)=ZERO
+      D11NK(L)=ZERO
+      D11VK(L)=ZERO
+    3 CONTINUE
+      L=0
+      DO 4 J=KE1,KE2,2
+      L=L+1
+      E01N2(L)=ZERO
+      E01NK(L)=ZERO
+      E01VK(L)=ZERO
+      E10N2(L)=ZERO
+      E10NK(L)=ZERO
+      E10VK(L)=ZERO
+    4 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S P N O R B
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SPNORB(ICOUNT,JA,JB)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      DIMENSION VSHELL(20)
+      COMMON/BLUME/ COEFN2(4),COEFNK(4),COEFVK(4)
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/SPORB/ ACMULT(NWD)
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+*
+    3 FORMAT(9H (CONFIG ,I3,12H/SO /CONFIG ,I3,1H),/35X,F14.8,11X,
+     :  4HS-O(,A3,1H,,A3,1H))
+   15 FORMAT(35X,F14.8,15X,4HS-O(,A3,1H,,A3,1H))
+  301 FORMAT(F14.8,2HZ(,A3,I3,1H,,A3,I3,1H))
+*
+*
+* --- THIS SUBROUTINE EVALUATES THE SPIN-ORBIT INTERACTION
+*
+*
+      IZOUT = 0
+      ISPIN=2
+      KA=1
+      KB=1
+      KR=-3
+      IRHO=0
+      ISIG=0
+      CALL TENSOR(KA,KB,ISPIN,IRHO,ISIG,VSHELL)
+      IF(IRHO.EQ.0) RETURN
+      IF(IRHO.EQ.ISIG) GO TO 2
+      I1=IJFUL(IRHO)
+      I2=IJFUL(ISIG)
+      LJR=LJ(IRHO)+1
+      LJS=LJ(ISIG)+1
+      A1=VSHELL(1)
+      IF(LJR.NE.LJS.OR.LJR.EQ.1) RETURN
+      ALJR=DFLOAT(LJR)
+      A4=DSQRT(ALJR*(ALJR-ONE)*(ALJR+ALJR-ONE)*THREE/TWO)
+      A5=A1*A4
+      A5=A5*TWO
+      ACMULT(1) = A5
+      IF(ICOUNT-1) 5,7,7
+    5 IF(DABS(A5).LT.EPS) RETURN
+      IF (IFULL.NE.0) WRITE(IWRITE,3) JA,JB,A5,IAJCMP(I1),IAJCMP(I2)
+*     WRITE(JSC0,301) A5,IAJCMP(I1),JA,IAJCMP(I2),JB
+      CALL SAVE(5,A5,0,0,I1,0,I2,JA,JB,0)
+    1 ICOUNT=1
+      IZOUT = 1
+      RETURN
+    7 IF(DABS(A5).LT.EPS) RETURN
+      IF (IFULL.NE.0) WRITE(IWRITE,15) A5,IAJCMP(I1),IAJCMP(I2)
+*     WRITE(JSC0,301) A5,IAJCMP(I1),JA,IAJCMP(I2),JB
+      CALL SAVE(5,A5,0,0,I1,0,I2,JA,JB,0)
+      IZOUT = 1
+      RETURN
+    2 DO 6 K=1,IHSH
+      A1=VSHELL(K)
+      I1=IJFUL(K)
+      LJR=LJ(K)+1
+      IF(LJR.EQ.1) GO TO 6
+      ALJR=DFLOAT(LJR)
+      A4=DSQRT(ALJR*(ALJR-ONE)*(ALJR+ALJR-ONE)*THREE/TWO)
+      A5=A1*A4
+      A5=A5*TWO
+      ACMULT(I1) = A5
+      IF(ICOUNT-1) 8,9,9
+    8 IF(DABS(A5).LT.EPS) GO TO 6
+      IF (IFULL.NE.0) WRITE(IWRITE,3) JA,JB,A5,IAJCMP(I1),IAJCMP(I1)
+*     WRITE(JSC0,301) A5,IAJCMP(I1),JA,IAJCMP(I1),JB
+      CALL SAVE(5,A5,0,0,I1,0,I1,JA,JB,0)
+      ICOUNT = 1
+      IZOUT = 1
+      GO TO 6
+    9 IF(DABS(A5).LT.EPS) GO TO 6
+      IF (IFULL.NE.0) WRITE(IWRITE,15) A5,IAJCMP(I1),IAJCMP(I1)
+*     WRITE(JSC0,301) A5,IAJCMP(I1),JA,IAJCMP(I1),JB
+      CALL SAVE(5,A5,0,0,I1,0,I1,JA,JB,0)
+      IZOUT = 1
+    6 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S S P A R
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SSPAR(XMULT1)
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DESSNK/D00SNK(12),D11SNK(12),E01SNK(12),E10SNK(12),
+     :     MULDSS,MULDSP,MULESS,MULESP
+      COMMON/IMAGNT/CONST,CONSOO,CONSS,ISPORB,ISOORB,ISPSPN,
+     :     IREL,ISTRICT,IZOUT,IELST,ITENPR
+      COMMON/SSKLIM/KDS1,KDS2,KDS3,KDS4,KES1,KES2,KES3,KES4
+      COMMON/SSMULT/DMULS0(12),DMULS1(12),EMULS0(12),EMULS1(12)
+      COMMON/SSRME/DRRME0(12),DRRME1(12),EXRME0(12),EXRME1(12)
+*
+      DATA FIVE/5.0D 00/
+*
+*
+* --- EVALUATE THE COEFFICIENTS FOR THE SPIN-SPIN INTERACTION
+*
+*
+*
+* --- ZEROIZE THE SPIN-SPIN PARAMETERS
+*
+      CALL SSZERO
+*
+      XC=XMULT1*DSQRT(ONE/FIVE)*THREE
+*
+* --- DIRECT INTEGRAL
+*
+*
+* --- IF MULDSS=0 MEANS NO =DIRECT= COEFFICIENTS
+*
+      IF(MULDSS-1) 2,1,1
+    1 L=0
+      DO 3 J=KDS1,KDS2,2
+      L=L+1
+      K=J-1
+*
+* --- INCLUDE MULTIPLICATIVE FACTORS COMMON TO ALL TERMS WITHIN THE
+*     FOUR-FOLD SUMMATION
+*
+      FLOAT1=DFLOAT((K+K+1)*(K+K+2)*(K+K+3)*(K+K+4)*(K+K+5))
+      DKJ=XC*DSQRT(FLOAT1)
+      D00SNK(L)=DKJ*DMULS0(L)*DRRME0(L)
+    3 CONTINUE
+*
+* --- IF MULDSP=0 MEANS NO =DIRECT= COEFFICIENTS
+*
+    2 IF(MULDSP-1) 4,5,5
+    5 L=0
+      DO 6 J=KDS3,KDS4,2
+      L=L+1
+      K=J-1
+*
+* --- INCLUDE MULTIPLICATIVE FACTORS COMMON TO ALL TERMS WITHIN THE
+*     FOUR-FOLD SUMMATION
+*
+      FLOAT1=DFLOAT((K+K+1)*(K+K+2)*(K+K+3)*(K+K+4)*(K+K+5))
+      DKJ=XC*DSQRT(FLOAT1)
+      D11SNK(L)=DKJ*DMULS1(L)*DRRME1(L)
+    6 CONTINUE
+*
+* --- EXCHANGE INTEGRAL
+*
+*
+* --- IF MULESS=0 MEANS NO =EXCHANGE= COEFFICIENTS
+*
+    4 IF(MULESS-1) 7,8,8
+    8 L=0
+      DO 9 J=KES1,KES2,2
+      L=L+1
+      K=J-1
+*
+* --- INCLUDE MULTIPLICATIVE FACTORS COMMON TO ALL TERMS WITHIN THE
+*     FOUR-FOLD SUMMATION
+*
+      FLOAT1=DFLOAT((K+K+1)*(K+K+2)*(K+K+3)*(K+K+4)*(K+K+5))
+      DKJ=XC*DSQRT(FLOAT1)
+      E01SNK(L)=DKJ*EMULS0(L)*EXRME0(L)
+    9 CONTINUE
+*
+* --- IF MULESP=0 MEANS NO =EXCHANGE= COEFFICIENTS
+*
+    7 IF(MULESP.EQ.0) RETURN
+      L=0
+      DO 10 J=KES3,KES4,2
+      L=L+1
+      K=J-1
+*
+* --- INCLUDE MULTIPLICATIVE FACTORS COMMON TO ALL TERMS WITHIN THE
+*     FOUR-FOLD SUMMATION
+*
+      FLOAT1=DFLOAT((K+K+1)*(K+K+2)*(K+K+3)*(K+K+4)*(K+K+5))
+      DKJ=XC*DSQRT(FLOAT1)
+      E10SNK(L)=DKJ*EMULS1(L)*EXRME1(L)
+   10 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S S R E D
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SSRED
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+*
+* --- THIS SUBROUTINE ZEROIZES MULTIPLYING FACTORS FOR ALLOWED K-VALUES
+*     FOR THE SPIN-SPIN INTERACTION.  THE LOWEST KDS1, KDS3, KES1 AND
+*     KES3 VALUES ARE ALWAYS ALLOWED (UNLESS THEY ARE GREATER THAN
+*     KDS2, KDS4, KES2 AND KES4 RESPECTIVELY).   ALLOWED K-VALUES THEN
+*     STEP UP BY 2 TO SATISFY THE EVEN CONDITION OF THE REDUCED MATRIX
+*     ELEMENTS WHICH ARE THEN CALCULATED AND STORED.
+*
+*
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/MVALUE/M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,M13,M14,M15,
+     :     M16,M17,M18,M19,M20
+      COMMON/NJLJ/NRHO,LRHO,NSIG,LSIG,NRHOP,LRHOP,NSIGP,LSIGP
+      COMMON/SSKLIM/KDS1,KDS2,KDS3,KDS4,KES1,KES2,KES3,KES4
+      COMMON/SSMULT/DMULS0(12),DMULS1(12),EMULS0(12),EMULS1(12)
+      COMMON/SSRME/DRRME0(12),DRRME1(12),EXRME0(12),EXRME1(12)
+*
+* --- DIRECT INTEGRALS
+*
+*
+* --- EPSILON-ZERO, EPSILONP=ZERO,  /EPSILON-EPSILONP/=ZERO
+*
+      IF(KDS1.GT.KDS2) GO TO 1
+      L=0
+      DO 5 J=KDS1,KDS2,2
+      L=L+1
+      K=J-1
+      K2=K+2
+      DMULS0(L)=ZERO
+      DRRME0(L)=RME(LRHO,LRHOP,K2)*RME(LSIG,LSIGP,K)
+    5 CONTINUE
+*
+* --- EPSILON=ONE, EPSILONP=ONE,  /EPSILON-EPSILONP/=ZERO
+*
+    1 IF(KDS3.GT.KDS4) GO TO 2
+      IF(M1.EQ.0.OR.M2.EQ.0) GO TO 2
+      L=0
+      DO 6 J=KDS3,KDS4,2
+      L=L+1
+      K=J-1
+      K2=K+2
+      DMULS1(L)=ZERO
+      DRRME1(L)=RME(LSIG,LSIGP,K2)*RME(LRHO,LRHOP,K)
+    6 CONTINUE
+*
+* --- EXCHANGE INTEGRALS
+*
+    2 IF(M1.EQ.0.AND.M2.EQ.0) RETURN
+*
+* --- EPSILON=ZERO, EPSILONP=ONE,  /EPSILON-EPSILONP/=ONE
+*
+      IF(KES1.GT.KES2.OR.M2.EQ.0) GO TO 3
+      L=0
+      DO 7 J=KES1,KES2,2
+      L=L+1
+      K=J-1
+      K2=K+2
+      EMULS0(L)=ZERO
+      EXRME0(L)=RME(LRHO,LSIGP,K2)*RME(LRHOP,LSIG,K)
+    7 CONTINUE
+*
+* --- EPSILON=ONE, EPSILONP=ZERO,  /EPSILON-EPSILONP/=ONE
+*
+    3 IF(KES3.GT.KES4.OR.M1.EQ.0) RETURN
+      L=0
+      DO 8 J=KES3,KES4,2
+      L=L+1
+      K=J-1
+      K2=K+2
+      EMULS1(L)=ZERO
+      EXRME1(L)=RME(LSIG,LRHOP,K2)*RME(LRHO,LSIGP,K)
+    8 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S S Z E R O
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SSZERO
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/DESSNK/D00SNK(12),D11SNK(12),E01SNK(12),E10SNK(12),
+     :     MULDSS,MULDSP,MULESS,MULESP
+      COMMON/SSKLIM/KDS1,KDS2,KDS3,KDS4,KES1,KES2,KES3,KES4
+*
+*
+* --- ZEROIZE THE ARRAYS FOR THE SPIN-SPIN INTERACTION
+*
+*
+      L=0
+      DO 1 I=KDS1,KDS2,2
+      L=L+1
+      D00SNK(I)=ZERO
+    1 CONTINUE
+      L=0
+      DO 2 I=KDS3,KDS4,2
+      L=L+1
+      D11SNK(I)=ZERO
+    2 CONTINUE
+      L=0
+      DO 3 I=KES1,KES2,2
+      L=L+1
+      E01SNK(I)=ZERO
+    3 CONTINUE
+      L=0
+      DO 4 I=KES3,KES4,2
+      L=L+1
+      E10SNK(I)=ZERO
+    4 CONTINUE
+      RETURN
+      END
+*
+*
+*     ------------------------------------------------------------------
+*	U S E E A V
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE USEEAV(IRHO,ISIG)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NCD=100,NCD2=2*NCD)
+*
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/DIAGNL/IDIAG,JA,JB
+      COMMON/INFORM/IREAD,IWRITE,IOUT,ISC(8)
+      COMMON/STATES/NCFG,NOCCSH(NCD2),NOCORB( 5,NCD2),NELCSH( 5,NCD2),
+     :     J1QNRD( 9,NCD2),MAXORB,NJCOMP(NWD),LJCOMP(NWD),IAJCMP(NWD)
+      COMMON/ENAV/NINTS,KVALUE(15),COEFCT(15)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+    6 FORMAT(35X,F14.8,11X,1HF,I2,1H(,A3,1H,,A3,1H))
+   10 FORMAT(//23H INTERACTING SHELLS ARE,6X,6H RHO =,A3,6X,6H SIG =,A3,
+     :6X,7H RHOP =,A3,6X,7H SIGP =,A3//)
+   11 FORMAT(35X,F14.8,11X,1HG,I2,1H(,A3,1H,,A3,1H))
+  100 FORMAT(F14.8,1HF,I2,1H(,A3,I3,1H,,A3,I3,1H))
+  101 FORMAT(F14.8,1HG,I2,1H(,A3,I3,1H,,A3,I3,1H))
+  102 FORMAT(' (CONFIG ',I3,'/Rij/CONFIG ',I3,')')
+*
+*     DETERMINE THE INTERACTION ENERGY
+*
+      IF (IFULL .NE. 0) WRITE(IWRITE,102) JA,JB
+      JRHO=IJFUL(IRHO)
+      JSIG=IJFUL(ISIG)
+      N1=NOSH1(IRHO)
+      N2=NOSH2(ISIG)
+      M1=ISIG-IRHO
+      IZERO=0
+      ZERO=0.D0
+      IF(M1.EQ.0) GO TO 1
+      IEQUIV=2
+      AC2=DFLOAT(N1*N2)
+      GO TO 2
+    1 IEQUIV=1
+      AC2=DFLOAT(N1*(N1-1)/2)
+    2 LA=LJ(IRHO)
+      LB=LJ(ISIG)
+      CALL INTACT(LA,LB,IEQUIV)
+      IF(IBUG2-1) 4,7,7
+*
+*     PRINT OUT RESULTS AS IN SUBROUTINE PRNTWT
+*
+    7 IF (IFULL.NE.0) WRITE(IWRITE,10) IAJCMP(JRHO),IAJCMP(JSIG),
+     : IAJCMP(JRHO),IAJCMP(JSIG)
+    4 CONTINUE
+      IF (IFULL.NE.0)
+     :   WRITE(IWRITE,6)AC2,IZERO,IAJCMP(JRHO),IAJCMP(JSIG)
+*     WRITE(IOUT,100) AC2,IZERO,IAJCMP(JRHO),JA,IAJCMP(JSIG),JB
+      CALL SAVE(1,AC2,IZERO,0,JRHO,0,JSIG,JA,JB,0)
+      IF(NINTS.EQ.0) RETURN
+      DO 8 N=1,NINTS
+      ZA=AC2*COEFCT(N)
+      K=KVALUE(N)
+      IF(IEQUIV.EQ.1) GO TO 9
+      IF (IFULL.NE.0)
+     :    WRITE(IWRITE,11) ZA,K,IAJCMP(JRHO),IAJCMP(JSIG)
+*     WRITE(ISC1,101) ZA,K,IAJCMP(JRHO),JA,IAJCMP(JSIG),JB
+      CALL SAVE(2,ZA,K,0,JRHO,0,JSIG,JA,JB,0)
+      GO TO 8
+    9 IF (IFULL .NE. 0)WRITE(IWRITE,6) ZA,K,IAJCMP(JRHO),IAJCMP(JSIG)
+*     WRITE(IOUT,100) ZA,K,IAJCMP(JRHO),JA,IAJCMP(JSIG),JB
+      CALL SAVE(1,ZA,K,0,JRHO,0,JSIG,JA,JB,0)
+    8 CONTINUE
+      RETURN
+      END

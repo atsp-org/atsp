@@ -1,0 +1,6 @@
+Auto >>Li.out <<S12
+LiBP
+3
+Li,LSJ,3.
+S12
+cat auto.dat >>Li.out

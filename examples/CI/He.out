@@ -1,0 +1,251 @@
+
+
+
+                    ============================
+                       N O N - W E I G H T S    
+                    ============================
+
+
+
+ STATE  (WITH  2 CONFIGURATIONS):
+ -------------------------------
+
+
+ THERE ARE  4 ORBITALS AS FOLLOWS:
+
+       1s 2p1 2p2 3d2
+
+ CONFIGURATION  1 ( OCCUPIED ORBITALS= 2 ):  1s( 1) 2p1( 1)
+                           COUPLING SCHEME:     2S1     2P1
+                                                           1P0
+
+ CONFIGURATION  2 ( OCCUPIED ORBITALS= 2 ): 2p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2D1
+                                                           1P0
+
+
+                    ===================
+                      MCHF  ...  1988
+                    ===================
+
+
+          THE DIMENSIONS FOR THE CURRENT VERSION ARE:
+            NCFG=100       NWF= 30        NO=220
+
+
+
+ He    1P        2.   220  4  4  2  F  T
+
+  F.1D-09.1D-06 12  00.0  0  T  F
+
+
+
+          WEAK ORTHOGONALIZATION DURING THE SCF CYCLE=   F
+          ACCELERATING PARAMETER FOR MCHF ITERATION  = 0.00
+          SCF CONVERGENCE TOLERANCE (FUNCTIONS)      = 1.00D-07
+          NUMBER OF POINTS IN THE MAXIMUM RANGE      = 220
+          RELATIVISTIC DIAGONAL  ENERGY CORRECTIONS  =   F
+
+
+          TOTAL ENERGY =       -1.980787506
+
+      WEIGHTS
+  1  0.9998  2  0.0187
+
+
+          ITERATION NUMBER  1
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  2.8D-07
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      2.9615640      5.6862587   1.0036050    4.23D-03
+          ED =  -0.037983; ADJUSTED TO ALLOWED MINIMUM ENERGY
+                    2p1      0.2329414      0.0339212   1.1930036    4.33D-01
+                    2p2      2.5383935      2.5255797   1.1264452**  2.97D-01
+                    3d2      2.5331417      0.9467615   1.2290334**  4.08D-01
+
+
+          TOTAL ENERGY =       -2.120849032
+
+      WEIGHTS
+  1  0.9998  2  0.0176
+
+      LEAST SELF-CONSISTENT FUNCTION IS 2p1 :WEIGHTED MAXIMUM CHANGE =  4.33D-01
+
+
+          ITERATION NUMBER  2
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  5.7D-07
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      3.5607930      5.6596420   0.9371950    3.78D-03
+                    2p1      0.2417940      0.1435733   0.2974250    3.30D-02
+                    2p2      4.8371434      3.1193658   0.9899950**  9.04D-02
+                    3d2      4.2762219      1.6354910   0.9766811**  1.18D-01
+
+
+          TOTAL ENERGY =       -2.123066190
+
+      WEIGHTS
+  1  0.9998  2  0.0191
+
+      LEAST SELF-CONSISTENT FUNCTION IS 2p1 :WEIGHTED MAXIMUM CHANGE =  3.30D-02
+
+
+          ITERATION NUMBER  3
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.1D-06
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      3.5311603      5.6606527   1.0009302    2.87D-04
+                    2p1      0.2461527      0.1980840   0.6937235    2.07D-02
+                    2p2      4.9342835      3.2296860   0.9960756**  1.75D-02
+                    3d2      4.1262359      1.8291326   0.9905037**  2.65D-02
+
+
+          TOTAL ENERGY =       -2.123538529
+
+      WEIGHTS
+  1  0.9998  2  0.0204
+
+      LEAST SELF-CONSISTENT FUNCTION IS 2p1 :WEIGHTED MAXIMUM CHANGE =  2.07D-02
+
+
+          ITERATION NUMBER  4
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.7D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  2.3D-06
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      3.5125860      5.6613260   1.0005088    1.49D-04
+                    2p1      0.2470988      0.2102273   0.9629675    4.25D-03
+                    2p2      4.6942879      3.2181812   1.0004075**  1.66D-03
+                    3d2      3.8177889      1.8053147   1.0021979**  5.29D-03
+
+
+          TOTAL ENERGY =       -2.123554439
+
+      WEIGHTS
+  1  0.9998  2  0.0207
+
+      LEAST SELF-CONSISTENT FUNCTION IS 2p1 :WEIGHTED MAXIMUM CHANGE =  4.25D-03
+
+
+          ITERATION NUMBER  5
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  3.8D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  4.5D-06
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      3.5085741      5.6614377   1.0000726    1.84D-05
+                    2p1      0.2471302      0.2104007   0.9992623    1.23D-04
+                    2p2      4.5965017      3.2007855   1.0006733**  2.40D-03
+                    3d2      3.7325475      1.7857168   1.0013561**  3.16D-03
+
+
+          TOTAL ENERGY =       -2.123554494
+
+      WEIGHTS
+  1  0.9998  2  0.0208
+
+      LEAST SELF-CONSISTENT FUNCTION IS 2p1 :WEIGHTED MAXIMUM CHANGE =  1.23D-04
+
+
+          ITERATION NUMBER  6
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  5.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  9.1D-06
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      3.5084570      5.6614323   0.9999906    3.74D-06
+                    2p1      0.2471302      0.2103588   1.0001142    1.57D-05
+                    2p2      4.5835488      3.1971323   1.0001326**  5.09D-04
+                    3d2      3.7263102      1.7838334   1.0001127**  2.65D-04
+
+
+          TOTAL ENERGY =       -2.123554495
+
+      WEIGHTS
+  1  0.9998  2  0.0208
+
+      LEAST SELF-CONSISTENT FUNCTION IS 2p1 :WEIGHTED MAXIMUM CHANGE =  1.57D-05
+
+
+          ITERATION NUMBER  7
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  7.5D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.8D-05
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      3.5084678      5.6614305   0.9999983    6.71D-07
+                    2p1      0.2471302      0.2103551   1.0000116    1.61D-06
+                    2p2      4.5828750      3.1968941   1.0000081**  3.25D-05
+                    3d2      3.7258398      1.7836923   1.0000087**  2.03D-05
+
+
+          TOTAL ENERGY =       -2.123554495
+
+      WEIGHTS
+  1  0.9998  2  0.0208
+
+      LEAST SELF-CONSISTENT FUNCTION IS 2p1 :WEIGHTED MAXIMUM CHANGE =  1.61D-06
+
+
+          ITERATION NUMBER  8
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.1D-09
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  3.6D-05
+
+
+                     EL         ED             AZ           NORM       DPM
+                     1s      3.5084688      5.6614304   0.9999999    3.96D-08
+                    2p1      0.2471302      0.2103548   1.0000008    1.12D-07
+                    2p2      4.5828267      3.1968762   1.0000006**  2.46D-06
+                    3d2      3.7258175      1.7836847   1.0000004**  1.00D-06
+
+
+          TOTAL ENERGY =       -2.123554495
+
+      WEIGHTS
+  1  0.9998  2  0.0208
+
+
+     ENERGY (a.u.)
+     ------
+           Total                  -2.123554495
+           Potential              -4.247109003
+           Kinetic                 2.123554508
+           Ratio                   1.999999994
+
+                    ===========================
+                     CONFIGURATION INTERACTION 
+                    ===========================
+
+
+
+   ATOM = He       Z =  2.
+
+
+
+    1 EIGENVALUES FOUND 
+
+    -2.12354793  1s.2p1_1P
+   0.999784  0.020778

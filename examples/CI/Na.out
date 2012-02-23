@@ -1,0 +1,2379 @@
+
+
+                    ===================
+                      MCHF  ...  1988
+                    ===================
+
+
+          THE DIMENSIONS FOR THE CURRENT VERSION ARE:
+            NCFG=100       NWF= 30        NO=220
+
+
+
+ Na    2S       11.   220  7  4  2  F  T
+        WAVE FUNCTIONS NOT FOUND FOR 3p1
+        WAVE FUNCTIONS NOT FOUND FOR 3p2
+        WAVE FUNCTIONS NOT FOUND FOR 3d2
+
+  F.1D-09.1D-06 12  00.0  0  T  F
+
+
+
+          WEAK ORTHOGONALIZATION DURING THE SCF CYCLE=   F
+          ACCELERATING PARAMETER FOR MCHF ITERATION  = 0.00
+          SCF CONVERGENCE TOLERANCE (FUNCTIONS)      = 1.00D-07
+          NUMBER OF POINTS IN THE MAXIMUM RANGE      = 220
+          RELATIVISTIC DIAGONAL  ENERGY CORRECTIONS  =   F
+
+
+          TOTAL ENERGY =     -159.595155871
+
+      WEIGHTS
+  1  0.9972  2  0.0743
+
+
+          ITERATION NUMBER  1
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  8.8D-07
+
+          E(3s1 1s) =    -0.02015   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.00361   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -2.13776   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.70936   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 1.5D-03
+      < 2s|3s1>= 3.8D-02
+                    3s1      0.3465998      1.9251252   3.5207710    2.62D-01
+          ED =  -1.602998; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      < 2p|3p1>=-3.2D-02
+                    3p1      0.2659046      2.9704562   3.7861243    6.82D-01
+          ED =  -1.082104; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+      < 2p|3p2>=-2.6D-03
+                    3p2      0.0034793      0.1570816 190.2360379**  8.19D-01
+          ED =  -1.874416; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+                    3d2      0.0030573     -0.0490960  27.2172559**  8.72D-01
+
+
+          TOTAL ENERGY =     -160.560118256
+
+      WEIGHTS
+  1  1.0000  2  0.0000
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  6.80D-01
+
+
+          ITERATION NUMBER  2
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.8D-06
+
+          E(3s1 1s) =    -0.01501   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.04509   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.40981   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -2.96758   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 4.4D-04
+      < 2s|3s1>= 5.7D-03
+                    3s1      0.5274441      4.3914849   0.4930173    2.61D-01
+      < 2p|3p1>=-1.7D-02
+                    3p1      0.2032968      1.7560234   1.2309815    1.42D-01
+      < 2p|3p2>= 1.2D-02
+                    3p2      0.2888843      0.6600291 248.3397056**  4.26D-01
+          ED =  -5.199024; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+                    3d2      0.0034669      0.0920530**************  1.53D-01
+
+
+          TOTAL ENERGY =     -160.619035257
+
+      WEIGHTS
+  1  1.0000  2  0.0013
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3s1 :WEIGHTED MAXIMUM CHANGE =  2.61D-01
+
+
+          ITERATION NUMBER  3
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  3.5D-06
+
+          E(3s1 1s) =    -0.02230   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06311   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.24671   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -1.35781   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 6.4D-05
+      < 2s|3s1>= 6.1D-04
+                    3s1      0.6713525      4.3948342   1.0128755    1.00D-02
+      < 2p|3p1>= 2.4D-03
+                    3p1      0.2063578      1.9829011   0.9424569    1.52D-02
+      < 2p|3p2>= 3.0D-01
+                    3p2      1.3724259      8.2100839  18.9811603**  5.75D-01
+                    3d2     14.6519585      1.9875527   6.4379477**  5.15D-01
+
+
+          TOTAL ENERGY =     -160.628969992
+
+      WEIGHTS
+  1  0.9887  2  0.1497
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  1.52D-02
+
+
+          ITERATION NUMBER  4
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.7D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  7.0D-06
+
+          E(3s1 1s) =    -0.02255   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06330   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.27588   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.05032   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 7.7D-06
+      < 2s|3s1>= 8.4D-05
+                    3s1      0.6816097      4.3526061   1.0110174    5.47D-03
+      < 2p|3p1>=-2.6D-02
+                    3p1      0.2260849      2.1285681   0.6456390    3.84D-02
+      < 2p|3p2>= 1.3D-01
+                    3p2      1.0677778      6.7558662   0.9928334**  1.90D-01
+                    3d2      0.6270662      0.4309305   1.2773495**  1.18D-01
+
+
+          TOTAL ENERGY =     -160.633369793
+
+      WEIGHTS
+  1  0.9761  2  0.2174
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  3.80D-02
+
+
+          ITERATION NUMBER  5
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  3.8D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.4D-05
+
+          E(3s1 1s) =    -0.02232   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06219   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.30087   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01830   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 2.7D-06
+      < 2s|3s1>= 4.3D-05
+                    3s1      0.6658412      4.3146391   1.0089996    5.33D-03
+          METHOD 1 UNABLE TO SOLVE EQUATION FOR ELECTRON3p1
+          NC =   3   NJ = 147   ED =   0.305097   EL =   0.081633   EU =   9.000000
+          E(3s1 1s) =    -0.02222   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06197   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.30080   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01793   E( 2p3p2) =     0.00001
+          METHOD 1 UNABLE TO SOLVE EQUATION FOR ELECTRON3p1
+          NC =   3   NJ = 147   ED =   0.305094   EL =   0.081633   EU =   9.000000
+      < 2p|3p1>= 8.0D-03
+                    3p1      0.2351468      2.4550679   1.0000000*   1.94D-02
+      < 2p|3p2>= 3.3D-02
+                    3p2      0.8511391      8.1254728   0.9893472**  5.95D-02
+                    3d2      0.5510993      0.4379942   1.0027924**  4.69D-03
+
+
+          TOTAL ENERGY =     -160.633762610
+
+      WEIGHTS
+  1  0.9737  2  0.2279
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  1.89D-02
+
+
+          ITERATION NUMBER  6
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  5.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  2.8D-05
+
+          E(3s1 1s) =    -0.02225   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06172   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.33933   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01567   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 1.0D-06
+      < 2s|3s1>= 9.1D-06
+                    3s1      0.6545673      4.2987524   1.0037732    2.53D-03
+      < 2p|3p1>= 1.2D-02
+                    3p1      0.2361130      2.4838873   1.1844855    1.37D-02
+      < 2p|3p2>= 8.7D-03
+                    3p2      0.8322210      8.5773489   0.9940724**  1.71D-02
+                    3d2      0.5241565      0.4323231   1.0031481**  4.59D-03
+
+
+          TOTAL ENERGY =     -160.633777457
+
+      WEIGHTS
+  1  0.9733  2  0.2296
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  1.33D-02
+
+
+          ITERATION NUMBER  7
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  7.5D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  5.6D-05
+
+          E(3s1 1s) =    -0.02221   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06156   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.34299   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01435   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 1.0D-07
+      < 2s|3s1>= 5.3D-07
+                    3s1      0.6537874      4.2984502   1.0000897    1.40D-04
+          E(3s1 1s) =    -0.02221   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06155   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.34299   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01435   E( 2p3p2) =     0.00001
+      < 2p|3p1>=-2.3D-03
+                    3p1      0.2361781      2.3888851   1.0000000*   5.37D-03
+      < 2p|3p2>= 1.5D-03
+                    3p2      0.8259492      8.7030945   0.9987986**  3.69D-03
+                    3d2      0.5174785      0.4288592   1.0022984**  4.13D-03
+
+
+          TOTAL ENERGY =     -160.633793903
+
+      WEIGHTS
+  1  0.9735  2  0.2288
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  5.23D-03
+
+
+          ITERATION NUMBER  8
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.1D-09
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.1D-04
+
+          E(3s1 1s) =    -0.02222   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06159   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.33187   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01360   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 1.1D-07
+      < 2s|3s1>= 3.6D-06
+                    3s1      0.6563464      4.3036500   0.9988389    6.44D-04
+      < 2p|3p1>= 3.3D-04
+                    3p1      0.2361733      2.4034175   1.0000000*   8.00D-04
+      < 2p|3p2>= 7.8D-04
+                    3p2      0.8294001      8.7359236   0.9992456**  1.44D-03
+                    3d2      0.5211614      0.4304135   0.9992925**  1.24D-03
+
+
+          TOTAL ENERGY =     -160.633794911
+
+      WEIGHTS
+  1  0.9735  2  0.2287
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  7.78D-04
+
+
+          ITERATION NUMBER  9
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.5D-09
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  2.2D-04
+
+          E(3s1 1s) =    -0.02223   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06161   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.33344   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01374   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 7.8D-09
+      < 2s|3s1>=-1.6D-07
+                    3s1      0.6560901      4.3032907   1.0000840    4.28D-05
+      < 2p|3p1>=-2.5D-05
+                    3p1      0.2361646      2.4021615   1.0000000*   6.82D-05
+      < 2p|3p2>= 1.8D-04
+                    3p2      0.8293990      8.7458211   0.9998344**  3.67D-04
+                    3d2      0.5210969      0.4299025   1.0000165**  4.55D-05
+
+
+          TOTAL ENERGY =     -160.633794925
+
+      WEIGHTS
+  1  0.9735  2  0.2287
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p2 :WEIGHTED MAXIMUM CHANGE =  8.39D-05
+
+
+          ITERATION NUMBER 10
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.1D-09
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  4.5D-04
+
+          E(3s1 1s) =    -0.02223   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06160   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.33332   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01371   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 2.3D-09
+      < 2s|3s1>= 4.1D-08
+                    3s1      0.6560892      4.3033536   0.9999859    6.96D-06
+      < 2p|3p1>= 4.4D-06
+                    3p1      0.2361651      2.4023613   1.0000000*   1.06D-05
+      < 2p|3p2>= 5.3D-05
+                    3p2      0.8293812      8.7485971   0.9999531**  1.06D-04
+                    3d2      0.5210792      0.4299066   0.9999985**  7.70D-06
+
+
+          TOTAL ENERGY =     -160.633794926
+
+      WEIGHTS
+  1  0.9735  2  0.2287
+
+
+     ENERGY (a.u.)
+     ------
+           Total                -160.633794926
+           Potential            -321.229910135
+           Kinetic               160.596115209
+           Ratio                   2.000234624
+
+
+
+
+
+
+
+    ***************          I N P U T  D A T A          **********
+
+
+
+              Header  :  Na core-excited 4S                                          
+
+        Closed shell  :   1s  2s                                                     
+
+       Reference Set  :  2p(5)3s1(1)4s1(0)3p1(1)                                     
+
+                             2  :  2p(5)3p2(1)3d2(1)                                           
+
+                             3  :  2p(5)3s1(1)4p1(1)                                           
+
+                             4  :  2p(5)4s1(1)3p1(1)                                           
+
+                             5  :  2p(5)4s1(1)4p1(1)                                           
+
+                             6  :  2p(5)3p2(1)4d2(1)                                           
+
+          Active Set  :                                                              
+
+        Replacements  :                                                              
+
+         Final Terms  :  4S                                                          
+
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na core-excited 4S   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  3s1( 1)  3p1( 1)
+        Their couplings  :       2P1     2S1     2P1     3P0     4S0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na core-excited 4S   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  3p2( 1)  3d2( 1)
+        Their couplings  :       2P1     2P1     2D1     3D0     4S0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na core-excited 4S   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  3s1( 1)  4p1( 1)
+        Their couplings  :       2P1     2S1     2P1     3P0     4S0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na core-excited 4S   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  4s1( 1)  3p1( 1)
+        Their couplings  :       2P1     2S1     2P1     3P0     4S0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na core-excited 4S   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  4s1( 1)  4p1( 1)
+        Their couplings  :       2P1     2S1     2P1     3P0     4S0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na core-excited 4S   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  3p2( 1)  4d2( 1)
+        Their couplings  :       2P1     2P1     2D1     3D0     4S0
+
+
+
+                    ============================
+                       N O N - W E I G H T S    
+                    ============================
+
+
+
+ STATE  (WITH  6 CONFIGURATIONS):
+ -------------------------------
+
+
+ THERE ARE  8 ORBITALS AS FOLLOWS:
+
+       2p 3s1 3p2 3d2 4s1 3p1 4p1 4d2
+
+ THERE ARE  2 CLOSED SUBSHELLS COMMON TO ALL CONFIGURATIONS AS FOLLOWS:
+
+       1s  2s
+
+ CONFIGURATION  1 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION  2 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4S0
+
+ CONFIGURATION  3 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION  4 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION  5 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION  6 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4S0
+
+
+                    ===================
+                      MCHF  ...  1988
+                    ===================
+
+
+          THE DIMENSIONS FOR THE CURRENT VERSION ARE:
+            NCFG=100       NWF= 30        NO=220
+
+
+
+ Na    4S       11.   220 10  3  6  F  T
+        WAVE FUNCTIONS NOT FOUND FOR 4p1
+        WAVE FUNCTIONS NOT FOUND FOR 4s1
+        WAVE FUNCTIONS NOT FOUND FOR 4d2
+
+  F.1D-09.1D-06 12  00.0  0  T  F
+
+
+
+          WEAK ORTHOGONALIZATION DURING THE SCF CYCLE=   F
+          ACCELERATING PARAMETER FOR MCHF ITERATION  = 0.00
+          SCF CONVERGENCE TOLERANCE (FUNCTIONS)      = 1.00D-07
+          NUMBER OF POINTS IN THE MAXIMUM RANGE      = 220
+          RELATIVISTIC DIAGONAL  ENERGY CORRECTIONS  =   F
+
+
+          TOTAL ENERGY =     -160.674201770
+
+      WEIGHTS
+  1  0.9891  2  0.1449  3  0.0241  4 -0.0122  5  0.0038  6  0.0012
+
+
+          ITERATION NUMBER  1
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.0D-06
+
+          E(4p1 2p) =     0.82369   E( 2p4p1) =     0.00001
+          E(4p13p1) =    12.41966   E(3p14p1) =     0.00001
+          E(4s1 1s) =     1.60140   E( 1s4s1) =     0.00001
+          E(4s1 2s) =    -4.24342   E( 2s4s1) =     0.00001
+          E(4s13s1) =   -51.70577   E(3s14s1) =     0.00001
+          E(4d23d2) =    71.82043   E(3d24d2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 2p|4p1>= 2.2D-01
+      <3p1|4p1>= 1.2D-01
+                    4p1      0.3683386     11.2074521  10.8198267**  1.05D+00
+          ED =  -0.325394; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+      < 1s|4s1>= 1.3D-05
+      < 2s|4s1>= 1.1D-04
+      <3s1|4s1>= 1.7D-02
+                    4s1      0.0034854      0.0385462 211.2793944**  8.28D-01
+          ED =  -2.350115; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+      <3d2|4d2>= 2.7D-02
+                    4d2      0.0034671     -0.01693503626.2144271**  7.22D-01
+      < 1s|4s1>=-1.9D-09
+      < 2s|4s1>=-4.8D-10
+      <3s1|4s1>=-1.2D-10
+
+
+          TOTAL ENERGY =     -160.706847335
+
+      WEIGHTS
+  1  0.8815  2  0.1457  3  0.4491  4  0.0013  5  0.0013  6  0.0000
+
+      LEAST SELF-CONSISTENT FUNCTION IS 4p1 :WEIGHTED MAXIMUM CHANGE =  2.56D-02
+
+
+          ITERATION NUMBER  2
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  2.1D-06
+
+          E(4p1 2p) =     0.10904   E( 2p4p1) =     0.00001
+          E(4p13p1) =     0.75033   E(3p14p1) =     0.00001
+          E(4s1 1s) =   -13.15122   E( 1s4s1) =     0.00001
+          E(4s1 2s) =    24.56912   E( 2s4s1) =     0.00001
+          E(4s13s1) =   329.13142   E(3s14s1) =     0.00001
+          E(4d23d2) =  2187.19174   E(3d24d2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 2p|4p1>= 9.8D-03
+      <3p1|4p1>= 3.6D-03
+                    4p1      0.3822922     13.0880045   0.9534218**  3.86D-02
+      < 1s|4s1>=-2.0D-03
+      < 2s|4s1>=-3.9D-02
+      <3s1|4s1>= 4.9D-01
+                    4s1      0.6868461     -2.2282125  59.8512895**  5.35D-01
+      <3d2|4d2>=-2.0D-01
+                    4d2      0.5815052     -3.0639832 950.0039966**  5.32D-01
+      < 1s|4s1>= 9.1D-08
+      < 2s|4s1>= 2.3D-08
+      <3s1|4s1>= 5.6D-09
+
+
+          TOTAL ENERGY =     -160.711309678
+
+      WEIGHTS
+  1  0.8805  2  0.1365  3  0.4427  4  0.0613  5  0.0695  6  0.0393
+
+      LEAST SELF-CONSISTENT FUNCTION IS 4p1 :WEIGHTED MAXIMUM CHANGE =  1.73D-02
+
+
+          ITERATION NUMBER  3
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  4.2D-06
+
+          E(4p1 2p) =     0.12218   E( 2p4p1) =     0.00001
+          E(4p13p1) =     0.79016   E(3p14p1) =     0.00001
+          E(4s1 1s) =    -0.24114   E( 1s4s1) =     0.00001
+          E(4s1 2s) =     0.42261   E( 2s4s1) =     0.00001
+          E(4s13s1) =     6.17214   E(3s14s1) =     0.00001
+          E(4d23d2) =     2.35029   E(3d24d2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 2p|4p1>= 1.5D-03
+      <3p1|4p1>= 5.0D-04
+                    4p1      0.4129019     13.4037682   0.9892894**  7.26D-03
+      < 1s|4s1>=-4.7D-04
+      < 2s|4s1>=-6.4D-03
+      <3s1|4s1>=-3.4D-02
+                    4s1      0.6624444     -4.6132770   0.9882093**  2.72D-02
+      <3d2|4d2>= 2.8D-03
+                    4d2      0.6836782     -2.9539402   0.9878283**  1.94D-02
+      < 1s|4s1>=-7.7D-09
+      < 2s|4s1>=-1.9D-09
+      <3s1|4s1>=-4.7D-10
+
+
+          TOTAL ENERGY =     -160.711340500
+
+      WEIGHTS
+  1  0.8821  2  0.1366  3  0.4395  4  0.0614  5  0.0698  6  0.0388
+
+      LEAST SELF-CONSISTENT FUNCTION IS 4p1 :WEIGHTED MAXIMUM CHANGE =  3.25D-03
+
+
+          ITERATION NUMBER  4
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.7D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  8.4D-06
+
+          E(4p1 2p) =     0.12393   E( 2p4p1) =     0.00001
+          E(4p13p1) =     0.79730   E(3p14p1) =     0.00001
+          E(4s1 1s) =    -0.23989   E( 1s4s1) =     0.00001
+          E(4s1 2s) =     0.41618   E( 2s4s1) =     0.00001
+          E(4s13s1) =     6.13211   E(3s14s1) =     0.00001
+          E(4d23d2) =     2.37902   E(3d24d2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 2p|4p1>= 2.4D-04
+      <3p1|4p1>= 6.5D-05
+                    4p1      0.4133861     13.4542035   0.9983641**  1.16D-03
+      < 1s|4s1>=-7.1D-05
+      < 2s|4s1>=-8.6D-04
+      <3s1|4s1>=-2.9D-03
+                    4s1      0.6619917     -4.4183535   0.9969006**  4.23D-03
+      <3d2|4d2>=-2.3D-04
+                    4d2      0.6770837     -2.9015491   1.0005986**  1.82D-03
+      < 1s|4s1>=-9.1D-10
+      < 2s|4s1>=-2.3D-10
+
+
+          TOTAL ENERGY =     -160.711341220
+
+      WEIGHTS
+  1  0.8823  2  0.1366  3  0.4390  4  0.0613  5  0.0697  6  0.0389
+
+      LEAST SELF-CONSISTENT FUNCTION IS 4p1 :WEIGHTED MAXIMUM CHANGE =  5.16D-04
+
+
+          ITERATION NUMBER  5
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  3.8D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.7D-05
+
+          E(4p1 2p) =     0.12420   E( 2p4p1) =     0.00001
+          E(4p13p1) =     0.79831   E(3p14p1) =     0.00001
+          E(4s1 1s) =    -0.24004   E( 1s4s1) =     0.00001
+          E(4s1 2s) =     0.41575   E( 2s4s1) =     0.00001
+          E(4s13s1) =     6.13520   E(3s14s1) =     0.00001
+          E(4d23d2) =     2.37756   E(3d24d2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 2p|4p1>= 3.3D-05
+      <3p1|4p1>= 7.3D-06
+                    4p1      0.4134349     13.4615409   0.9997841**  1.62D-04
+      < 1s|4s1>=-9.5D-06
+      < 2s|4s1>=-1.1D-04
+      <3s1|4s1>=-2.5D-04
+                    4s1      0.6620343     -4.3986012   0.9995963**  5.50D-04
+      <3d2|4d2>=-6.8D-06
+                    4d2      0.6762676     -2.8938013   1.0000485**  2.62D-04
+      < 1s|4s1>=-1.0D-10
+
+
+          TOTAL ENERGY =     -160.711341234
+
+      WEIGHTS
+  1  0.8823  2  0.1366  3  0.4390  4  0.0612  5  0.0697  6  0.0389
+
+      LEAST SELF-CONSISTENT FUNCTION IS 4p1 :WEIGHTED MAXIMUM CHANGE =  7.19D-05
+
+
+          ITERATION NUMBER  6
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  5.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  3.4D-05
+
+          E(4p1 2p) =     0.12424   E( 2p4p1) =     0.00001
+          E(4p13p1) =     0.79845   E(3p14p1) =     0.00001
+          E(4s1 1s) =    -0.24007   E( 1s4s1) =     0.00001
+          E(4s1 2s) =     0.41569   E( 2s4s1) =     0.00001
+          E(4s13s1) =     6.13573   E(3s14s1) =     0.00001
+          E(4d23d2) =     2.37750   E(3d24d2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 2p|4p1>= 4.7D-06
+      <3p1|4p1>= 9.8D-07
+                    4p1      0.4134407     13.4626000   0.9999699**  2.30D-05
+      < 1s|4s1>=-1.3D-06
+      < 2s|4s1>=-1.4D-05
+      <3s1|4s1>=-3.8D-05
+                    4s1      0.6620402     -4.3966817   0.9999479**  7.15D-05
+      <3d2|4d2>= 1.5D-06
+                    4d2      0.6761825     -2.8928347   0.9999999**  3.79D-05
+
+
+          TOTAL ENERGY =     -160.711341234
+
+      WEIGHTS
+  1  0.8823  2  0.1366  3  0.4390  4  0.0612  5  0.0697  6  0.0389
+
+      LEAST SELF-CONSISTENT FUNCTION IS 4p1 :WEIGHTED MAXIMUM CHANGE =  1.02D-05
+
+
+          ITERATION NUMBER  7
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  7.5D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  6.7D-05
+
+          E(4p1 2p) =     0.12424   E( 2p4p1) =     0.00001
+          E(4p13p1) =     0.79846   E(3p14p1) =     0.00001
+          E(4s1 1s) =    -0.24007   E( 1s4s1) =     0.00001
+          E(4s1 2s) =     0.41568   E( 2s4s1) =     0.00001
+          E(4s13s1) =     6.13579   E(3s14s1) =     0.00001
+          E(4d23d2) =     2.37751   E(3d24d2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 2p|4p1>= 6.8D-07
+      <3p1|4p1>= 1.4D-07
+                    4p1      0.4134414     13.4627529   0.9999957**  3.30D-06
+      < 1s|4s1>=-2.0D-07
+      < 2s|4s1>=-2.0D-06
+      <3s1|4s1>=-5.1D-06
+                    4s1      0.6620408     -4.3964116   0.9999932**  9.47D-06
+      <3d2|4d2>= 2.7D-07
+                    4d2      0.6761711     -2.8927099   0.9999997**  5.30D-06
+
+
+          TOTAL ENERGY =     -160.711341234
+
+      WEIGHTS
+  1  0.8823  2  0.1366  3  0.4390  4  0.0612  5  0.0697  6  0.0389
+
+
+     ENERGY (a.u.)
+     ------
+           Total                -160.711341234
+           Potential            -321.515710349
+           Kinetic               160.804369115
+           Ratio                   1.999421484
+
+
+
+
+
+
+
+    ***************          I N P U T  D A T A          **********
+
+
+
+              Header  :  Na quartet                                                  
+
+        Closed shell  :   1s  2s                                                     
+
+       Reference Set  :  2p(5)3s1(1)4s1(0)3p1(1)                                     
+
+                             2  :  2p(5)3p2(1)3d2(1)                                           
+
+                             3  :  2p(5)3s1(1)4p1(1)                                           
+
+                             4  :  2p(5)4s1(1)3p1(1)                                           
+
+                             5  :  2p(5)4s1(1)4p1(1)                                           
+
+                             6  :  2p(5)3p2(1)4d2(1)                                           
+
+          Active Set  :                                                              
+
+        Replacements  :                                                              
+
+         Final Terms  :                                                              
+
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na quartet   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  3s1( 1)  3p1( 1)
+        Their couplings  :       2P1     2S1     2P1     1P0     2S0
+                                 2P1     2S1     2P1     1P0     2P0
+                                 2P1     2S1     2P1     1P0     2D0
+                                 2P1     2S1     2P1     3P0     2S0
+                                 2P1     2S1     2P1     3P0     2P0
+                                 2P1     2S1     2P1     3P0     2D0
+                                 2P1     2S1     2P1     3P0     4S0
+                                 2P1     2S1     2P1     3P0     4P0
+                                 2P1     2S1     2P1     3P0     4D0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na quartet   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  3p2( 1)  3d2( 1)
+        Their couplings  :       2P1     2P1     2D1     1S0     2D0
+                                 2P1     2P1     2D1     1P0     2P0
+                                 2P1     2P1     2D1     1P0     2D0
+                                 2P1     2P1     2D1     1P0     2F0
+                                 2P1     2P1     2D1     1D0     2S0
+                                 2P1     2P1     2D1     1D0     2P0
+                                 2P1     2P1     2D1     1D0     2D0
+                                 2P1     2P1     2D1     1D0     2F0
+                                 2P1     2P1     2D1     1D0     2G0
+                                 2P1     2P1     2D1     3S0     2D0
+                                 2P1     2P1     2D1     3S0     4D0
+                                 2P1     2P1     2D1     3P0     2P0
+                                 2P1     2P1     2D1     3P0     2D0
+                                 2P1     2P1     2D1     3P0     2F0
+                                 2P1     2P1     2D1     3P0     4P0
+                                 2P1     2P1     2D1     3P0     4D0
+                                 2P1     2P1     2D1     3P0     4F0
+                                 2P1     2P1     2D1     3D0     2S0
+                                 2P1     2P1     2D1     3D0     2P0
+                                 2P1     2P1     2D1     3D0     2D0
+                                 2P1     2P1     2D1     3D0     2F0
+                                 2P1     2P1     2D1     3D0     2G0
+                                 2P1     2P1     2D1     3D0     4S0
+                                 2P1     2P1     2D1     3D0     4P0
+                                 2P1     2P1     2D1     3D0     4D0
+                                 2P1     2P1     2D1     3D0     4F0
+                                 2P1     2P1     2D1     3D0     4G0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na quartet   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  3s1( 1)  4p1( 1)
+        Their couplings  :       2P1     2S1     2P1     1P0     2S0
+                                 2P1     2S1     2P1     1P0     2P0
+                                 2P1     2S1     2P1     1P0     2D0
+                                 2P1     2S1     2P1     3P0     2S0
+                                 2P1     2S1     2P1     3P0     2P0
+                                 2P1     2S1     2P1     3P0     2D0
+                                 2P1     2S1     2P1     3P0     4S0
+                                 2P1     2S1     2P1     3P0     4P0
+                                 2P1     2S1     2P1     3P0     4D0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na quartet   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  4s1( 1)  3p1( 1)
+        Their couplings  :       2P1     2S1     2P1     1P0     2S0
+                                 2P1     2S1     2P1     1P0     2P0
+                                 2P1     2S1     2P1     1P0     2D0
+                                 2P1     2S1     2P1     3P0     2S0
+                                 2       7154      125696                     0 7202304               1773                  d                                                                         3P0     4S0
+
+ CONFIGURATION  4 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION  5 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION  6 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4S0
+
+
+                    ===================
+                      MCHF  ...  1988
+                    ===================
+
+
+          THE DIMENSIONS FOR THE CURRENT VERSION ARE:
+            NCFG=100       NWF= 30        NO=220P1     2S1     2P1     3P0     2P0
+                                 2P1     2S1     2P1     3P0     2D0
+                                 2P1     2S1     2P1     3P0     4S0
+                                 2P1     2S1     2P1     3P0     4P0
+                                 2P1     2S1     2P1     3P0     4D0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na quartet   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  4s1( 1)  4p1( 1)
+        Their couplings  :       2P1     2S1     2P1     1P0     2S0
+                                 2P1     2S1     2P1     1P0     2P0
+                                 2P1     2S1     2P1     1P0     2D0
+                                 2P1     2S1     2P1     3P0     2S0
+                                 2P1     2S1     2P1     3P0     2P0
+                                 2P1     2S1     2P1     3P0     2D0
+                                 2P1     2S1     2P1     3P0     4S0
+                                 2P1     2S1     2P1     3P0     4P0
+                                 2P1     2S1     2P1     3P0     4D0
+
+
+      GENERATE ALL COUPLINGS FOR EACH MEMBER  OF THE REFERENCE SET
+
+
+ 
+         -------------       Na quartet   --------
+
+          Closed Shells  :   1s  2s 
+
+          Configuration  :   2p( 5)  3p2( 1)  4d2( 1)
+        Their couplings  :       2P1     2P1     2D1     1S0     2D0
+                                 2P1     2P1     2D1     1P0     2P0
+                                 2P1     2P1     2D1     1P0     2D0
+                                 2P1     2P1     2D1     1P0     2F0
+                                 2P1     2P1     2D1     1D0     2S0
+                                 2P1     2P1     2D1     1D0     2P0
+                                 2P1     2P1     2D1     1D0     2D0
+                                 2P1     2P1     2D1     1D0     2F0
+                                 2P1     2P1     2D1     1D0     2G0
+                                 2P1     2P1     2D1     3S0     2D0
+                                 2P1     2P1     2D1     3S0     4D0
+                                 2P1     2P1     2D1     3P0     2P0
+                                 2P1     2P1     2D1     3P0     2D0
+                                 2P1     2P1     2D1     3P0     2F0
+                                 2P1     2P1     2D1     3P0     4P0
+                                 2P1     2P1     2D1     3P0     4D0
+                                 2P1     2P1     2D1     3P0     4F0
+                                 2P1     2P1     2D1     3D0     2S0
+                                 2P1     2P1     2D1     3D0     2P0
+                                 2P1     2P1     2D1     3D0     2D0
+                                 2P1     2P1     2D1     3D0     2F0
+                                 2P1     2P1     2D1     3D0     2G0
+                                 2P1     2P1     2D1     3D0     4S0
+                                 2P1     2P1     2D1     3D0     4P0
+                                 2P1     2P1     2D1     3D0     4D0
+                                 2P1     2P1     2D1     3D0     4F0
+                                 2P1     2P1     2D1     3D0     4G0
+
+
+
+                    ============================
+                       N O N - W E I G H T S    
+                    ============================
+
+
+
+ STATE  (WITH 90 CONFIGURATIONS):
+ -------------------------------
+
+
+ THERE ARE  8 ORBITALS AS FOLLOWS:
+
+       2p 3s1 3p2 3d2 4s1 3p1 4p1 4d2
+
+ THERE ARE  2 CLOSED SUBSHELLS COMMON TO ALL CONFIGURATIONS AS FOLLOWS:
+
+       1s  2s
+
+ CONFIGURATION  1 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2S0
+
+ CONFIGURATION  2 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2P0
+
+ CONFIGURATION  3 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2D0
+
+ CONFIGURATION  4 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2S0
+
+ CONFIGURATION  5 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2P0
+
+ CONFIGURATION  6 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2D0
+
+ CONFIGURATION  7 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION  8 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4P0
+
+ CONFIGURATION  9 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4D0
+
+ CONFIGURATION 10 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1S0     2D0
+
+ CONFIGURATION 11 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2P0
+
+ CONFIGURATION 12 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2D0
+
+ CONFIGURATION 13 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2F0
+
+ CONFIGURATION 14 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2S0
+
+ CONFIGURATION 15 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2P0
+
+ CONFIGURATION 16 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2D0
+
+ CONFIGURATION 17 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2F0
+
+ CONFIGURATION 18 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2G0
+
+ CONFIGURATION 19 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3S0     2D0
+
+ CONFIGURATION 20 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3S0     4D0
+
+ CONFIGURATION 21 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2P0
+
+ CONFIGURATION 22 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2D0
+
+ CONFIGURATION 23 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2F0
+
+ CONFIGURATION 24 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4P0
+
+ CONFIGURATION 25 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4D0
+
+ CONFIGURATION 26 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4F0
+
+ CONFIGURATION 27 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2S0
+
+ CONFIGURATION 28 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2P0
+
+ CONFIGURATION 29 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2D0
+
+ CONFIGURATION 30 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2F0
+
+ CONFIGURATION 31 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2G0
+
+ CONFIGURATION 32 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4S0
+
+ CONFIGURATION 33 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4P0
+
+ CONFIGURATION 34 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4D0
+
+ CONFIGURATION 35 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4F0
+
+ CONFIGURATION 36 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4G0
+
+ CONFIGURATION 37 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2S0
+
+ CONFIGURATION 38 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2P0
+
+ CONFIGURATION 39 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2D0
+
+ CONFIGURATION 40 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2S0
+
+ CONFIGURATION 41 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2P0
+
+ CONFIGURATION 42 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2D0
+
+ CONFIGURATION 43 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION 44 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4P0
+
+ CONFIGURATION 45 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4D0
+
+ CONFIGURATION 46 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2S0
+
+ CONFIGURATION 47 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2P0
+
+ CONFIGURATION 48 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2D0
+
+ CONFIGURATION 49 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2S0
+
+ CONFIGURATION 50 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2P0
+
+ CONFIGURATION 51 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2D0
+
+ CONFIGURATION 52 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION 53 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4P0
+
+ CONFIGURATION 54 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4D0
+
+ CONFIGURATION 55 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2S0
+
+ CONFIGURATION 56 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2P0
+
+ CONFIGURATION 57 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2D0
+
+ CONFIGURATION 58 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2S0
+
+ CONFIGURATION 59 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2P0
+
+ CONFIGURATION 60 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2D0
+
+ CONFIGURATION 61 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION 62 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4P0
+
+ CONFIGURATION 63 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4D0
+
+ CONFIGURATION 64 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1S0     2D0
+
+ CONFIGURATION 65 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2P0
+
+ CONFIGURATION 66 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2D0
+
+ CONFIGURATION 67 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2F0
+
+ CONFIGURATION 68 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2S0
+
+ CONFIGURATION 69 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2P0
+
+ CONFIGURATION 70 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2D0
+
+ CONFIGURATION 71 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2F0
+
+ CONFIGURATION 72 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2G0
+
+ CONFIGURATION 73 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3S0     2D0
+
+ CONFIGURATION 74 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3S0     4D0
+
+ CONFIGURATION 75 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2P0
+
+ CONFIGURATION 76 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2D0
+
+ CONFIGURATION 77 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2F0
+
+ CONFIGURATION 78 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4P0
+
+ CONFIGURATION 79 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4D0
+
+ CONFIGURATION 80 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4F0
+
+ CONFIGURATION 81 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2S0
+
+ CONFIGURATION 82 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2P0
+
+ CONFIGURATION 83 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2D0
+
+ CONFIGURATION 84 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2F0
+
+ CONFIGURATION 85 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2G0
+
+ CONFIGURATION 86 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4S0
+
+ CONFIGURATION 87 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4P0
+
+ CONFIGURATION 88 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4D0
+
+ CONFIGURATION 89 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4F0
+
+ CONFIGURATION 90 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4G0
+
+                    =======================
+                     B R E I T - P A U L I 
+                    =======================
+
+
+
+
+
+ THE TYPE OF CALCULATION IS DEFINED BY THE FOLLOWING PARAMETERS - 
+      BREIT-PAULI OPERATORS             IREL   = 1
+      PHASE CONVENTION PARAMETER        ICSTAS = 1
+
+1
+
+
+
+                             ---------------------
+                             THE CONFIGURATION SET
+                             ---------------------
+
+
+
+
+
+ STATE  (WITH 90 CONFIGURATIONS):
+ -------------------------------
+
+
+ THERE ARE  8 ORBITALS AS FOLLOWS:
+
+       2p 3s1 3p2 3d2 4s1 3p1 4p1 4d2
+
+ THERE ARE  2 CLOSED SUBSHELLS COMMON TO ALL CONFIGURATIONS AS FOLLOWS:
+
+       1s  2s
+
+ CONFIGURATION  1 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2S0
+
+ CONFIGURATION  2 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2P0
+
+ CONFIGURATION  3 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2D0
+
+ CONFIGURATION  4 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2S0
+
+ CONFIGURATION  5 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2P0
+
+ CONFIGURATION  6 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2D0
+
+ CONFIGURATION  7 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION  8 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4P0
+
+ CONFIGURATION  9 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4D0
+
+ CONFIGURATION 10 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1S0     2D0
+
+ CONFIGURATION 11 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2P0
+
+ CONFIGURATION 12 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2D0
+
+ CONFIGURATION 13 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2F0
+
+ CONFIGURATION 14 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2S0
+
+ CONFIGURATION 15 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2P0
+
+ CONFIGURATION 16 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2D0
+
+ CONFIGURATION 17 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2F0
+
+ CONFIGURATION 18 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2G0
+
+ CONFIGURATION 19 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3S0     2D0
+
+ CONFIGURATION 20 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3S0     4D0
+
+ CONFIGURATION 21 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2P0
+
+ CONFIGURATION 22 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2D0
+
+ CONFIGURATION 23 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2F0
+
+ CONFIGURATION 24 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4P0
+
+ CONFIGURATION 25 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4D0
+
+ CONFIGURATION 26 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4F0
+
+ CONFIGURATION 27 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2S0
+
+ CONFIGURATION 28 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2P0
+
+ CONFIGURATION 29 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2D0
+
+ CONFIGURATION 30 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2F0
+
+ CONFIGURATION 31 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2G0
+
+ CONFIGURATION 32 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4S0
+
+ CONFIGURATION 33 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4P0
+
+ CONFIGURATION 34 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4D0
+
+ CONFIGURATION 35 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4F0
+
+ CONFIGURATION 36 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4G0
+
+ CONFIGURATION 37 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2S0
+
+ CONFIGURATION 38 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2P0
+
+ CONFIGURATION 39 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2D0
+
+ CONFIGURATION 40 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2S0
+
+ CONFIGURATION 41 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2P0
+
+ CONFIGURATION 42 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2D0
+
+ CONFIGURATION 43 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION 44 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4P0
+
+ CONFIGURATION 45 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4D0
+
+ CONFIGURATION 46 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2S0
+
+ CONFIGURATION 47 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2P0
+
+ CONFIGURATION 48 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2D0
+
+ CONFIGURATION 49 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2S0
+
+ CONFIGURATION 50 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2P0
+
+ CONFIGURATION 51 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2D0
+
+ CONFIGURATION 52 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION 53 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4P0
+
+ CONFIGURATION 54 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4D0
+
+ CONFIGURATION 55 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2S0
+
+ CONFIGURATION 56 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2P0
+
+ CONFIGURATION 57 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           1P0     2D0
+
+ CONFIGURATION 58 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2S0
+
+ CONFIGURATION 59 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2P0
+
+ CONFIGURATION 60 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2D0
+
+ CONFIGURATION 61 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4S0
+
+ CONFIGURATION 62 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4P0
+
+ CONFIGURATION 63 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 4s1( 1) 4p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     4D0
+
+ CONFIGURATION 64 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1S0     2D0
+
+ CONFIGURATION 65 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2P0
+
+ CONFIGURATION 66 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2D0
+
+ CONFIGURATION 67 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1P0     2F0
+
+ CONFIGURATION 68 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2S0
+
+ CONFIGURATION 69 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2P0
+
+ CONFIGURATION 70 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2D0
+
+ CONFIGURATION 71 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2F0
+
+ CONFIGURATION 72 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           1D0     2G0
+
+ CONFIGURATION 73 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3S0     2D0
+
+ CONFIGURATION 74 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3S0     4D0
+
+ CONFIGURATION 75 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2P0
+
+ CONFIGURATION 76 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2D0
+
+ CONFIGURATION 77 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     2F0
+
+ CONFIGURATION 78 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4P0
+
+ CONFIGURATION 79 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4D0
+
+ CONFIGURATION 80 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3P0     4F0
+
+ CONFIGURATION 81 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2S0
+
+ CONFIGURATION 82 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2P0
+
+ CONFIGURATION 83 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2D0
+
+ CONFIGURATION 84 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2F0
+
+ CONFIGURATION 85 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2G0
+
+ CONFIGURATION 86 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4S0
+
+ CONFIGURATION 87 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4P0
+
+ CONFIGURATION 88 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4D0
+
+ CONFIGURATION 89 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4F0
+
+ CONFIGURATION 90 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 4d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     4G0
+
+
+ MATRIX ELEMENTS CONSTRUCTED USING THE SPHERICAL HARMONIC PHASE CONVENTION OF
+
+                CONDON AND SHORTLEY, THEORY OF ATOMIC STRUCTURE
+                -----------------------------------------------
+
+
+
+
+                    ===========================
+                     CONFIGURATION INTERACTION 
+                    ===========================
+
+
+
+   ATOM = Na       Z = 11.
+
+
+
+    9 EIGENVALUES FOUND 
+
+  -160.91161818  2p(5).3s1_3P.3p1_4S
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.882087
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.136434  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.439941  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.059210  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.068829  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.038935  0.000000  0.000000  0.000000  0.000000
+
+  -160.89758710  2p(5).3s1_3P.3p1_4D
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.911858  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.070487  0.000000
+   0.000000  0.000000  0.000000 -0.068680  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.084543  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.377872  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.060897  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.067055
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.016565  0.000000  0.000000  0.000000
+   0.000000  0.001515  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.020339  0.000000  0.000000
+
+  -160.88898076  2p(5).3s1_3P.3p1_4P
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.929657  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000 -0.068591  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.098689  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.336048  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.061856  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.065671  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+  -0.014649  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000 -0.003546  0.000000  0.000000  0.000000
+
+  -160.88480292  2p(5).3s1_1P.3p1_2D
+   0.000000  0.000000  0.754562  0.000000  0.000000  0.526966  0.000000
+   0.000000  0.000000  0.043062  0.000000 -0.058045  0.000000  0.000000
+   0.000000  0.069074  0.000000  0.000000  0.041180  0.000000  0.000000
+  -0.046622  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.049434  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.305340  0.000000  0.000000  0.170018
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.085751  0.000000
+   0.000000  0.030348  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.069274  0.000000  0.000000  0.033005  0.000000  0.000000  0.000000
+   0.009771  0.000000 -0.001072  0.000000  0.000000  0.000000  0.012796
+   0.000000  0.000000  0.003094  0.000000  0.000000 -0.007221  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.003401  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+
+  -160.88059939  2p(5).3s1_1P.3p1_2P
+   0.000000  0.746662  0.000000  0.000000  0.548276  0.000000  0.000000
+   0.000000  0.000000  0.000000 -0.055692  0.000000  0.000000  0.000000
+   0.074437  0.000000  0.000000  0.000000  0.000000  0.000000 -0.043248
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.069604
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.284264  0.000000  0.000000  0.177944  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.084565  0.000000  0.000000
+   0.032075  0.000000  0.000000  0.000000  0.000000  0.000000  0.066075
+   0.000000  0.000000  0.036038  0.000000  0.000000  0.000000  0.000000
+   0.000000 -0.009885  0.000000  0.000000  0.000000 -0.000734  0.000000
+   0.000000  0.000000  0.000000  0.000000 -0.003340  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.010303  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+
+  -160.86954950  2p(5).3s1_1P.3p1_2S
+   0.869024  0.000000  0.000000  0.363269  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.152380
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.025254  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.264040  0.000000  0.000000 -0.047520  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.101043  0.000000  0.000000  0.008009
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.077638  0.000000
+   0.000000 -0.006469  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.020707  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000 -0.015101  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+
+  -160.83017314  2p(5).3s1_3P.3p1_2S
+  -0.323912  0.000000  0.000002  0.901579  0.000001 -0.000002  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 -0.106258
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.233161  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000 -0.118959  0.000000  0.000000  0.029956  0.000000  0.000000
+   0.000000  0.000000  0.000000 -0.008412  0.000000  0.000000  0.001285
+   0.000000  0.000000  0.000000  0.000000  0.000000 -0.020127  0.000000
+   0.000000  0.030413  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000 -0.008634  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.007505  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+
+  -160.82984347  2p(5).3s1_3P.3p1_2D
+  -0.000001  0.000000 -0.529619  0.000003 -0.000001  0.791957  0.000000
+   0.000000  0.000000 -0.048016  0.000000  0.101585  0.000000  0.000000
+   0.000000 -0.080304  0.000000  0.000000  0.109548  0.000000  0.000000
+  -0.157221  0.000000  0.000000  0.000000  0.000000  0.000001  0.000000
+   0.128943  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000 -0.102495  0.000000  0.000000  0.075375
+   0.000000  0.000000  0.000000  0.000000  0.000000 -0.031540  0.000000
+   0.000000 -0.004535  0.000000  0.000000  0.000000  0.000000  0.000000
+  -0.031057  0.000000  0.000000  0.029076  0.000000  0.000000  0.000000
+  -0.003525  0.000000  0.018811  0.000000  0.000000  0.000000 -0.002382
+   0.000000  0.000000  0.006707  0.000000  0.000000 -0.020180  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.007226  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+
+  -160.82832868  2p(5).3s1_3P.3p1_2P
+   0.000000 -0.553021  0.000000 -0.000001  0.777040  0.000001  0.000000
+   0.000000  0.000000  0.000000  0.064684  0.000000  0.000000  0.000000
+  -0.133910  0.000000  0.000000  0.000000  0.000000  0.000000 -0.095889
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.210556
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000 -0.087717  0.000000  0.000000  0.058375  0.000000
+   0.000000  0.000000  0.000000  0.000000 -0.031875  0.000000  0.000000
+  -0.010170  0.000000  0.000000  0.000000  0.000000  0.000000 -0.028825
+   0.000000  0.000000  0.023464  0.000000  0.000000  0.000000  0.000000
+   0.000000 -0.000454  0.000000  0.000000  0.000000 -0.023048  0.000000
+   0.000000  0.000000  0.000000  0.000000 -0.003795  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.024159  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+
+
+    1 EIGENVALUES FOUND 
+
+  -160.89957747  2p(5).3s1_3P.3p1_4D
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.912061  0.000000  0.000000  0.000000  0.000100  0.000000
+   0.000000  0.000000  0.000139  0.000000  0.000000  0.070323  0.000000
+   0.000000  0.000082  0.000000 -0.068914  0.000138  0.000000  0.000000
+   0.000000  0.000046  0.000000  0.000000  0.000000  0.084471  0.000087
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.377395  0.000000  0.000000  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.060903  0.000000  0.000000
+   0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.067029
+   0.000000  0.000000  0.000000 -0.000002  0.000000  0.000000  0.000000
+  -0.000007  0.000000  0.000000  0.016501  0.000000  0.000000 -0.000002
+   0.000000  0.001536 -0.000005  0.000000  0.000000  0.000000 -0.000002
+   0.000000  0.000000  0.000000  0.020289 -0.000003  0.000000
+
+
+    4 EIGENVALUES FOUND 
+
+  -160.89795070  2p(5).3s1_3P.3p1_4D
+   0.000000  0.000000 -0.122494  0.000000  0.000000 -0.083673  0.000000
+   0.150629  0.887631 -0.006947  0.000000  0.009624  0.000052  0.000000
+   0.000000 -0.011181  0.000071  0.000000 -0.006431  0.068603  0.000000
+   0.007442  0.000029 -0.011089 -0.066859  0.000137  0.000000  0.000000
+  -0.007800  0.000035  0.000000  0.000000  0.016054  0.082274  0.000098
+   0.000000  0.000000  0.000000 -0.049561  0.000000  0.000000 -0.028271
+   0.000000  0.055189  0.367924  0.000000  0.000000 -0.013585  0.000000
+   0.000000 -0.004949  0.000000  0.009985  0.059300  0.000000  0.000000
+  -0.010843  0.000000  0.000000 -0.005244  0.000000  0.010480  0.065186
+  -0.001553  0.000000  0.000181 -0.000001  0.000000  0.000000 -0.002031
+  -0.000004  0.000000 -0.000520  0.016119  0.000000  0.001164  0.000000
+  -0.002370  0.001471 -0.000004  0.000000  0.000000 -0.000576 -0.000002
+   0.000000  0.000000 -0.000541  0.019788 -0.000004  0.000000
+
+  -160.89030676  2p(5).3s1_3P.3p1_4P
+   0.000000  0.000000  0.223750  0.000000  0.000000  0.154451  0.000000
+   0.882497 -0.099610  0.012806  0.000000 -0.017362 -0.000015  0.000000
+   0.000000  0.020446 -0.000020  0.000000  0.011989 -0.007690  0.000000
+  -0.013585  0.000014 -0.065060  0.007470 -0.000023  0.000000  0.000000
+   0.014334 -0.000027  0.000000  0.000000  0.093741 -0.009365 -0.000038
+   0.000000  0.000000  0.000000  0.090047  0.000000  0.000000  0.049832
+   0.000000  0.318645 -0.041296  0.000000  0.000000  0.025186  0.000000
+   0.000000  0.008913  0.000000  0.058748 -0.006730  0.000000  0.000000
+   0.020222  0.000000  0.000000  0.009604  0.000000  0.062276 -0.007444
+   0.002858  0.000000 -0.000326  0.000000  0.000000  0.000000  0.003746
+   0.000002  0.000000  0.000884 -0.001835  0.000000 -0.002065 -0.000001
+  -0.013858 -0.000163  0.000000  0.000000  0.000000  0.000977  0.000001
+   0.000000  0.000000 -0.003382 -0.002238  0.000002  0.000000
+
+  -160.88309584  2p(5).3s1_1P.3p1_2D
+   0.000000  0.000000  0.707469  0.000000  0.000000  0.500955  0.000000
+  -0.250828  0.183258  0.040289  0.000000 -0.054008 -0.000022  0.000000
+   0.000000  0.064655 -0.000028  0.000000  0.039448  0.014405  0.000000
+  -0.044768  0.000070  0.018571 -0.013593  0.000002  0.000000  0.000000
+   0.047302 -0.000074  0.000000  0.000000 -0.026511  0.017122 -0.000072
+   0.000000  0.000000  0.000000  0.286716  0.000000  0.000000  0.160376
+   0.000000 -0.090524  0.076109  0.000000  0.000000  0.080773  0.000000
+   0.000000  0.028479  0.000000 -0.016589  0.012089  0.000000  0.000000
+   0.065296  0.000000  0.000000  0.031425  0.000000 -0.017969  0.013889
+   0.009198  0.000000 -0.000904  0.000001  0.000000  0.000000  0.012054
+   0.000003  0.000000  0.002955  0.003408  0.000000 -0.006930 -0.000005
+   0.003975  0.000299 -0.000002  0.000000  0.000000  0.003250  0.000003
+   0.000000  0.000000  0.000962  0.004184  0.000005  0.000000
+
+  -160.83186297  2p(5).3s1_3P.3p1_2D
+   0.000000  0.000000 -0.533564  0.000000  0.000000  0.789262  0.000000
+   0.002824 -0.002600 -0.048326  0.000000  0.101829 -0.000015  0.000000
+   0.000000 -0.080697 -0.000017  0.000000  0.109305 -0.000225  0.000000
+  -0.156966 -0.000022 -0.000255  0.000339 -0.000164  0.000000  0.000000
+   0.128745 -0.000127  0.000000  0.000000  0.000257 -0.000229  0.000038
+   0.000000  0.000000  0.000000 -0.103315  0.000000  0.000000  0.074829
+   0.000000  0.000365 -0.001004  0.000000  0.000000 -0.031774  0.000000
+   0.000000 -0.004584  0.000000  0.000032  0.000058  0.000000  0.000000
+  -0.031216  0.000000  0.000000  0.028865  0.000000  0.000188 -0.000187
+  -0.003539  0.000000  0.018723 -0.000003  0.000000  0.000000 -0.002411
+   0.000000  0.000000  0.006677 -0.000047  0.000000 -0.020104  0.000004
+  -0.000018 -0.000018  0.000009  0.000000  0.000000  0.007203  0.000010
+   0.000000  0.000000 -0.000045 -0.000063 -0.000006  0.000000
+
+
+    7 EIGENVALUES FOUND 
+
+  -160.91191910  2p(5).3s1_3P.3p1_4S
+   0.000000  0.041602  0.000438  0.000000  0.027752  0.000367  0.877312
+   0.082505  0.002389  0.000025 -0.003173 -0.000032  0.000000  0.000000
+   0.004494  0.000038  0.000000  0.000000  0.000030  0.000185 -0.002134
+  -0.000034  0.000000 -0.006158 -0.000181  0.000000  0.000000  0.003308
+   0.000032  0.000000  0.000000  0.135676  0.008899  0.000216  0.000000
+   0.000000  0.000000  0.016377  0.000208  0.000000  0.009524  0.000087
+   0.437415  0.031629  0.001027  0.000000  0.004479  0.000052  0.000000
+   0.001687  0.000010  0.058890  0.005463  0.000153  0.000000  0.003439
+   0.000042  0.000000  0.001743  0.000017  0.068407  0.005596  0.000170
+   0.000006 -0.000538 -0.000001  0.000000  0.000000  0.000049  0.000009
+   0.000000  0.000000  0.000001  0.000044 -0.000157 -0.000004  0.000000
+  -0.001319  0.000003  0.000000  0.000000  0.000461  0.000001  0.000000
+   0.000000  0.038697 -0.000236  0.000054  0.000000  0.000000
+
+  -160.89635951  2p(5).3s1_3P.3p1_4D
+   0.000000 -0.075005 -0.130794  0.000000 -0.052508 -0.088594 -0.010773
+   0.156715  0.880165 -0.007447  0.005609  0.010299  0.000000  0.000000
+  -0.007740 -0.011970  0.000000  0.000000 -0.006776  0.068174  0.004052
+   0.007774  0.000000 -0.011536 -0.066120  0.000101  0.000000 -0.006438
+  -0.008212  0.000000  0.000000 -0.001684  0.016695  0.081650  0.000083
+   0.000000  0.000000 -0.028596 -0.052978  0.000000 -0.017275 -0.029780
+  -0.005381  0.057343  0.365202  0.000000 -0.008271 -0.014538  0.000000
+  -0.003106 -0.005269 -0.000743  0.010413  0.058813  0.000000 -0.006385
+  -0.011644  0.000000 -0.003366 -0.005514 -0.000872  0.010904  0.064658
+  -0.001665  0.000969  0.000217  0.000000  0.000000  0.000010 -0.002177
+   0.000000  0.000000 -0.000537  0.016034  0.000304  0.001211  0.000000
+  -0.002471  0.001445 -0.000003  0.000000 -0.000919 -0.000593  0.000000
+   0.000000 -0.000486 -0.000566  0.019660 -0.000004  0.000000
+
+  -160.88855494  2p(5).3s1_3P.3p1_4P
+   0.000000 -0.145266  0.273244  0.000000 -0.103202  0.186173 -0.061942
+   0.839697 -0.104370  0.015658  0.010802 -0.021300  0.000000  0.000000
+  -0.014727  0.025072  0.000000  0.000000  0.014352 -0.008082  0.008039
+  -0.016177  0.000000 -0.061948  0.007800 -0.000026  0.000000 -0.012882
+   0.017245  0.000000  0.000000 -0.009728  0.089126 -0.009813 -0.000059
+   0.000000  0.000000 -0.054743  0.110077  0.000000 -0.034488  0.060806
+  -0.031602  0.303466 -0.043453  0.000000 -0.016150  0.030768  0.000000
+  -0.006261  0.010980 -0.004231  0.055912 -0.007026  0.000000 -0.012516
+   0.024793  0.000000 -0.006820  0.011621 -0.005118  0.059294 -0.007808
+   0.003504  0.001876 -0.000448  0.000000  0.000000  0.000105  0.004583
+   0.000000  0.000000  0.001079 -0.001934  0.000645 -0.002499  0.000000
+  -0.013244 -0.000165  0.000000  0.000000 -0.001925  0.001185  0.000000
+   0.000000 -0.002880 -0.003206 -0.002357  0.000003  0.000000
+
+  -160.88515750  2p(5).3s1_1P.3p1_2D
+   0.000000 -0.055963  0.688604  0.000000 -0.037321  0.475089  0.029756
+  -0.322739  0.196466  0.039385  0.004263 -0.053266  0.000000  0.000000
+  -0.005823  0.063179  0.000000  0.000000  0.036884  0.015408  0.002812
+  -0.041581  0.000000  0.023857 -0.014592 -0.000016  0.000000 -0.004495
+   0.044339  0.000000  0.000000  0.004681 -0.034183  0.018343 -0.000118
+   0.000000  0.000000 -0.020434  0.278438  0.000000 -0.012789  0.154189
+   0.015400 -0.116502  0.081594  0.000000 -0.006164  0.078086  0.000000
+  -0.002490  0.027725  0.002010 -0.021431  0.013016  0.000000 -0.004775
+   0.063133  0.000000 -0.002563  0.029720  0.002483 -0.022948  0.014778
+   0.008908  0.000693 -0.001079  0.000000  0.000000  0.000016  0.011655
+   0.000000  0.000000  0.002776  0.003643  0.000235 -0.006458  0.000000
+   0.005108  0.000320 -0.000002  0.000000 -0.000675  0.003044  0.000000
+   0.000000  0.001408  0.001238  0.004465  0.000008  0.000000
+
+  -160.87964762  2p(5).3s1_1P.3p1_2P
+   0.000000  0.723204  0.089036  0.000000  0.536757  0.067465 -0.059208
+   0.153521  0.083085  0.005012 -0.053868 -0.006580  0.000000  0.000000
+   0.071692  0.008044  0.000000  0.000000  0.005452  0.006520 -0.042550
+  -0.006274  0.000000 -0.011401 -0.006132  0.000004  0.000000  0.068621
+   0.006542  0.000000  0.000000 -0.009339  0.016227  0.007816 -0.000011
+   0.000000  0.000000  0.275708  0.037185  0.000000  0.173230  0.020737
+  -0.031639  0.055194  0.035178  0.000000  0.082168  0.010382  0.000000
+   0.031104  0.003514 -0.003876  0.010118  0.005437  0.000000  0.064225
+   0.008454  0.000000  0.035262  0.004082 -0.005023  0.011031  0.006343
+   0.001200 -0.009613 -0.000086  0.000000  0.000000 -0.000827  0.001582
+   0.000000  0.000000  0.000396  0.001581 -0.003266 -0.000953  0.000000
+  -0.002438  0.000111  0.000000  0.000000  0.010152  0.000431  0.000000
+   0.000000 -0.002907 -0.000602  0.001933  0.000001  0.000000
+
+  -160.83065795  2p(5).3s1_3P.3p1_2P
+   0.000000 -0.481216 -0.268476  0.000000  0.666834  0.400884  0.002386
+  -0.001563 -0.003353 -0.024281  0.056264  0.051395  0.000000  0.000000
+  -0.115817 -0.040884  0.000000  0.000000  0.055248 -0.000288 -0.082722
+  -0.079542  0.000000  0.000169  0.000298 -0.000127  0.000000  0.181004
+   0.065469  0.000000  0.000000  0.000329 -0.000154 -0.000245  0.000027
+   0.000000  0.000000 -0.077097 -0.052313  0.000000  0.049485  0.037653
+   0.000907 -0.000745 -0.001023  0.000000 -0.027795 -0.015938  0.000000
+  -0.008815 -0.002353  0.000000 -0.000012 -0.000002  0.000000 -0.025119
+  -0.015741  0.000000  0.019959  0.014570  0.000193 -0.000120 -0.000246
+  -0.001799 -0.000338  0.009524  0.000000  0.000000 -0.019786 -0.001212
+   0.000000  0.000000  0.003384 -0.000051 -0.003236 -0.010172  0.000000
+   0.000031 -0.000026  0.000007  0.000000  0.020725  0.003614  0.000000
+   0.000000  0.000099 -0.000002 -0.000071 -0.000005  0.000000
+
+  -160.82547995  2p(5).3s1_3P.3p1_2D
+   0.000000  0.278076 -0.450842  0.000000 -0.394981  0.686766 -0.001231
+   0.001807 -0.000191 -0.040946 -0.032466  0.087292  0.000000  0.000000
+   0.067651 -0.068537  0.000000  0.000000  0.094954 -0.000014  0.048541
+  -0.135980  0.000000 -0.000187  0.000127 -0.000224  0.000000 -0.106885
+   0.111328  0.000000  0.000000 -0.000166  0.000164 -0.000041  0.000043
+   0.000000  0.000000  0.043481 -0.087298  0.000000 -0.029885  0.065938
+  -0.000429  0.000426 -0.000166  0.000000  0.016033 -0.026974  0.000000
+   0.005197 -0.003844  0.000014 -0.000012  0.000077  0.000000  0.014477
+  -0.026628  0.000000 -0.012046  0.025471 -0.000097  0.000124 -0.000005
+  -0.003027  0.000264  0.016381  0.000000  0.000000  0.011711 -0.002026
+   0.000000  0.000000  0.005837 -0.000006  0.001931 -0.017545  0.000000
+  -0.000018 -0.000004  0.000012  0.000000 -0.012303  0.006290  0.000000
+   0.000000 -0.000048 -0.000020 -0.000008 -0.000008  0.000000
+
+
+    6 EIGENVALUES FOUND 
+
+  -160.89503195  2p(5).3s1_3P.3p1_4D
+  -0.005712 -0.120082  0.000000 -0.003213 -0.083017  0.000000  0.000000
+   0.112729  0.893362  0.000000  0.009012  0.000000  0.000000 -0.000951
+  -0.012441  0.000000  0.000000  0.000000  0.000000  0.069316  0.006354
+   0.000000  0.000000 -0.008301 -0.066978  0.000000 -0.000357 -0.010099
+   0.000000  0.000000  0.000000  0.000000  0.012005  0.082934  0.000000
+   0.000000 -0.001846 -0.045580  0.000000  0.000256 -0.027497  0.000000
+   0.000000  0.041186  0.370866 -0.000667 -0.013232  0.000000 -0.000044
+  -0.005018  0.000000  0.000000  0.007502  0.059690 -0.000500 -0.010230
+   0.000000  0.000020 -0.005350  0.000000  0.000000  0.007850  0.065689
+   0.000000  0.001544  0.000000  0.000000 -0.000141  0.000001  0.000000
+   0.000000  0.000000  0.000000  0.016312  0.000484  0.000000  0.000000
+  -0.001780  0.001459  0.000000  0.000093 -0.001448  0.000000  0.000000
+   0.000000  0.000000 -0.000410  0.019988  0.000000  0.000000
+
+  -160.88766082  2p(5).3s1_3P.3p1_4P
+  -0.117673 -0.063744  0.000000 -0.055048 -0.044694  0.000000  0.000000
+   0.908763 -0.123563  0.000000  0.004746  0.000000  0.000000 -0.020087
+  -0.006508  0.000000  0.000000  0.000000  0.000000 -0.009626  0.003434
+   0.000000  0.000000 -0.067106  0.009206  0.000000 -0.005006 -0.005451
+   0.000000  0.000000  0.000000  0.000000  0.096445 -0.011568  0.000000
+   0.000000 -0.035819 -0.024298  0.000000  0.004942 -0.014896  0.000000
+   0.000000  0.328591 -0.051422 -0.013405 -0.007112  0.000000 -0.001399
+  -0.002661  0.000000  0.000000  0.060503 -0.008258 -0.010061 -0.005533
+   0.000000  0.000519 -0.002930  0.000000  0.000000  0.064174 -0.009236
+   0.000000  0.000834  0.000000  0.000000 -0.002741  0.000012  0.000000
+   0.000000  0.000000  0.000000 -0.002289  0.000274  0.000000  0.000000
+  -0.014365 -0.000197  0.000000  0.001884 -0.000817  0.000000  0.000000
+   0.000000  0.000000 -0.003464 -0.002796  0.000000  0.000000
+
+  -160.88096870  2p(5).3s1_1P.3p1_2P
+  -0.087329  0.733999  0.000000 -0.034192  0.534282  0.000000  0.000000
+   0.084304  0.132484  0.000000 -0.054809  0.000000  0.000000 -0.015251
+   0.073459  0.000000  0.000000  0.000000  0.000000  0.010376 -0.041956
+   0.000000  0.000000 -0.006274 -0.009792  0.000000 -0.002212  0.067459
+   0.000000  0.000000  0.000000  0.000000  0.008935  0.012465  0.000000
+   0.000000 -0.025853  0.279051  0.000000  0.003797  0.174245  0.000000
+   0.000000  0.030232  0.055995 -0.009810  0.082962  0.000000 -0.001156
+   0.031584  0.000000  0.000000  0.005561  0.008718 -0.007421  0.064840
+   0.000000  0.000520  0.035121  0.000000  0.000000  0.006026  0.010065
+   0.000000 -0.009688  0.000000  0.000000 -0.001985 -0.000629  0.000000
+   0.000000  0.000000  0.000000  0.002513 -0.003265  0.000000  0.000000
+  -0.001333  0.000181  0.000000  0.001411  0.009991  0.000000  0.000000
+   0.000000  0.000000 -0.000335  0.003068  0.000000  0.000000
+
+  -160.86908593  2p(5).3s1_1P.3p1_2S
+   0.856814  0.068296  0.000000  0.356644  0.040719  0.000000  0.000000
+   0.135268  0.002411  0.000000 -0.005432  0.000000  0.000000  0.150377
+   0.007606  0.000000  0.000000  0.000000  0.000000  0.000192 -0.002706
+   0.000000  0.000000 -0.010005 -0.000174  0.000000  0.024478  0.003757
+   0.000000  0.000000  0.000000  0.000000  0.014069  0.000226  0.000000
+   0.000000  0.260405  0.027351  0.000000 -0.047225  0.013067  0.000000
+   0.000000  0.051153  0.001079  0.099681  0.007861  0.000000  0.007799
+   0.002210  0.000000  0.000000  0.008808  0.000145  0.076647  0.006309
+   0.000000 -0.006472  0.002673  0.000000  0.000000  0.009998  0.000189
+   0.000000 -0.000945  0.000000  0.000000  0.020435  0.000290  0.000000
+   0.000000  0.000000  0.000000  0.000049 -0.000183  0.000000  0.000000
+  -0.002286  0.000001  0.000000 -0.014928  0.000562  0.000000  0.000000
+   0.000000  0.000000 -0.000401  0.000060  0.000000  0.000000
+
+  -160.83167681  2p(5).3s1_3P.3p1_2S
+  -0.282484 -0.258794  0.000000  0.798374  0.363880  0.000000  0.000000
+   0.003422 -0.001829  0.000000  0.030241  0.000000  0.000000 -0.093238
+  -0.062652  0.000000  0.000000  0.000000  0.000000 -0.000156 -0.044910
+   0.000000  0.000000 -0.000230  0.000127  0.000000  0.206185  0.098411
+   0.000000  0.000000  0.000000  0.000000  0.000450 -0.000124  0.000000
+   0.000000 -0.103068 -0.040401  0.000000  0.026289  0.027485  0.000000
+   0.000000  0.004377 -0.000503 -0.006802 -0.014721  0.000000  0.001157
+  -0.004730  0.000000  0.000000  0.000456 -0.000026 -0.017239 -0.013320
+   0.000000  0.026706  0.010870  0.000000  0.000000  0.000403 -0.000136
+   0.000000 -0.000229  0.000000  0.000000 -0.007436 -0.010696  0.000000
+   0.000000  0.000000  0.000000 -0.000026 -0.001779  0.000000  0.000000
+  -0.000189 -0.000014  0.000000  0.006532  0.011261  0.000000  0.000000
+   0.000000  0.000000  0.000145 -0.000037  0.000000  0.000000
+
+  -160.82481167  2p(5).3s1_3P.3p1_2P
+   0.156981 -0.483852  0.000000 -0.419505  0.689998  0.000000  0.000000
+  -0.002510 -0.002863  0.000000  0.056637  0.000000  0.000000  0.050690
+  -0.117987  0.000000  0.000000  0.000000  0.000000 -0.000248 -0.084536
+   0.000000  0.000000  0.000228  0.000196  0.000000 -0.108898  0.186787
+   0.000000  0.000000  0.000000  0.000000 -0.000299 -0.000178  0.000000
+   0.000000  0.059256 -0.076636  0.000000 -0.014257  0.052358  0.000000
+   0.000000 -0.002730 -0.000683  0.004953 -0.027971  0.000000 -0.000585
+  -0.008946  0.000000  0.000000 -0.000191 -0.000001  0.010326 -0.025321
+   0.000000 -0.014554  0.021058  0.000000  0.000000 -0.000267 -0.000208
+   0.000000 -0.000438  0.000000  0.000000  0.004386 -0.020541  0.000000
+   0.000000  0.000000  0.000000 -0.000036 -0.003403  0.000000  0.000000
+   0.000116 -0.000027  0.000000 -0.003675  0.021473  0.000000  0.000000
+   0.000000  0.000000 -0.000083 -0.000054  0.000000  0.000000
+1
+
+
+ ENERGY LEVELS
+
+
+ Z =  11      11 electrons
+
+
+
+----------------------------------------------------------------
+ Configuration         Term  J     Total Energy  Energy Level 
+                                      (a.u.)        (cm-1)
+----------------------------------------------------------------
+ 
+ 
+ 2p(5).3s1_3P.3p       4S   1.5    -160.9119191         0.00
+ 
+                       4D   3.5    -160.8995775      2708.61
+                            2.5    -160.8979507      3065.64
+                            1.5    -160.8963595      3414.85
+                            0.5    -160.8950320      3706.21
+ 
+                       4P   2.5    -160.8903068      4743.25
+                            1.5    -160.8885549      5127.72
+                            0.5    -160.8876608      5323.95
+ 
+ 
+ 2p(5).3s1_1P.3p       2D   1.5    -160.8851575      5873.35
+                            2.5    -160.8830958      6325.82
+ 
+                       2P   0.5    -160.8809687      6792.67
+                            1.5    -160.8796476      7082.60
+ 
+                       2S   0.5    -160.8690859      9400.57
+ 
+ 
+ 2p(5).3s1_3P.3p       2D   2.5    -160.8318630     17569.87
+ 
+                       2S   0.5    -160.8316768     17610.73
+ 
+                       2P   1.5    -160.8306579     17834.34
+ 
+                       2D   1.5    -160.8254799     18970.75
+ 
+                       2P   0.5    -160.8248117     19117.41
+
+
+ 2p(5).3s1_3P.3p1  4S    1.5 -160.91191910
+    0.8773122  2p(5).3s1_3P.3p1  4S 
+    0.4374148  2p(5).3s1_3P.4p1  4S 
+    0.1356757  2p(5).3p2_3D.3d2  4S 
+
+
+ 2p(5).3s1_3P.3p1  4D    3.5 -160.89957747
+    0.9120606  2p(5).3s1_3P.3p1  4D 
+    0.3773954  2p(5).3s1_3P.4p1  4D 
+
+
+ 2p(5).3s1_3P.3p1  4D    2.5 -160.89795070
+    0.8876308  2p(5).3s1_3P.3p1  4D 
+    0.3679241  2p(5).3s1_3P.4p1  4D 
+    0.1506291  2p(5).3s1_3P.3p1  4P 
+   -0.1224940  2p(5).3s1_1P.3p1  2D 
+
+
+ 2p(5).3s1_3P.3p1  4D    1.5 -160.89635951
+    0.8801647  2p(5).3s1_3P.3p1  4D 
+    0.3652024  2p(5).3s1_3P.4p1  4D 
+    0.1567152  2p(5).3s1_3P.3p1  4P 
+   -0.1307937  2p(5).3s1_1P.3p1  2D 
+
+
+ 2p(5).3s1_3P.3p1  4D    0.5 -160.89503195
+    0.8933618  2p(5).3s1_3P.3p1  4D 
+    0.3708665  2p(5).3s1_3P.4p1  4D 
+   -0.1200822  2p(5).3s1_1P.3p1  2P 
+    0.1127291  2p(5).3s1_3P.3p1  4P 
+
+
+ 2p(5).3s1_3P.3p1  4P    2.5 -160.89030676
+    0.8824970  2p(5).3s1_3P.3p1  4P 
+    0.3186453  2p(5).3s1_3P.4p1  4P 
+    0.2237505  2p(5).3s1_1P.3p1  2D 
+    0.1544512  2p(5).3s1_3P.3p1  2D 
+
+
+ 2p(5).3s1_3P.3p1  4P    1.5 -160.88855494
+    0.8396973  2p(5).3s1_3P.3p1  4P 
+    0.3034658  2p(5).3s1_3P.4p1  4P 
+    0.2732438  2p(5).3s1_1P.3p1  2D 
+    0.1861727  2p(5).3s1_3P.3p1  2D 
+   -0.1452660  2p(5).3s1_1P.3p1  2P 
+    0.1100769  2p(5).3s1_1P.4p1  2D 
+   -0.1043698  2p(5).3s1_3P.3p1  4D 
+   -0.1032020  2p(5).3s1_3P.3p1  2P 
+
+
+ 2p(5).3s1_3P.3p1  4P    0.5 -160.88766082
+    0.9087634  2p(5).3s1_3P.3p1  4P 
+    0.3285907  2p(5).3s1_3P.4p1  4P 
+   -0.1235634  2p(5).3s1_3P.3p1  4D 
+   -0.1176731  2p(5).3s1_1P.3p1  2S 
+
+
+ 2p(5).3s1_1P.3p1  2D    1.5 -160.88515750
+    0.6886045  2p(5).3s1_1P.3p1  2D 
+    0.4750895  2p(5).3s1_3P.3p1  2D 
+   -0.3227391  2p(5).3s1_3P.3p1  4P 
+    0.2784382  2p(5).3s1_1P.4p1  2D 
+    0.1964663  2p(5).3s1_3P.3p1  4D 
+    0.1541886  2p(5).3s1_3P.4p1  2D 
+   -0.1165017  2p(5).3s1_3P.4p1  4P 
+
+
+ 2p(5).3s1_1P.3p1  2D    2.5 -160.88309584
+    0.7074691  2p(5).3s1_1P.3p1  2D 
+    0.5009550  2p(5).3s1_3P.3p1  2D 
+    0.2867165  2p(5).3s1_1P.4p1  2D 
+   -0.2508285  2p(5).3s1_3P.3p1  4P 
+    0.1832584  2p(5).3s1_3P.3p1  4D 
+    0.1603758  2p(5).3s1_3P.4p1  2D 
+
+
+ 2p(5).3s1_1P.3p1  2P    0.5 -160.88096870
+    0.7339995  2p(5).3s1_1P.3p1  2P 
+    0.5342815  2p(5).3s1_3P.3p1  2P 
+    0.2790509  2p(5).3s1_1P.4p1  2P 
+    0.1742447  2p(5).3s1_3P.4p1  2P 
+    0.1324842  2p(5).3s1_3P.3p1  4D 
+
+
+ 2p(5).3s1_1P.3p1  2P    1.5 -160.87964762
+    0.7232042  2p(5).3s1_1P.3p1  2P 
+    0.5367569  2p(5).3s1_3P.3p1  2P 
+    0.2757077  2p(5).3s1_1P.4p1  2P 
+    0.1732297  2p(5).3s1_3P.4p1  2P 
+    0.1535207  2p(5).3s1_3P.3p1  4P 
+
+
+ 2p(5).3s1_1P.3p1  2S    0.5 -160.86908593
+    0.8568141  2p(5).3s1_1P.3p1  2S 
+    0.3566444  2p(5).3s1_3P.3p1  2S 
+    0.2604046  2p(5).3s1_1P.4p1  2S 
+    0.1503766  2p(5).3p2_1D.3d2  2S 
+    0.1352680  2p(5).3s1_3P.3p1  4P 
+
+
+ 2p(5).3s1_3P.3p1  2D    2.5 -160.83186297
+    0.7892619  2p(5).3s1_3P.3p1  2D 
+   -0.5335640  2p(5).3s1_1P.3p1  2D 
+   -0.1569657  2p(5).3p2_3P.3d2  2D 
+    0.1287453  2p(5).3p2_3D.3d2  2D 
+    0.1093054  2p(5).3p2_3S.3d2  2D 
+   -0.1033145  2p(5).3s1_1P.4p1  2D 
+    0.1018287  2p(5).3p2_1P.3d2  2D 
+
+
+ 2p(5).3s1_3P.3p1  2S    0.5 -160.83167681
+    0.7983736  2p(5).3s1_3P.3p1  2S 
+    0.3638801  2p(5).3s1_3P.3p1  2P 

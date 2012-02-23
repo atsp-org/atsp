@@ -1,0 +1,109 @@
+1
+
+
+         HARTREE-FOCK WAVE FUNCTIONS FOR  Li    2P     Z =  3.0
+
+              CORE = 
+
+
+           CONFIGURATION                                     WEIGHT
+
+
+
+     1        1s( 2) 2p1( 1)                                 1.00000000
+                 1S0     2P1
+                            2P0
+
+     2        1s( 1) 2s2( 1) 2p2( 1)                         0.00000000
+                 2S1     2S1     2P1
+                            1S0     2P0
+
+     3        1s( 1) 2s3( 1) 2p3( 1)                         0.00000000
+                 2S1     2S1     2P1
+                            3S0     2P0
+
+
+         INPUT DATA
+         ----- ----
+
+             WAVE FUNCTION  PROCEDURE
+                 NL  SIGMA METH ACC OPT
+
+
+
+       1   1s  1  0    0.0   1 0.0  -1
+       2  2p1  2  1    0.0   1 0.0  -1
+       3  2s2  2  0    0.0   3 0.0  -1
+       4  2p2  2  1    0.0   3 0.0  -1
+       5  2s3  2  0    0.0   3 0.0  -1
+       6  2p3  2  1    0.0   3 0.0  -1
+
+
+
+        INITIAL ESTIMATES 
+
+          NL    SIGMA      E(NL)    AZ(NL)    FUNCTIONS
+
+
+          1s     0.00      5.061     9.262    SCALED Li    2P        
+         2p1     0.00      0.257     0.426    SCALED Li    2P        
+         2s2     0.00      0.000     3.674    SCREENED HYDROGENIC    
+         2p2     0.00      0.000     3.182    SCREENED HYDROGENIC    
+         2s3     0.00      0.000     3.674    SCREENED HYDROGENIC    
+         2p3     0.00      0.000     3.182    SCREENED HYDROGENIC    
+
+      WEIGHTS
+    1  0.9999    2 -0.0099    3 -0.0105
+
+
+          TOTAL ENERGY =       -7.365734658
+    1       -7.3650607
+    2        0.0355388     -3.8632662
+    3        0.0306104      0.0713024     -4.5134187
+
+
+          NUMBER OF FUNCTIONS ITERATED          =     5
+          MAXIMUM WEIGHTED CHANGE IN FUNCTIONS  =  0.21D-06
+          TOLERANCE FOR THE MCHF ITERATION      =  0.54D-09
+
+
+
+
+          OVERLAP INTEGRALS FOR ATOM Li     TERM 2P    
+
+                    (NL)   (NL)       INTEGRAL
+
+
+                     2p2    2p1     0.03850149
+                     2s3    2s2     0.97823999
+                     2p3    2p1     0.33692013
+                     2p3    2p2     0.94052941
+
+
+
+                        ATOM Li       TERM 2P    
+
+  nl       E(nl)        I(nl)       KE(nl)        Rel(nl)   S(nl)     Az(nl)
+  1s     5.0614518    -4.443007     3.612006    -0.000330   0.38      9.26183
+ 2p1     0.2586750    -0.657985     0.143357    -0.000002   1.95      0.43756
+ 2s2     6.3746844    -1.136840     1.870976    -0.000274  -0.33      5.04931
+ 2p2     5.3120810    -0.690483     2.731323    -0.000386  -1.05      7.27355
+ 2s3     5.7933726    -1.131017     1.436682    -0.000242   0.26      4.66409
+ 2p3     4.6645156    -0.997040     1.932839    -0.000180  -1.08      4.44865
+
+
+  nl      Delta(R)     1/R**3       1/R         R        R**2
+  1s         6.826       0.0000    2.68500   0.57331    0.44728
+ 2p1         0.000       0.0604    0.26711   4.76517   27.49979
+ 2s2         2.029       0.0000    1.00261   1.79942    4.06741
+ 2p2         0.000       3.6793    1.14060   1.23323    2.85005
+ 2s3         1.731       0.0000    0.85590   2.18676    6.13203
+ 2p3         0.000       2.0819    0.97663   1.22627    1.74475
+
+
+     ENERGY (a.u.)
+     ------
+           Total                  -7.365734658
+           Potential             -14.730765503
+           Kinetic                 7.365030844
+           Ratio                   2.000095562

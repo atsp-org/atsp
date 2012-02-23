@@ -1,0 +1,1710 @@
+***********************************************************************
+*
+	PROGRAM MLTPOL
+*
+*               C O P Y R I G H T -- 1994
+*
+*  M.GODEFROID  LABORATOIRE DE CHIMIE PHYSIQUE MOLECULAIRE
+*               UNIVERSITE LIBRE OF BRUSSELS, BELGIUM
+*  A.HIBBERT    DEPARTMENPT OF APPLIED MATHEMATICS
+*               QUEEN'S UNIVERSITY, BELFAST, NORTHERN IRELAND
+*  C.F.FISCHER  DEPARTMENT OF COMPUTER SCIENCE
+*               VANDERBILT UNIVERSITY, NASHVILLE, TENN., USA
+*  1981
+*
+*    Computer Physics Communications, Vol. 64, 485--500 (1991).
+***********************************************************************
+*
+*  THIS PROGRAM EVALUATES THE REDUCED MATRIX ELEMENTS OF ELECTRIC AND
+*  MAGNETIC TRANSITION OPERATORS BETWEEN CSF EXPANSIONS IN THE LS
+*  REPRESENTATION IN TERMS OF ONE-ELECTRON RME.
+*
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NWD2=2*NWD,NCD=100,NCD4=4*NCD)
+      CHARACTER IM*1, NAME(2)*24, OUTPUT*24
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/INFORM/IREADI,IWRITE,IOUT,IREADF,ISC(7)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :J1QN2(19,3),IJFUL(10)
+      COMMON/STATES/NCFG,MAXORB,IAJCMP(NWD2),LJCOMP(NWD2),NJCOMP(NWD2),
+     :NOCCSH(NCD4),NELCSH(5,NCD4),NOCORB(5,NCD4),J1QNRD(9,NCD4)
+      COMMON/EMS/IEM(4),IFL,JI,JF,LAM
+      COMMON/OVRLAP/MU,NU,MUP,NUP,NONORT,NOVLPS,IROWMU,IROWNU,ICOLMU,
+     1 ICOLNU,NORTH,IORDER,NCALLS,LMU,LNU,LMUP,LNUP,JMU,JNU,JMUP,JNUP,
+     2 IORTH(NWD*NWD)
+      COMMON/OVRINT/IOVEL(2),IOVER(2),IOVEP(2)
+      COMMON/FACT/GAM(100)
+      COMMON/NTRM/NTERMS
+      COMMON/NOR/NCOM,NORBI,NORBF
+    1 FORMAT(///20X,'======================'/
+     :          20X,'  M U L T I P O L E   '/
+     :          20X,'======================'//)
+   55 FORMAT(14X,1H*)
+  555 FORMAT( ///32X,'NUMBER OF TERMS IN THE ABOVE SUMMATION =',I3)
+   32 FORMAT(1H1 ,' ELECTRIC TRANSITION OF ORDER ',I3,/)
+   31 FORMAT(1H1 ,' MAGNETIC TRANSITION OF ORDER ',I3,/)
+    6 FORMAT(A1,I1)
+CDBG8 FORMAT(////
+CDBG :         ' IBUG3  =',I3,' (DEBUG IN RECOUPLING PACKAGE)'/
+CDBG :         ' NBUG6  =',I3,' (DEBUG IN TENSOR PACKAGE)'//)
+    2 FORMAT(1H ,41X,2H_ /19H < INITIAL STATE ||,A2,1H(,I1,75H)|| FINAL
+     1STATE > = >  COEFF * WEIGHT(INITIAL,I) * WEIGHT(FINAL,J) * < NL||,
+     2A2,1H(,I1,8H)||N'L'>)
+    4 FORMAT(1H+,41X,2H_ /41X,3HI,J///5X,'COEFF      I    J     < NL||'
+     1,A2,1H(,I1,8H)||N'L'>//)
+*
+*     ...  THE FOLLOWING SECTION CONCERNS INPUT/OUTPUT AND MAY BE
+*          SYSTEM DEPENDENT.  CHECK ALLOWED UNIT NUMBERS AND
+*          FILE NAME CONVENTIONS - MODIFY, IF NECESSARY.
+*
+      IREADI = 1
+      IREADF = 2
+      IWRITE = 6
+      IOUT=7
+CSUN      i = iargc()
+CSUN      if (i .gt. 0) then
+CSUN    	 call getarg(1,OUTPUT)
+CSUN      else
+        	 OUTPUT= 'mltpol.lst'
+CSUN      end if
+      OPEN(UNIT=IOUT, FILE=OUTPUT,STATUS='UNKNOWN')
+*
+      WRITE(IWRITE,1)
+      IBUG1 = 0
+      IBUG2 = 0
+      IBUG3 = 0
+      NBUG6 = 0
+*
+*  ---  DETERMINE DEBUG INFORMATION
+*
+CDBG  WRITE(0,*)  ' Input IBUG3, NBUG6 (0/1) '
+CDBG  READ (5,*) IBUG3,NBUG6
+CDBG  WRITE(IWRITE,8) IBUG3,NBUG6
+*
+*  ---  GET THE CONFIGURATION DATA FOR THE STATES
+*
+11    WRITE(0,*) 'Name of Initial State'
+      READ (5,'(A)') NAME(1)
+      WRITE(0,*) 'Name of Final State'
+      READ (5,'(A)') NAME(2)
+      Do 12 I = 1,2
+    	 J = INDEX(NAME(I),' ')
+    	 IF (J .NE. 0) THEN
+    		NAME(I) = NAME(I)(1:J-1)//'.c'
+    	 ELSE
+    		WRITE(0,*) ' Names may not start with blanks'
+    		GO TO 11
+		 END IF
+12    Continue
+      CALL CFGIN2(MCFG,KCFG,.FALSE.,NAME)
+      CALL ORTH
+*
+*  SPECIFY THE NATURE OF THE TRANSITION
+*
+   82 WRITE(0,*)
+     :      ' Type of transition ? (E1, E2, M1, M2, .. or *) '
+      READ (5,6) IM, LAM
+      IF (IM .EQ. '*' .OR. IM .EQ. ' ' ) STOP ' END OF CASE'
+      IF (IM .EQ. 'e') IM = 'E'
+      IF (IM .EQ. 'm') IM = 'M'
+      IF (IM .EQ. 'E' ) THEN
+         IFL = 1
+         WRITE(IWRITE,32) LAM
+      ELSE
+         IFL = 2
+         WRITE(IWRITE,31) LAM
+      ENDIF
+*
+*     SET FACTORIALS AND LOG OF FACTORIALS
+*
+      CALL FACTRL(32)
+*
+*     CALCULATE THE ELEMENTS OF VSHELL
+*
+      WRITE(IWRITE,2) IEM(IFL),LAM,IEM(IFL),LAM
+      WRITE(IWRITE,4) IEM(IFL),LAM
+      NTERMS=0
+      IF(IFL.EQ.2) IFL=3
+      KA=LAM
+      KB=0
+      ISPIN=0
+  502 DO 10 JI=1,MCFG
+      DO 20 JF=1,KCFG
+      IF(NBUG6.NE.0) WRITE(IWRITE,1005) JI,JF
+ 1005 FORMAT(//,' JI =',I3,'  JF =',I3)
+      JFF = JF+MCFG
+      NOVLPS=0
+      JMUP=0
+      JNUP=0
+      JMU=0
+      JNU=0
+      IF (NORTH .NE. 0) CALL NORTBP(JI,JFF)
+      IF(NBUG6.NE.0) WRITE(IWRITE,1001) NORTH,JMU,JNU,JMUP,JNUP,NOVLPS
+ 1001 FORMAT(/,1H ,'NORTH = ',I3,/
+     1           ' JMU = ',I3,2X,'JNU = ',I3,/
+     2           ' JMUP= ',I3,2X,'JNUP= ',I3,/
+     3           ' NOVLPS = ',I3,/)
+*
+*     SET UP THE OCCUPATION AND COUPLING ARRAYS
+*
+      CALL SETUP(JI,JFF)
+*
+*  TEST SELECTION RULES DELTA(S)=0 FOR EK AND M1
+*                       DELTA(L)=0 FOR M1
+*
+      I2HSH = IHSH*2 - 1
+      IF(IM.EQ.'E'.OR.(IM.EQ.'M'.AND.LAM.EQ.1)) THEN
+         IF(J1QN1(I2HSH,3).NE.J1QN2(I2HSH,3)) GO TO 20
+      ENDIF
+      IF(IM.EQ.'M'.AND.LAM.EQ.1) THEN
+         IF(J1QN1(I2HSH,2).NE.J1QN2(I2HSH,2)) GO TO 20
+      ENDIF
+*
+*     CALL THE MAIN ROUTINE - TENSOR
+*
+      CALL TENSOR(KA,KB,ISPIN,IRHO,ISIG)
+   20 CONTINUE
+   10 CONTINUE
+      WRITE(IOUT,55)
+      IF (IFL.EQ.1) WRITE(IOUT,55)
+      IF (IFL.NE.3) GO TO 501
+      IFL=4
+      KA=LAM-1
+      KB=1
+      ISPIN=2
+      GOTO 502
+  501 WRITE(IWRITE,555) NTERMS
+      GO TO 82
+*
+*  END OF THE CASE
+*
+      STOP
+      END
+*
+*     ------------------------------------------------------------------
+*	C N D E N S
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE CNDENS(I1L)
+      PARAMETER(KFL1=60,KFL2=12)
+      PARAMETER (NWD=30,NWD2=2*NWD,NCD=100,NCD4=4*NCD)
+*
+      LOGICAL FREE
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/OVRLAP/MU,NU,MUP,NUP,NONORT,NOVLPS,IROWMU,IROWNU,ICOLMU,
+     : ICOLNU,NORTH,IORDER,NCALLS,LMU,LNU,LMUP,LNUP,JMU,JNU,JMUP,JNUP,
+     :     IORTH(NWD*NWD)
+*
+      NJ23ST=NJ23S
+      NJ23=NJ23S-1
+      CALL PIKUP1(J2,NJ23,MUP,NUP,IROWMU,IROWNU,ICOLMU,ICOLNU)
+      IF(IROWMU.NE.IROWNU) GO TO 1
+      IROWM1=IROWMU+1
+      J2(IROWM1+1,1)=J2(IROWM1,2)
+      CALL SCRAP(J2,NJ23,IROWMU)
+      CALL SCRAP(J2,NJ23,IROWMU)
+      GO TO 3
+    1 IMU=J2(IROWMU,3)
+      CALL PIKUP2(J2,NJ23,IROWMU,IMU,IROW,ICOL)
+      IF(IROWMU.EQ.NJ23) GO TO 2
+      J2(IROW,ICOL)=J2(IROWMU,3-ICOLMU)
+    2 IF(NOVLPS.EQ.1.OR.MUP.EQ.NUP) GO TO 4
+      IMU=J2(IROWNU,3)
+      CALL PIKUP2(J2,NJ23,IROWNU,IMU,IROW,ICOL)
+      IF(IROWNU.EQ.NJ23) GO TO 4
+      J2(IROW,ICOL)=J2(IROWNU,3-ICOLNU)
+    4 CALL SCRAP(J2,NJ23,IROWMU)
+      IF(NOVLPS.LT.2.OR.MUP.EQ.NUP) GO TO 3
+      IROWNU=IROWNU-1
+      CALL SCRAP(J2,NJ23,IROWNU)
+    3 NJ23=NJ23ST-1
+      CALL PIKUP1(J3,NJ23,MU,NU,IROWMU,IROWNU,ICOLMU,ICOLNU)
+      IF(IROWMU.NE.IROWNU) GO TO 11
+      IROWM1=IROWMU+1
+      J3(IROWM1+1,1)=J3(IROWM1,2)
+      CALL SCRAP(J3,NJ23,IROWMU)
+      CALL SCRAP(J3,NJ23,IROWMU)
+      GO TO 13
+   11 IMU=J3(IROWMU,3)
+      CALL PIKUP2(J3,NJ23,IROWMU,IMU,IROW,ICOL)
+      IF(IROWMU.EQ.NJ23) GO TO 12
+      J3(IROW,ICOL)=J3(IROWMU,3-ICOLMU)
+   12 IF(NOVLPS.EQ.1.OR.MU.EQ.NU) GO TO 14
+      IMU=J3(IROWNU,3)
+      CALL PIKUP2(J3,NJ23,IROWNU,IMU,IROW,ICOL)
+      IF(IROWNU.EQ.NJ23) GO TO 14
+      J3(IROW,ICOL)=J3(IROWNU,3-ICOLNU)
+   14 CALL SCRAP(J3,NJ23,IROWMU)
+      IF(NOVLPS.LT.2.OR.MU.EQ.NU) GO TO 13
+      IROWNU=IROWNU-1
+      CALL SCRAP(J3,NJ23,IROWNU)
+   13 IF(MU.EQ.NU.AND.MUP.NE.NUP) GO TO 21
+      IF(MUP.EQ.NUP.AND.MU.NE.NU) GO TO 22
+      CALL PIKUP1(J3,NJ23,MUP,NUP,IROWMU,IROWNU,ICOLMU,ICOLNU)
+      J3(IROWMU,ICOLMU)=MU
+      IF(IROWNU.EQ.0) GO TO 23
+      J3(IROWNU,ICOLNU)=NU
+      GO TO 23
+   21 NJ23=NJ23ST-3
+      IROW=3-I1L
+      CALL NSCRAP(J2,NJ23,IROW)
+      J2(IROW,1)=MUP
+      J2(IROW,2)=NUP
+      J2(IROW,3)=MU
+      GO TO 23
+   22 NJ23=NJ23ST-3
+      IROW=3-I1L
+      CALL NSCRAP(J3,NJ23,IROW)
+      J3(IROW,1)=MU
+      J3(IROW,2)=NU
+      J3(IROW,3)=MUP
+   23 NJ23S=NJ23+1
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	M A T C H
+*     ------------------------------------------------------------------
+*
+      INTEGER FUNCTION MATCH(IA, IB, IC, ID)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NWD2=2*NWD,NCD=100,NCD4=4*NCD)
+*
+      COMMON/OVRINT/IOVEL(2),IOVER(2),IOVEP(2)
+      COMMON/OVRLAP/MU,NU,MUP,NUP,NONORT,NOVLPS,IROWMU,IROWNU,ICOLMU,
+     : ICOLNU,NORTH,IORDER,NCALLS,LMU,LNU,LMUP,LNUP,JMU,JNU,JMUP,JNUP,
+     :     IORTH(NWD*NWD)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     :     J1QN2(19,3),IJFUL(10)
+      COMMON/INFORM/IREADI,IWRITE,IOUT,IREADF,ISC(7)
+      COMMON/EMS/IEM(4),IFL,JA,JB,LAM
+      COMMON/MACHOR/IMATCH(2)
+      COMMON/NOR/NCOM,NORBI,NORBF
+      IMATCH(1)=0
+      IMATCH(2)=0
+      IM = 0
+      NA = 0
+      NB = 0
+      NC = 0
+      ND = 0
+  200 IF (MU .NE. 0) NA = NOSH1(MU)
+      IF (NU .NE. 0 .AND. MU .NE. NU) NB = NOSH1(NU)
+      IF (MUP .NE. 0) NC = NOSH2(MUP)
+      IF (NUP .NE. 0 .AND. MUP .NE. NUP) ND = NOSH2(NUP)
+      NA = NA - IA
+      NB = NB - IB
+      NC = NC - IC
+      ND = ND - ID
+      IF (NA.LT.0 .OR. NB.LT.0 .OR. NC.LT.0 .OR. ND.LT.0) GO TO 20
+      IF ((NA+NB) .EQ. (NC+ND)) GO TO 14
+   20 MATCH = 1
+      RETURN
+   14 IF (NA.EQ.0 .AND. NB.EQ.0 .AND. NC.EQ.0 .AND. ND.EQ.0) GO TO 17
+      IF ((NA.EQ.0 .OR. NB.EQ.0).AND.(NC.EQ.0 .OR. ND.EQ.0)) GO TO 15
+      NOVLPS=2
+      GO TO 16
+   15 IF (NA .EQ. 0) MU = NU
+      IF (NC .EQ. 0) MUP = NUP
+      NU = 0
+      NUP = 0
+      NOVLPS = 1
+      LMU = LJ(MU)
+      LMUP = LJ(MUP)
+      IF (LMU .NE. LMUP) GO TO 20
+      IOVEL(1) = MU
+      IOVER(1) = MUP
+      IOVEP(1) = NA + NB
+      MATCH = 2
+      GO TO 30
+   17 MU = 0
+      NU = 0
+      MUP = 0
+      NUP = 0
+      NOVLPS = 0
+      MATCH = 2
+      RETURN
+   16 IF(NA.EQ.0) MU=NU
+      IF(NB.EQ.0) NU=MU
+      IF(NC.EQ.0) MUP=NUP
+      IF(ND.EQ.0) NUP=MUP
+      LA = LJ(MU)
+      LB = LJ(NU)
+      LC = LJ(MUP)
+      LD = LJ(NUP)
+      IF (LA .EQ. LB) GO TO 21
+      IF (LA .EQ. LC) GO TO 22
+      IF (LA .NE. LD .OR. NA .NE. ND) GO TO 20
+      IF (LB .NE. LC) GO TO 20
+      IOVEL(1) = MU
+      IOVER(1) = NUP
+      IOVEP(1) = NA
+      IOVEL(2) = NU
+      IOVER(2) = MUP
+      IOVEP(2) = NB
+      MATCH = 2
+      IM = 1
+      GO TO 30
+   22 IF (LB.NE.LD .OR. NB.NE.ND) GO TO 20
+      IOVEL(1) = MU
+      IOVER(1) = MUP
+      IOVEP(1) = NA
+      IOVEL(2) = NU
+      IOVER(2) = NUP
+      IOVEP(2) = NB
+      MATCH = 2
+      GO TO 30
+   21 IF (LA.NE.LC .OR. LA.NE.LD) GO TO 20
+      IF(MU .EQ. NU) GO TO 23
+      IF (MUP .EQ. NUP) GO TO 24
+      IF (NA.GT.1 .OR. NB.GT.1 .OR. NC.GT.1 .OR. ND.GT.1) GO TO 25
+      IOVEL(1) = MU
+      IOVER(1) = MUP
+      IOVEP(1) = 1
+      IOVEL(2) = NU
+      IOVER(2) = NUP
+      IOVEP(2) = 1
+      MATCH = 2
+      GO TO 30
+   25 WRITE(IWRITE,300) MU,NU,MUP,NUP,JA,JB
+  300 FORMAT(' THE FOLLOWING SUBSHELLS HAVE A COMMON L-VALUE BUT',
+     1  ' CONTAIN TOO MANY ELECTRONS FOR THIS CODE',5X,4I3/
+     2    5X,'THE MATRIX ELEMENT IS (',I2,1H,,I2,1H))
+      MATCH = 0
+      RETURN
+   23 IF ((NC+ND) .GT. 2) GO TO 25
+      IOVEL(1) = MU
+      IOVER(1) = MUP
+      IOVEP(1) = NC
+      IOVEL(2) = MU
+      IOVER(2) = NUP
+      IOVEP(2) = ND
+      MATCH = 2
+      GO TO 30
+   24 IF ((NA+NB) .GT. 2) GO TO 25
+      IOVEL(1) = MU
+      IOVER(1) = MUP
+      IOVEP(1) = NA
+      IOVEL(2) = NU
+      IOVER(2) = MUP
+      IOVEP(2) = NB
+      MATCH = 2
+      GO TO 30
+*
+*      FINAL CHECK ON ALLOWED NON-ORTHOGONALITY
+*
+   30 K1=1
+      K2=1
+      IGO=1
+   31 I1=IOVEL(K1)
+      I2=IOVER(K2)
+      I5=IJFUL(I1)
+      I6=IJFUL(I2)
+      I3=MIN0(I5,I6)
+      IF (I3 .LE. NCOM ) GO TO 34
+      I4=MAX0(I5,I6)
+*
+*  THE FOLLOWING CARD IS DIFFERENT THAN MATCH IN NON
+*
+      I1 = NORBF*(I3-NCOM-1) + I4 - NCOM - NORBI
+      I2=IORTH(I1)
+      GO TO (32,33,35,36),IGO
+   32 IF(I2.NE.1) GO TO 34
+      IF(NOVLPS.EQ.1) GO TO 33
+      K1=2
+      K2=2
+      IGO=2
+      GO TO 31
+   33 IF(I2.EQ.1) IMATCH(IM+1)=1
+   34 IF(NOVLPS.EQ.1) THEN
+         IF(IMATCH(1).EQ.0) GO TO 20
+         RETURN
+      ENDIF
+      K1=1
+      K2=2
+      IGO=3
+      GO TO 31
+   35 IF(I2.NE.1) GO TO 37
+      K1=2
+      K2=1
+      IGO=4
+      GO TO 31
+   36 IF(I2.EQ.1) IMATCH(2-IM)=1
+   37 IF(IMATCH(1).EQ.0.AND.IMATCH(2).EQ.0) GO TO 20
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	N O R T B P
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE NORTBP(JA,JB)
+      PARAMETER (NWD=30,NWD2=2*NWD,NCD=100,NCD4=4*NCD)
+*
+      DIMENSION ILNO(2),IRNO(2)
+      COMMON/INFORM/IREADI,IWRITE,IOUT,IREADF,ISC(7)
+      COMMON/OVRLAP/MU,NU,MUP,NUP,NONORT,NOVLPS,IROWMU,IROWNU,ICOLMU,
+     : ICOLNU,NORTH,IORDER,NCALLS,LMU,LNU,LMUP,LNUP,JMU,JNU,JMUP,JNUP,
+     : IORTH(NWD*NWD)
+      COMMON/STATES/NCFG,MAXORB,IAJCMP(NWD2),LJCOMP(NWD2),NJCOMP(NWD2),
+     :NOCCSH(NCD4),NELCSH(5,NCD4),NOCORB(5,NCD4),J1QNRD(9,NCD4)
+      COMMON/NOR/NCOM,NORBI,NORBF
+*
+  101 FORMAT(/63H INCORRECT NON-ORTHOGONALITY SET UP IN THE MATRIX ELEME
+     1NT  -  (,I2,3H/V/,I2,1H))
+*
+      N1=NOCCSH(JA)
+      N2=NOCCSH(JB)
+      JMU=0
+      JNU=0
+      JMUP=0
+      JNUP=0
+      IL=0
+      IR=0
+*
+* --- BEGIN SEARCH FOR NON-ORTHOGONAL SUBSHELLS IN THIS MATRIX ELEMENT
+*
+      DO 1 I=1,N1
+      NI=NOCORB(I,JA)
+      DO 2 J=1,N2
+      NJ=NOCORB(J,JB)
+      IF(NI.EQ.NJ) GO TO 2
+      NA=MIN0(NI,NJ)
+      IF (NA .LE. NCOM) GO TO 2
+      NB=MAX0(NI,NJ)
+*
+*   THE FOLLOWING CARD IS NOT THE SAME THAN IN NORTBP OF NON
+*
+      NC = NORBF*(NA-NCOM-1) + NB - NCOM - NORBI
+      IF(IORTH(NC).NE.1) GO TO 2
+      IF (IL .EQ. 0) GO TO 4
+      IF (ILNO(IL) .EQ. I) GO TO 14
+      IF (IL .EQ. 2) GO TO 100
+    4 IL = IL+1
+      ILNO(IL) = I
+   14 IF ( IR .EQ. 0) GO TO 7
+      DO 15 K = 1,IR
+      IF (IRNO(K) .EQ. J) GO TO 2
+   15 CONTINUE
+      IF (IR .EQ. 2) GO TO 100
+    7 IR = IR+1
+      IRNO(IR) = J
+    2 CONTINUE
+    1 CONTINUE
+      IF(IL.EQ.0) GO TO 8
+      IF(IR.EQ.1) GO TO 11
+      IF(IRNO(1).LE.IRNO(2)) GO TO 11
+      ISTO=IRNO(1)
+      IRNO(1)=IRNO(2)
+      IRNO(2)=ISTO
+   11 JMU=ILNO(1)
+    3 IF(IL.EQ.1) GO TO 5
+      JNU=ILNO(2)
+    5 JMUP=IRNO(1)
+    6 IF (IR .EQ. 1) GO TO 10
+      JNUP=IRNO(2)
+      GO TO 10
+    8 NOVLPS=0
+      RETURN
+  100 WRITE(IWRITE,101) JA,JB
+      RETURN
+   10 NMU=NOCORB(JMU,JA)
+      NMUP=NOCORB(JMUP,JB)
+      LMU=LJCOMP(NMU)
+      LMUP=LJCOMP(NMUP)
+      IF (JNU .EQ. 0 .AND. JNUP .EQ. 0) GO TO 9
+      IF (JNU .EQ. 0) JNU = JMU
+      IF (JNUP .EQ. 0) JNUP = JMUP
+      NNU=NOCORB(JNU,JA)
+      NNUP=NOCORB(JNUP,JB)
+      LNU=LJCOMP(NNU)
+      LNUP=LJCOMP(NNUP)
+      NOVLPS=2
+      RETURN
+    9 NOVLPS=1
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	N S C R A P
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE NSCRAP(IX,IRS,IR1)
+      PARAMETER (KFL2=12)
+      DIMENSION IX(KFL2,3)
+*
+      IR2=IRS+1-IR1
+      DO 1 I=1,IR2
+      II=IRS+1-I
+      I1=II+1
+      DO 2 K=1,3
+      IX(I1,K)=IX(II,K)
+    2 CONTINUE
+    1 CONTINUE
+      IRS=IRS+1
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	P I K U P 1
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE PIKUP1(IX,IRS,MU,NU,IR1,IR2,IC1,IC2)
+      PARAMETER (KFL2=12)
+      DIMENSION IX(KFL2,3)
+*
+      IR1=0
+      IR2=0
+      DO 1 I=1,IRS
+      DO 2 K=1,2
+      IA=IX(I,K)
+      IF(IA.EQ.MU) GO TO 3
+      IF(IA.EQ.NU) GO TO 4
+      GO TO 2
+    3 IR1=I
+      IC1=K
+      IF(MU.EQ.NU) RETURN
+      GO TO 2
+    4 IR2=I
+      IC2=K
+    2 CONTINUE
+    1 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	P I K U P 2
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE PIKUP2(IX,IRS,IR1,IMU,IR2,IC2)
+      PARAMETER (KFL2=12)
+      DIMENSION IX(KFL2,3)
+*
+      IR2=0
+      IR3=IR1+1
+      DO 1 I=IR3,IRS
+      DO 2 K=1,2
+      IA=IX(I,K)
+      IF(IA.NE.IMU) GO TO 2
+      IR2=I
+      IC2=K
+      RETURN
+    2 CONTINUE
+    1 CONTINUE
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	P R N T M L
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE PRNTML(IRHO,ISIG,VSHELL,VSHEL2)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NWD2=2*NWD,NCD=100,NCD4=4*NCD)
+*
+      COMMON/INFORM/IREADI,IWRITE,IOUT,IREADF,ISC(7)
+      COMMON/STATES/NCFG,MAXORB,IAJCMP(NWD2),LJCOMP(NWD2),NJCOMP(NWD2),
+     : NOCCSH(NCD4),NELCSH(5,NCD4),NOCORB(5,NCD4),J1QNRD(9,NCD4)
+      COMMON/EMS/IEM(4),IFL,JI,JF,LAM
+      COMMON/OVRLAP/MU,NU,MUP,NUP,NONORT,NOVLPS,IROWMU,IROWNU,ICOLMU,
+     : ICOLNU,NORTH,IORDER,NCALLS,LMU,LNU,LMUP,LNUP,JMU,JNU,JMUP,JNUP,
+     : IORTH(NWD*NWD)
+      COMMON/OVRINT/IOVEL(2),IOVER(2),IOVEP(2)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3),
+     : J1QN2(19,3),IJFUL(10)
+      COMMON/NTRM/NTERMS
+    3 FORMAT(2X,F12.8,I5,I5,5X,1H<,A3,2H||,A2,1H(,I1,3H)||,A3,2H >)
+    4 FORMAT(2X,F12.8,I5,I5,5X,1H<,A3,2H||,A2,1H(,I1,3H)||,A3,2H >,
+     : 3X,1H<,A3,1H|,A3,3H>**,I2)
+    5 FORMAT(2X,F12.8,I5,I5,5X,1H<,A3,2H||,A2,1H(,I1,3H)||,A3,2H >,
+     : 3X,1H<,A3,1H|,A3,3H>**,I2,
+     : 1X,1H<,A3,1H|,A3,3H>**,I2)
+    6 FORMAT(F14.8,A2,I1,1H(,A3,I3,1H,,A3,I3,1H):2(1H(,A3,1H|,A3,1H),I2:
+     : ))
+      JRHO=IJFUL(IRHO)
+      JSIG=IJFUL(ISIG)
+      IF (NOVLPS .GE. 1) THEN
+         JMU=IJFUL(MU)
+         JMUP=IJFUL(MUP)
+      END IF
+      IF(NOVLPS.EQ.0) THEN
+         IF(DABS(VSHELL).LT.1.D-14) RETURN
+         WRITE(IWRITE,3) VSHELL,JI,JF,IAJCMP(JRHO),IEM(IFL),LAM,
+     :                   IAJCMP(JSIG)
+         NTERMS=NTERMS+1
+         IF(IOUT.NE.0) WRITE(IOUT,6) VSHELL,IEM(IFL),LAM,IAJCMP(JRHO
+     1   ),JI,IAJCMP(JSIG),JF
+      ELSEIF(NOVLPS.EQ.1) THEN
+         IF(DABS(VSHELL).LT.1.D-14) RETURN
+         WRITE(IWRITE,4) VSHELL,JI,JF,IAJCMP(JRHO),IEM(IFL),LAM,
+     1                     IAJCMP(JSIG),
+     2                     IAJCMP(JMU),IAJCMP(JMUP),IOVEP(1)
+         NTERMS=NTERMS+1
+         IF(IOUT.NE.0) WRITE(IOUT,6) VSHELL,IEM(IFL),LAM,IAJCMP(JRHO
+     1   ),JI,IAJCMP(JSIG),JF,IAJCMP(JMU),IAJCMP(JMUP),IOVEP(1)
+      ELSE
+         JNU=IJFUL(NU)
+         JNUP=IJFUL(NUP)
+         IF(DABS(VSHELL).LT.1.D-14) GO TO 15
+         WRITE(IWRITE,5) VSHELL,JI,JF,IAJCMP(JRHO),IEM(IFL),LAM,
+     1                     IAJCMP(JSIG),
+     2                     IAJCMP(JMU),IAJCMP(JMUP),IOVEP(1),
+     3                     IAJCMP(JNU),IAJCMP(JNUP),IOVEP(2)
+         NTERMS=NTERMS+1
+         IF(IOUT.NE.0) WRITE(IOUT,6) VSHELL,IEM(IFL),LAM,IAJCMP(JRHO
+     1   ),JI,IAJCMP(JSIG),JF,IAJCMP(JMU),IAJCMP(JMUP),IOVEP(1),IAJCMP(J
+     2   NU),IAJCMP(JNUP),IOVEP(2)
+   15    IF(DABS(VSHEL2).GT.1.D-14) THEN
+            NTERMS=NTERMS+1
+            WRITE(IWRITE,5) VSHEL2,JI,JF,IAJCMP(JRHO),IEM(IFL),LAM,
+     1                        IAJCMP(JSIG),
+     2                        IAJCMP(JMU),IAJCMP(JNUP),IOVEP(1),
+     3                        IAJCMP(JNU),IAJCMP(JMUP),IOVEP(2)
+         IF(IOUT.NE.0) WRITE(IOUT,6) VSHEL2,IEM(IFL),LAM,IAJCMP(JRHO
+     1   ),JI,IAJCMP(JSIG),JF,IAJCMP(JMU),IAJCMP(JNUP),IOVEP(1),IAJCMP(J
+     2   NU),IAJCMP(JMUP),IOVEP(2)
+            ENDIF
+      ENDIF
+*
+*     PRINT OUT THE RESULTS AND OUTPUT THEM ON CHANNEL IOUT IF IOUT
+*     IS NOT EQUAL TO ZERO.
+*
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	B L O C K    D A T A
+*     ------------------------------------------------------------------
+*
+      BLOCK DATA RCONST
+*
+      IMPLICIT REAL *8(A-H,O-Z)
+*
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/EMS/IEM(4),IFL,JI,JF,LAM
+*
+*     SET GLOBAL REAL CONSTANTS
+*
+      DATA ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS/
+     :     0.0D 00,0.1D 00,0.5D 00,1.0D 00,2.0D 00,3.0D 00,4.0D 00,
+     :     7.0D 00,1.1D 01,1.0D-08/
+*
+*     SET GLOBAL SYMBOLS
+*
+      DATA IEM/2HE ,2HM ,2HMA, 2HMB/
+*
+      END
+*
+*     ------------------------------------------------------------------
+*	S C R A P
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SCRAP(IX,IRS,IR1)
+      PARAMETER (KFL2=12)
+      DIMENSION IX(KFL2,3)
+*
+      IF(IR1.EQ.IRS) GO TO 3
+      IR2=IR1+1
+      DO 1 I=IR2,IRS
+      I1=I-1
+      DO 2 K=1,3
+      IX(I1,K)=IX(I,K)
+    2 CONTINUE
+    1 CONTINUE
+      GO TO 4
+    3 IX(IRS-1,3)=IX(IRS,3)
+    4 IRS=IRS-1
+      RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	S E T U P
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE SETUP(JA,JB)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (NWD=30,NWD2=2*NWD,NCD=100,NCD4=4*NCD)
+*
+      COMMON/INFORM/IREADI,IWRITE,IOUT,IREADF,ISC(7)
+      COMMON/STATES/NCFG,MAXORB,IAJCMP(NWD2),LJCOMP(NWD2),NJCOMP(NWD2),
+     :NOCCSH(NCD4),NELCSH(5,NCD4),NOCORB(5,NCD4),J1QNRD(9,NCD4)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH(10,2),J1QN(19,3,2),IJFUL(10)
+      COMMON/OVRLAP/MU,NU,MUP,NUP,NONORT,NOVLPS,IROWMU,IROWNU,ICOLMU,
+     : ICOLNU,NORTH,IORDER,NCALLS,LMU,LNU,LMUP,LNUP,JMU,JNU,JMUP,JNUP,
+     :     IORTH(NWD*NWD)
+*
+*     NOTICE THE DIFFERENT NAMES IN THE COMMON BLOCK MEDEFN  -  WE
+*      STORE NOSH1(I=1,10) AS NOSH((I=1,10),1) AND NOSH2(I=1,10) AS
+*     NOSH((I=1,10),2)   AND USE THE FACT THAT NOSH1 AND NOSH2 WILL THEN
+*     BE EQUIVALENT TO THE SINGLE 2-DIMENSIONAL ARRAY NOSH.  SIMILARLY
+*     FOR J1QN
+*
+* === GENERATES THE ARRAYS  NJ,LJ - DEFINING THE QUANTUM NUMBERS OF THE
+*     SHELLS,   NOSH - DEFINING THE OCCUPATION OF THE SHELLS,  J1QN -
+*     DEFINING THE COUPLING OF THE SHELLS,   FOR EACH OF THE TWO
+*     CONFIGURATIONS CONSIDERED.    ONLY THOSE SHELLS OCCURRING IN AT
+*     LEAST ONE CONFIGURATION ARE INCLUDED.
+*                   AT LEAST TWO SHELLS MUST BE CONSIDERED OCCUPIED.
+*     THUS (1S)**2    HELIUM  MUST BE TREATED AS ,E.G., (1S)**2(2S)**0
+*     THE SIZE OF THE ARRAYS HERE CALCULATED IS ARRANGED TO BE NO
+*     GREATER THAN IS NECESSARY TO INCLUDE ALL ORBITALS WHICH ARE
+*     DEEMED TO BE OCCUPIED IN EITHER OR BOTH OF THE CONFIGURATIONS
+*     JA,JB
+*
+* --- INITIALIZE BASIC QUANTITIES - (I1+1) RUNS OVER 1,MAXORB,  IHSH IS
+*     THE CURRENT VALUE OF THE HIGHEST OCCUPIED SHELL YET CONSIDERED,
+*     WHILE I2HSH=2*IHSH-1
+*
+      MU=0
+      NU=0
+      MUP=0
+      NUP=0
+      I1=0
+      IHSH=0
+      I2HSH=-1
+      IA=NOCCSH(JA)
+      IB=NOCCSH(JB)
+*
+* --- TEST ON WHETHER LIMIT OF I1 HAS BEEN REACHED
+*
+    1 IF(I1-MAXORB) 101,100,100
+*
+* --- INCREASE BASIC QUANTITIES
+*
+  101 I1=I1+1
+      I3=IHSH+1
+      I5=I2HSH+I3
+*
+* --- IS THE SHELL I1 OCCUPIED IN JA
+*
+      DO 2 J=1,IA
+      IF(I1-NOCORB(J,JA)) 2,3,2
+    2 CONTINUE
+      NA=1
+      GO TO 4
+    3 NA=2
+      J1=J
+*
+* --- IS THE SHELL I1 OCCUPIED IN JB
+*
+    4 DO 5 J=1,IB
+      IF(I1-NOCORB(J,JB)) 5,6,5
+    5 CONTINUE
+      NB=1
+      GO TO 7
+    6 NB=2
+      J2=J
+*
+*     IF THE SHELL I1 IS NOT OCCUPIED IN EITHER JA OR JB, IGNORE THE
+*     SHELL, DO NOT INCREASE IHSH, AND CONSIDER NEXT SHELL BY INCREASING
+*     I1
+*
+    7 IF(NA-1) 8,8,9
+    8 IF(NB-1) 1,1,9
+*
+* --- IF THE SHELL I1 IS OCCUPIED IN EITHER JA OR JB -
+*     (1)   IF IHSH.GT.1, THEN ALREADY AT LEAST TWO SHELLS AND THE
+*     RESULTING COUPLINGS HAVE BEEN STORED. WE MUST THUS MAKE ROOM FOR
+*     THE QUANTUM NUMBERS OF THIS NEW SHELL BETWEEN THE QUANTUM NUMBERS
+*     OF THE PREVIOUS SHELLS AND THE QUANTUM NUMBERS OF THE INTERMEDIATE
+*     COUPLINGS OF THE CONFIGURATIONS.  THUS THE LATTER SET ARE =MOVED
+*     ALONG= TO MAKE ROOM FOR THE NEW SHELL
+*     (2)   IF IHSH.LE.1, THERE ARE NO INTERMEDIATE COUPLING QUANTUM
+*     NUMBERS, AND SO THERE IS NOTHING TO MOVE
+*
+    9 IF(IHSH-1) 11,11,10
+   10 DO 12 I=1,2
+      DO 13 J=I3,I2HSH
+      I4=I5-J
+      DO 14 K=1,3
+      J1QN(I4+1,K,I)=J1QN(I4,K,I)
+   14 CONTINUE
+   13 CONTINUE
+   12 CONTINUE
+   11 IHSH=I3
+      I2HSH=I2HSH+2
+      NCC=NA
+      I=1
+      IC=J1
+      JC=JA
+*
+* --- FIRST CONSIDER THE L.H.S. (I=1) OF THE MATRIX ELEMENT.  NC=1 MEANS
+*     UNOCCUPIED, REPRESENTED BY A DUMMY SINGLET S SHELL, AND THE
+*     ADDITIONAL SET OF COUPLING QUANTUM NUMBERS WILL BE THE SAME AS THE
+*     LAST SET OF COUPLING QUANTUM NUMBERS ALREADY OBTAINED.
+*     NC=2 MEANS OCCUPIED.  THEN ALL THE NEW QUANTUM NUMBERS (BOTH FOR
+*     THE SHELL AND FOR THE COUPLING OF THIS SHELL TO THE RESULTANT OF
+*     THE PREVIOUS ONES) ARE DEFINED IN THE CORRESPONDING J1QNRD ARRAY.
+*     NOSH - THE NUMBER OF ELECTRONS IN THIS SHELL, IS DEFINED BY THE
+*     APPROPRIATE ENTRY IN NELCSH .  THE R.H.S. IS THEN CONSIDERED
+*     SIMILARLY (I=2)
+*
+   25 GO TO (15,16),NCC
+   15 NOSH(IHSH,I)=0
+      J1QN(IHSH,1,I)=0
+      J1QN(IHSH,2,I)=1
+      J1QN(IHSH,3,I)=1
+      IF(IHSH-2) 22,18,19
+   18 J1QN(3,1,I)=0
+      J1QN(3,2,I)=J1QN(1,2,I)
+      J1QN(3,3,I)=J1QN(1,3,I)
+      GO TO 22
+   19 DO 27 K=1,3
+      J1QN(I2HSH,K,I)=J1QN(I2HSH-1,K,I)
+   27 CONTINUE
+      GO TO 22
+   16 NOSH(IHSH,I)=NELCSH(IC,JC)
+      IF(NOVLPS.EQ.0) GO TO 33
+      GO TO (31,32),I
+   31 IF(IC.EQ.JMU) MU=IHSH
+      IF(IC.EQ.JNU) NU=IHSH
+      GO TO 33
+   32 IF(IC.EQ.JMUP) MUP=IHSH
+      IF(IC.EQ.JNUP) NUP=IHSH
+   33 JD = J1QNRD(IC,JC)
+      J1QN(IHSH,1,I)=MOD(JD,64)
+      JD = JD/64
+      J1QN(IHSH,2,I) = MOD(JD,64)
+      J1QN(IHSH,3,I) = JD/64
+*
+*     IS THIS THE FIRST OCCUPIED SHELL OF EITHER CONFIGURATION. IF SO,
+*     THEN THERE ARE NO INTERMEDIATE COUPLINGS TO CONSIDER AT THIS STAGE
+*
+      IF(IHSH .GT. 1) THEN
+*
+*     IS THIS THE FIRST OCCUPIED SHELL OF THIS CONFIGURATION, THOUGH NOT
+*     THE FIRST OF THE OTHER CONFIGURATION.  IF SO, THE INTERMEDIATE
+*     COUPLING FORMED HAS THE SAME  L,S  VALUES AS THIS OCCUPIED SHELL,
+*     SINCE WE COUPLE THE SHELL TO A DUMMY SINGLET S.
+*
+         IF(IC .LE.1) THEN
+	    I2 = 1
+         ELSE
+	    I2 = NOCCSH(JC)+IC-1
+         END IF
+         JD = J1QNRD(I2,JC)
+         IF (IC .LE. 1) THEN
+	    J1QN(I2HSH,1,I) = 0
+         ELSE
+	    J1QN(I2HSH,1,I) = MOD(JD,64)
+         END IF
+         JD = JD/64
+         J1QN(I2HSH,2,I) = MOD(JD, 64)
+         J1QN(I2HSH,3,I) = JD/64
+      END IF
+*
+*     SENIORITY SET (ARBITRARILY) ZERO FOR INTERMEDIATE COUPLING
+*
+   22 IF(I-2) 23,24,24
+   23 NCC=NB
+      I=2
+      IC=J2
+      JC=JB
+      GO TO 25
+*
+* --- SET THE NJ AND LJ VALUES OF THE OCCUPIED SHELLS
+*
+   24 NJ(IHSH)=NJCOMP(I1)
+      IJFUL(IHSH)=I1
+      LJ(IHSH)=LJCOMP(I1)
+*
+* --- RETURN TO 1  TO SEE IF MAXORB HAS BEEN REACHED
+*
+      GO TO 1
+  100 RETURN
+      END
+*
+*     ------------------------------------------------------------------
+*	T E N S O R
+*     ------------------------------------------------------------------
+*
+      SUBROUTINE TENSOR(KA,KB,ISPIN,IRHO,ISIG)
+*
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER(KFL1=60,KFL2=12)
+      PARAMETER (NWD=30,NWD2=2*NWD,NCD=100,NCD4=4*NCD)
+*
+*     W. D. ROBB   -   NOVEMBER 1971
+*     Modified by M. GODEFROID   --  1981
+*
+* **********************************************************************
+*
+*     A ROUTINE FOR THE EVALUATION OF ANGULAR AND SPIN FACTORS IN THE
+*     REDUCED MATRIX ELEMENT OF ANY ONE-ELECTRON TENSOR OPERATOR BETWEEN
+*     ARBITRARILY COUPLED L-S CONFIGURATIONS (Modified for non-
+*     orthogonal orbitals)
+*
+************************************************************************
+*
+*     **  NOTE THAT THE DEFINITIONS OF TENSOR OPERATORS USED ARE THOSE
+*     OF FANO AND RACAH, IRREDUCIBLE TENSORIAL SETS, ACADEMIC PRESS 1959
+*
+************************************************************************
+*
+*                       DIMENSION STATEMENTS
+*
+      DIMENSION J2STO(KFL2,3),J3STO(KFL2,3),NBAR(KFL2),
+     :          JBAR(KFL2,3),JPBAR(KFL2,3)
+*
+*                       COMMON BLOCKS
+*
+      LOGICAL FAIL,FREE
+      COMMON/COUPLE/NJ1S,NJ23S,J1(KFL1),J2(KFL2,3),J3(KFL2,3),FREE(KFL1)
+      COMMON/INFORM/IREADI,IWRITE,IOUT,IREADF,ISC(7)
+      COMMON/KRON/IDEL(10,10)
+      COMMON/MEDEFN/IHSH,NJ(10),LJ(10),NOSH1(10),NOSH2(10),J1QN1(19,3)
+     :    ,J1QN2(19,3),IJFUL(10)
+      COMMON/DEBUG/IBUG1,IBUG2,IBUG3,NBUG6,NBUG7,IFULL
+      COMMON/TERMS/NROWS,ITAB(24),JTAB(24),NTAB(333)
+      COMMON/CONSTS/ZERO,TENTH,HALF,ONE,TWO,THREE,FOUR,SEVEN,ELEVEN,EPS
+      COMMON/OVRLAP/MU,NU,MUP,NUP,NONORT,NOVLPS,IROWMU,IROWNU,ICOLMU,
+     : ICOLNU,NORTH,IORDER,NCALLS,LMU,LNU,LMUP,LNUP,JMU,JNU,JMUP,JNUP,
+     : IORTH(NWD*NWD)
+      COMMON/OVRINT/IOVEL(2),IOVER(2),IOVEP(2)
+      COMMON/MACHOR/IMATCH(2)
+      COMMON/FACT/GAM(100)
+*
+  203 FORMAT(//7H NJ,LJ ,10(I6,I3))
+  204 FORMAT(//6H NOSH ,10I4)
+  205 FORMAT(//6H J1QN ,30I3)
+  207 FORMAT(8F15.8)
+  208 FORMAT(// 23H PARENT TERMS NOT FOUND//)
+  209 FORMAT(//3H J1)
+  210 FORMAT(24I5)
+  211 FORMAT(24H J2                   J3)
+  212 FORMAT(3I5,I10,2I5)
+  213 FORMAT(///26H ORBITAL RECOUPLING COEFF //)
+  214 FORMAT(///23H SPIN RECOUPLING COEFF //)
+  215 FORMAT(/29H THE CONTRIBUTION FROM SHELLS,2I2,3H IS,F15.8,2X,F15.8)
+  216  FORMAT(//21H THIS IS NOT A PARENT)
+  220 FORMAT(//6H SHELL,I2)
+  221 FORMAT(//)
+  302 FORMAT(/5X,89H NO CONTRIBUTION FROM TENSOR SINCE MORE THAN ONE ELE
+     1CTRON DIFFERENT IN THE CONFIGURATIONS/)
+  303 FORMAT(/5X,114H NO CONTRIBUTION FROM TENSOR SINCE THE TRIANGLE REL
+     1ATION BETWEEN KA AND THE TOTAL ANGULAR MOMENTA IS NOT SATISFIED/)
+  313 FORMAT(19H SPECTATOR SUBSHELL,I3,69H HAS DIFFERENT QUANTUM NUMBERS
+     1 ON THE TWO SIDES OF THE MATRIX ELEMENT/)
+  601 FORMAT(//5H KA =,I2,
+     1        /5H KB =,I2,
+     2        /8H ISPIN =,I2)
+*
+      IF(NOVLPS.EQ.0) THEN
+         IOVEP(1)=0
+         IOVEP(2)=0
+      ELSE IF(NOVLPS.EQ.1) THEN
+         IOVEP(2)=0
+      ENDIF
+      AJF=ONE
+      RML=ZERO
+      RML2=ZERO
+      IONE=1
+      IZERO=0
+      NOVSTO=NOVLPS
+      NTOT=0
+      ISUM=0
+      MUSTO=0
+      NUSTO=0
+      MUPSTO=0
+      NUPSTO=0
+      NOVSTO=0
+      LMUSTO=0
+      LNUSTO=0
+      LMUPST=0
+      LNUPST=0
+      IF(NBUG6.NE.0) WRITE(IWRITE,601) KA,KB,ISPIN
+*     DO 100 IS=1,IHSH
+      VSHELL=ZERO
+* 100 CONTINUE
+      IHSHP1=IHSH+1
+      I2HSH=IHSH*2-1
+*
+*     PRINT OUT THE OCCUPATION AND COUPLING ARRAYS
+*
+      IF(NBUG6.NE.1) GO TO 103
+    2 WRITE(IWRITE,203) (NJ(I),LJ(I),I=1,IHSH)
+      WRITE(IWRITE,204)(NOSH1(J),J=1,IHSH)
+      WRITE(IWRITE,204)(NOSH2(J),J=1,IHSH)
+      WRITE(IWRITE,205) ((J1QN1(J,K),K=1,3),J=1,I2HSH)
+      WRITE(IWRITE,205) ((J1QN2(J,K),K=1,3),J=1,I2HSH)
+*
+*      TEST FOR AT MOST ONE ELECTRON DIFFERENCE IN CONFIGURATIONS
+*
+*
+*     TEST FOR TRIANGLE RELATION BETWEEN KA AND TOTAL ANGULAR MOMENTA
+*
+  103 IF(ISPIN.EQ.0) GO TO 198
+      K=3
+      KC=KB
+      IF(ISPIN.EQ.2) GO TO 199
+      IF(J1QN1(I2HSH,2).NE.J1QN2(I2HSH,2)) GO TO 183
+      GO TO 199
+  198 K=2
+      KC=KA
+      IF(J1QN1(I2HSH,3).NE.J1QN2(I2HSH,3)) GO TO 183
+  199 LB=J1QN1(I2HSH,K)-1
+      NB=J1QN2(I2HSH,K)-1
+      MB=KC+KC
+      BTST=TRITST(MB,LB,NB)
+      IF(DABS(BTST).GT.EPS) GO TO 301
+      IF(K.EQ.2.OR.ISPIN.LT.2) GO TO 104
+      K=2
+      KC=KA
+      GO TO 199
+*
+*      DETERMINE IRHO AND ISIGMA, THE NUMBERS OF THE OCCUPIED SHELLS
+*
+  104 IBACK3=0
+      IF (NBUG6.NE.0) WRITE(IWRITE,1000)
+ 1000 FORMAT(11H GOT TO 104)
+      IX=0
+      IY=0
+      DO 102 I=1,IHSH
+      IF(I.EQ.MU.OR.I.EQ.NU.OR.I.EQ.MUP.OR.I.EQ.NUP) GO TO 102
+      N=NOSH1(I)-NOSH2(I)
+      IF(IABS(N).GT.1) GO TO 300
+      IF(N.EQ.0) THEN
+         GO TO 102
+      ELSE IF(N.EQ.1) THEN
+         IRHO=I
+         IX=IX+1
+      ELSE
+         ISIG=I
+         IY=IY+1
+      ENDIF
+  102 CONTINUE
+      IF(IX.GT.1.OR.IY.GT.1) GO TO 300
+  101 IF(NOVLPS.NE.0) THEN
+         MUSTO=MU
+         NUSTO=NU
+         MUPSTO=MUP
+         NUPSTO=NUP
+         NOVSTO=NOVLPS
+         LMUSTO=LMU
+         LNUSTO=LNU
+         LMUPST=LMUP
+         LNUPST=LNUP
+      ENDIF
+*
+*     INTERACTING SUBSHELLS FOUND
+*
+      IF(IX.EQ.1.AND.IY.EQ.1) THEN
+         IF(NOVLPS.EQ.0) GO TO 108
+         MGO=MATCH(IZERO,IZERO,IZERO,IZERO)
+         IF(MGO.EQ.2) GO TO 108
+         IRHO=0
+         RETURN
+      ENDIF
+*
+*     INTERACTING SUBSHELL ON R.H.S. FOUND. THE ONE ON L.H.S. MUST
+*     BE EITHER MU OR NU
+*
+  506 IF(IX.EQ.0.AND.IY.EQ.1) THEN
+         IF(IBACK3.EQ.0) THEN
+            IRHO=MU
+            IF(MU.NE.NU) IBACK3=1
+            MGO=MATCH(IONE,IZERO,IZERO,IZERO)
+            IF(MGO.EQ.0) THEN
+               IRHO=0
+               RETURN
+            ELSEIF(MGO.EQ.1) THEN
+               IF(IBACK3.EQ.1) THEN
+                  MU=MUSTO
+                  NU=NUSTO
+                  MUP=MUPSTO
+                  NUP=NUPSTO
+                  NOVLPS=NOVSTO
+                  LMU=LMUSTO
+                  LNU=LNUSTO
+                  LMUP=LMUPST
+                  LNUP=LNUPST
+                  GO TO 105
+               ELSE
+                  IRHO=0
+                  RETURN
+               ENDIF
+            ELSE
+               GO TO 108
+            ENDIF
+         ELSE
+  105       IRHO=NU
+            RML=ZERO
+            RML2=ZERO
+            IBACK3=0
+            MGO=MATCH(IZERO,IONE,IZERO,IZERO)
+            IF(MGO.EQ.2) GO TO 108
+            IRHO=0
+            RETURN
+         ENDIF
+*
+*     INTERACTING SUBSHELL ON L.H.S. FOUND. THE ONE ON R.H.S. MUST
+*     BE EITHER MUP OR NUP
+*
+      ELSE IF(IX.EQ.1.AND.IY.EQ.0) THEN
+         IF(IBACK3.EQ.0) THEN
+            ISIG=MUP
+            IF(MUP.NE.NUP) IBACK3=1
+            MGO=MATCH(IZERO,IZERO,IONE,IZERO)
+            IF(MGO.EQ.0) THEN
+               IRHO=0
+               RETURN
+            ELSEIF(MGO.EQ.1) THEN
+               IF(IBACK3.EQ.1) THEN
+                  MU=MUSTO
+                  NU=NUSTO
+                  MUP=MUPSTO
+                  NUP=NUPSTO
+                  NOVLPS=NOVSTO
+                  LMU=LMUSTO
+                  LNU=LNUSTO
+                  LMUP=LMUPST
+                  LNUP=LNUPST
+                  GO TO 106
+               ELSE
+                  IRHO=0
+                  RETURN
+               ENDIF
+            ELSE
+               GO TO 108
+            ENDIF
+         ELSE
+  106       ISIG=NUP
+            RML=ZERO
+            RML2=ZERO
+            IBACK3=0
+            MGO=MATCH(IZERO,IZERO,IZERO,IONE)
+            IF(MGO.LT.2) RETURN
+            GO TO 108
+         ENDIF
+      ELSE
+         ISUM=1
+         GO TO 107
+      ENDIF
+*
+*     SUM OVER SHELLS
+*
+  107 IRHO=1
+      ISIG=1
+ 1509 IF (NOSH1(IRHO).EQ.0) GO TO 189
+      IF(NOVLPS.EQ.0) GO TO 108
+      IF(NOVLPS.EQ.1) GO TO 508
+  509 IF(IRHO.NE.MU.AND.IRHO.NE.NU) THEN
+         MGO=MATCH(IZERO,IZERO,IZERO,IZERO)
+         IF(MGO.EQ.0) THEN
+            IRHO=0
+            RETURN
+         ELSEIF(MGO.EQ.1) THEN
+            GO TO 189
+         ELSE
+            GO TO 108
+         ENDIF
+      ELSE
+         IF(IBACK3.EQ.0) THEN
+            ISIG=MUP
+            IF(MUP.NE.NUP) IBACK3=1
+            IF(IRHO.EQ.MU) THEN
+               MGO=MATCH(IONE,IZERO,IONE,IZERO)
+            ELSE
+               MGO=MATCH(IZERO,IONE,IONE,IZERO)
+            ENDIF
+            IF(MGO.EQ.0) THEN
+               IRHO=0
+               RETURN
+            ELSEIF(MGO.EQ.1) THEN
+               IF(IBACK3.EQ.1) THEN
+                  MU=MUSTO
+                  NU=NUSTO
+                  MUP=MUPSTO
+                  NUP=NUPSTO
+                  NOVLPS=NOVSTO
+                  LMU=LMUSTO
+                  LNU=LNUSTO
+                  LMUP=LMUPST
+                  LNUP=LNUPST
+                  GO TO 507
+               ELSE
+                  GO TO 189
+               ENDIF
+            ELSE
+               GO TO 108
+            ENDIF
+         ELSE
+  507       ISIG=NUP
+            IF(NBUG6.NE.0) WRITE(IWRITE,1215) IRHO,ISIG
+ 1215 FORMAT(15H AT 507, IRHO =,I3,7H ISIG =,I3)
+            IBACK3=0
+            RML=ZERO
+            RML2=ZERO
+            IF(IRHO.EQ.MU) THEN
+               MGO=MATCH(IONE,IZERO,IZERO,IONE)
+            ELSE
+               MGO=MATCH(IZERO,IONE,IZERO,IONE)
+            ENDIF
+            IF(MGO.EQ.0) THEN
+               IRHO=0
+               RETURN
+            ELSEIF(MGO.EQ.1) THEN
+               GO TO 189
+            ELSE
+               GO TO 108
+            ENDIF
+         ENDIF
+      ENDIF
+  508 IF(IRHO.NE.MU) THEN
+         MGO=MATCH(IZERO,IZERO,IZERO,IZERO)
+      ELSE
+         ISIG=MUP
+         MGO=MATCH(IONE,IZERO,IONE,IZERO)
+      ENDIF
+      IF(MGO.EQ.0) THEN
+         IRHO=0
+         RETURN
+      ELSEIF(MGO.EQ.1) THEN
+         GO TO 189
+      ELSE
+         GO TO 108
+      ENDIF
+  108 MEMR=IRHO
+      IF (NBUG6.NE.0) WRITE(IWRITE,1001) IRHO,ISIG
+ 1001 FORMAT(' AT 108, IRHO =',I3,2X,'ISIG =',I3)
+      IF (NBUG6.NE.0) WRITE(IWRITE,1010) MU,MUP,NU,NUP,NOVLPS
+ 1010 FORMAT(' AT 108, MU =',I3,2X,'MUP =',I3,/,
+     1       '         NU =',I3,2X,'NUP =',I3,/,
+     2       '         NOVLPS =',I3)
+*
+*     THE BEGINNING OF THE LOOP OVER ALL SHELLS
+*
+  109 IF(ISUM.EQ.0) GO TO 309
+      IF(NBUG6-1) 309,4,309
+    4 WRITE(IWRITE,220) IRHO
+  309 NTOT=NTOT+1
+      LRHO=LJ(IRHO)
+      LSIG=LJ(ISIG)
+      L1=LRHO+1
+      L2=LSIG+1
+      AJF=DFLOAT(J1QN1(I2HSH,2))/DFLOAT(2*LRHO+1)
+      IF(ISPIN.EQ.1) AJF=DFLOAT(J1QN1(I2HSH,3))*HALF
+      IF(ISPIN.EQ.2) AJF=AJF*DFLOAT(J1QN1(I2HSH,3))*HALF
+*
+*     CHECK THE DIAGONAL CHARACTER OF QUANTUM NUMBERS OF SPECTATOR
+*     SHELLS
+*
+      DO 255 J=1,IHSH
+      IF(J.NE.IRHO) THEN
+         DO 253 KK=1,3
+         JBAR(J,KK)=J1QN1(J,KK)
+  253    CONTINUE
+      ENDIF
+      IF(J.NE.ISIG) THEN
+         DO 254 KK=1,3
+         JPBAR(J,KK)=J1QN2(J,KK)
+  254    CONTINUE
+      ENDIF
+      IF(J.EQ.MU.OR.J.EQ.NU.OR.J.EQ.MUP.OR.J.EQ.NUP) GO TO 255
+      IF(J.EQ.IRHO.OR.J.EQ.ISIG) GO TO 255
+      DO 256 KK=1,3
+      IF(JBAR(J,KK).NE.JPBAR(J,KK)) GO TO 257
+  256 CONTINUE
+  255 CONTINUE
+      DO 405 J = 1,IHSH
+      NBAR(J) = NOSH1(J)-IDEL(J,IRHO)
+  405 CONTINUE
+      IF(MUP.NE.0) NBAR(MUP)=NOSH2(MUP)-IDEL(MUP,ISIG)
+      IF(NUP.NE.0) NBAR(NUP)=NOSH2(NUP)-IDEL(NUP,ISIG)
+      IF(NOVLPS.LT.2) GO TO 175
+      IF(MU.EQ.NU) THEN
+         NKAP=NBAR(MUP)*NBAR(NUP)
+      ELSE
+         NKAP=NBAR(MU)*NBAR(NU)
+      ENDIF
+  175 IDELP=2
+      IF(IRHO.EQ.IHSH) GO TO 177
+      JRHO=IRHO+1
+      DO 178 J=JRHO,IHSH
+      IF(J.EQ.MUP.OR.J.EQ.NUP) GO TO 178
+      IDELP=IDELP+NBAR(J)
+  178 CONTINUE
+  177 IF(ISIG.EQ.IHSH) GO TO 481
+      JSIG=ISIG+1
+      DO 180 J=JSIG,IHSH
+      IF(J.EQ.MU.OR.J.EQ.NU) GO TO 180
+      IDELP=IDELP+NBAR(J)
+  180 CONTINUE
+  481 IF(NOVLPS.EQ.0) GO TO 181
+      IF(NOVLPS.EQ.1) GO TO 925
+      IF (MU.EQ.NU) GO TO 904
+      IF (MUP.EQ.NUP) GO TO 905
+      IF (NBAR(MU).EQ.NBAR(NUP)) GO TO 906
+      MU1N = MIN0(MU,MUP) + 1
+      MU1X = MAX0(MU,MUP) - 1
+      MU2N = MIN0(NU,NUP) + 1
+      MU2X = MAX0(NU,NUP) - 1
+      MU1=MU
+      NU1=NU
+      GO TO 933
+  906 MU1N = MIN0(MU,NUP) + 1
+      MU1X = MAX0(MU,NUP) - 1
+      MU2N = MIN0(NU,MUP) + 1
+      MU2X = MAX0(NU,MUP) - 1
+      MU1=MU
+      NU1=NU
+      GO TO 933
+  905 MU1N = MIN0(MU,MUP) + 1
+      MU1X = MAX0(MU,MUP) - 1
+      MU2N = MIN0(MUP,NU) + 1
+      MU2X = MAX0(MUP,NU) - 1
+      MU1=MU
+      NU1=NU
+      GO TO 933
+  904 MU1N = MIN0(MU,MUP) + 1
+      MU1X = MAX0(MU,MUP) - 1
+      MU2N = MIN0(MU,NUP) + 1
+      MU2X = MAX0(MU,NUP) - 1
+      MU1=MUP
+      NU1=NUP
+  933 IF (MU1N .GT. MU1X) GO TO 934
+      DO 962 J = MU1N,MU1X
+      IF (J.EQ.MU .OR. J.EQ.NU .OR. J.EQ.MUP .OR. J.EQ.NUP) GO TO 962
+      IDELP = IDELP + NBAR(J)*NBAR(MU1)
+  962 CONTINUE
+  934 IF (MU2N .GT. MU2X) GO TO 181
+      DO 963 J = MU2N,MU2X
+      IF (J.EQ.MU .OR. J.EQ.NU .OR. J.EQ.MUP .OR. J.EQ.NUP) GO TO 963
+      IDELP = IDELP + NBAR(J)*NBAR(NU1)
+  963 CONTINUE
+      GO TO 181
+  925 MUMIN1=MIN0(MU,MUP)+1
+      MUMAX1=MAX0(MU,MUP)-1
+      IF(MUMIN1.GT.MUMAX1) GO TO 181
+      DO 927 J=MUMIN1,MUMAX1
+      IDELP=IDELP+NBAR(J)*NBAR(MU)
+  927 CONTINUE
+  181 MINUS=(-1)**IDELP
+      FACTR=ONE
+      IF(NOVLPS.LT.2) GO TO 127
+      IF(MU.NE.NU.AND.MUP.NE.NUP) GO TO 127
+*
+*     MU=NU OR MUP=NUP
+*
+      N1=IOVEP(1)
+      N2=IOVEP(2)
+      N3=N1+N2
+      FACTR=FACTR*DEXP((GAM(N3+1)-GAM(N1+1)-GAM(N2+1))/2)
+      GO TO 127
+  257 IF(NBUG6.EQ.1) WRITE(IWRITE,313) J
+      GO TO 189
+*
+*     SET  J2  AND  J3 .  SAME FOR  L  AND  S
+*
+  127 M1=IHSH-2
+      M2=2*M1+1
+      M3=3*IHSH-1
+      M4=M3+1
+      M5=M3+2
+      M10=M5+1
+      MN1=M10+1
+      NJ1S=MN1
+      J2(1,1)=M10
+      J2(1,2)=MN1
+      J2(1,3)=M5
+      J2(2,1)=IRHO
+      J2(2,2)=M5
+      J2(2,3)=M3
+      J3(1,1)=ISIG
+      J3(1,2)=M10
+      J3(1,3)=M4
+      IF(IRHO-1) 128,129,128
+  129 J2(3,1)=M3
+      GO TO 130
+  128 J2(3,1)=1
+  130 IF(IRHO-2) 131,132,131
+  132 J2(3,2)=M3
+      GO TO 133
+  131 J2(3,2)=2
+  133 J2(3,3)=IHSHP1
+      IF(ISIG-1) 134,135,134
+  135 J3(2,1)=M4
+      GO TO 136
+  134 J3(2,1) = 1
+  136 IF(ISIG-2) 137,138,137
+  138 J3(2,2)=M4
+      GO TO 139
+  137 J3(2,2)=2
+  139 J3(2,3)=2*IHSH
+      IF(IHSH-3) 149,140,140
+  140 DO 148 J=4,IHSHP1
+      L=J-1
+      J2(J,1)=M1+L
+      J2(J,3)=M1+J
+      J3(L,1)=M2+L
+      J3(L,3)=M2+J
+  141 IF(IRHO-L) 142,143,142
+  143 J2(J,2)=M3
+      GO TO 144
+  142 J2(J,2)=L
+  144 IF(ISIG-L) 145,146,145
+  146 J3(L,2)=M4
+       GO TO 148
+  145 J3(L,2)=L
+  148 CONTINUE
+  149 M6=IHSHP1
+      J3(M6,1)=M3-1
+      J3(M6,2)=MN1
+      J3(M6,3)=I2HSH
+      IF(IHSH-1) 450,451,450
+  451 J3(M6,1) = M4
+      J3(M6,3) = M3
+  450 NJ23S=M6+1
+      IL=2
+      IF(NOVLPS.NE.0) CALL CNDENS(IL)
+      NJ23=NJ23S-1
+      DO 150 J=1,NJ23
+      DO 151 K=1,3
+      J2STO(J,K)=J2(J,K)
+      J3STO(J,K)=J3(J,K)
+  151 CONTINUE
+  150 CONTINUE
+*
+*   SUM OVER PARENTS OF IRHO AND ISIG
+*
+      N1=NOSH1(IRHO)
+      K1=NTAB1(N1,L1)
+      KK1=ITAB(K1)
+      N2=NOSH2(ISIG)
+      K2=NTAB1(N2,L2)
+      KK2=ITAB(K2)
+      DO 111 JJ1=1,KK1
+*
+*   CHECK ON TRIANGULAR CONDITIONS
+*
+      IN3=2*LRHO
+      IJK1=3*(JJ1-1)+JTAB(K1)
+      DO 113 KK=2,3
+      IN1=NTAB(IJK1+KK)-1
+      IN2=J1QN1(IRHO,KK)-1
+      IF(IN1.GT.(IN2+IN3)) GO TO 111
+      IF(IN1.LT.IABS(IN2-IN3)) GO TO 111
+      IN3=1
+  113 CONTINUE
+      DO 112 JJ2=1,KK2
+      IN3=2*LSIG
+      IJK2=3*(JJ2-1)+JTAB(K2)
+      DO 114 KK=2,3
+      IN1=NTAB(IJK2+KK)-1
+      IN2=J1QN2(ISIG,KK)-1
+      IF(IN1.GT.(IN2+IN3)) GO TO 112
+      IF(IN1.LT.IABS(IN2-IN3)) GO TO 112
+      IN3=1
+  114 CONTINUE
+      DO 115 KK=1,3
+      JBAR(IRHO,KK)=NTAB(IJK1+KK)
+      JPBAR(ISIG,KK)=NTAB(IJK2+KK)
+  115 CONTINUE
+      IF(IRHO.EQ.MU.OR.IRHO.EQ.NU) GO TO 116
+      DO 117 KK=1,3
+      IF(JBAR(IRHO,KK).NE.JPBAR(IRHO,KK)) GO TO 112
+  117 CONTINUE
+  116 IF(ISIG.EQ.MUP.OR.ISIG.EQ.NUP) GO TO 118
+      DO 119 KK=1,3
+      IF(JBAR(ISIG,KK).NE.JPBAR(ISIG,KK)) GO TO 112
+  119 CONTINUE
+  118 IF(NOVLPS.EQ.1) THEN
+         DO 120 KK=1,3
+         IF(JBAR(MU,KK).NE.JPBAR(MUP,KK)) GO TO 112
+  120    CONTINUE
+      ENDIF
+  154 K=2
+      M7=M3-IHSH
+      M9=M7+1
+      M11=M3-1
+      M12=IHSH-1
+      RECUPS=ONE
+      VSHEL2=ZERO
+      RECUPT=ZERO
+      IF(NOVLPS.EQ.2) RECUPT=ONE
+*
+*     FIRST FRACTIONAL PARENTAGE COEFFICIENT
+*
+      IF(NBUG6.NE.0) WRITE(IWRITE,221)
+      LIJ=LRHO
+      COEFP=ONE
+      IF(LIJ) 171,173,171
+  171 N=NOSH1(IRHO)
+      IV1=J1QN1(IRHO,1)
+      IL1=(J1QN1(IRHO,2)-1)/2
+      IS1=J1QN1(IRHO,3)
+      IV2=JBAR(IRHO,1)
+      IL2=(JBAR(IRHO,2)-1 )/2
+      IS2=JBAR(IRHO,3)
+      CALL CFP(LIJ,N,IV1,IL1,IS1,IV2,IL2,IS2,COEFP)
+      RECUPS=RECUPS*COEFP
+      IF(NOVLPS.EQ.2) RECUPT=RECUPT*COEFP
+      IF(NBUG6.NE.0) WRITE(IWRITE,207) RECUPS,RECUPT
+*
+*     SECOND FRACTIONAL PARENTAGE COEFFICIENT
+*
+  173 LIJ=LSIG
+      COEFP=ONE
+      IF(LIJ) 176,176,174
+  174 N=NOSH2(ISIG)
+      IV1=J1QN2(ISIG,1)
+      IL1=(J1QN2(ISIG,2)-1)/2
+      IS1=J1QN2(ISIG,3)
+      IV2=JPBAR(ISIG,1)
+      IL2=(JPBAR(ISIG,2)-1)/2
+      IS2=JPBAR(ISIG,3)
+      CALL CFP(LIJ,N,IV1,IL1,IS1,IV2,IL2,IS2,COEFP)
+  176 RECUPS=RECUPS*COEFP
+      IF(NOVLPS.EQ.2) RECUPT=RECUPT*COEFP
+      IF(NBUG6.NE.0) WRITE(IWRITE,207) RECUPS,RECUPT
+      IF(DABS(RECUPS).LT.1.D-14.AND.DABS(RECUPT).LT.1.D-14) GO TO 112
+*
+*     SET UP THE J1 ARRAY FOR THE ANGULAR AND SPIN RECOUPLING
+*     COEFFICIENTS
+*
+  155 IF(K-3) 156,157,157
+  156 J1(M5)=2*LRHO+1
+      J1(M10)=2*LSIG+1
+      J1(MN1)=2*KA+1
+      IF(ISPIN.EQ.1) J1(MN1)=1
+      J1(M3)=J1QN1(IRHO,K)
+      J1(M4)=J1QN2(ISIG,K)
+      GO TO 158
+  157 J1(M5)=2
+      J1(M10)=2
+      J1(MN1)=KB+KB+1
+      IF(ISPIN.EQ.0) J1(MN1)=1
+      J1(M3)=J1QN1(IRHO,K)
+      J1(M4)=J1QN2(ISIG,K)
+  158 DO 161 J=1,IHSH
+      J1(J)=JBAR(J,K)
+      IF(J.EQ.MUP.OR.J.EQ.NUP) J1(J)=JPBAR(J,K)
+  161 CONTINUE
+      IF(IHSH.EQ.1) GO TO 197
+      DO 162 J=M6,M7
+      J1(J)=J1QN1(J,K)
+  162 CONTINUE
+      DO 163 J=M9,M11
+      JM12=J-M12
+      J1(J)=J1QN2(JM12,K)
+  163 CONTINUE
+*
+*     PRINT OUT THE J1,J2 AND J3 ARRAYS
+*
+  197 IF(NBUG6.EQ.0) GO TO 304
+   17 WRITE(IWRITE,209)
+      WRITE(IWRITE,210) (J1(J),J=1,NJ1S)
+      WRITE(IWRITE,211)
+      DO 166 I=1,NJ23
+      WRITE(IWRITE,212) (J2(I,J),J=1,3),(J3(I,J),J=1,3)
+  166 CONTINUE
+      IF(K.EQ.2) WRITE(IWRITE,213)
+  304 CONTINUE
+      IF(DABS(RECUPS).LT.1.D-14) GO TO 1164
+*
+*     EVALUATE ORBITAL AND SPIN RECOUPLING COEFFICIENTS
+*
+  164 IF(K.EQ.3.AND.NBUG6.NE.0) WRITE(IWRITE,214)
+      IF(NOVLPS.LT.2.OR.MU.EQ.NU.OR.MUP.EQ.NUP) GO TO 77
+      IF(IMATCH(1).EQ.0) GO TO 79
+      IF(LMU.NE.LMUP.OR.LNU.NE.LNUP) GO TO 79
+      DO 937 KK=1,3
+      IF(JBAR(MU,KK).NE.JPBAR(MUP,KK)) GO TO 79
+      IF(JBAR(NU,KK).NE.JPBAR(NUP,KK)) GO TO 79
+  937 CONTINUE
+   77 DO 78 I = 1,NJ1S
+	FREE(I) = .FALSE.
+   78 CONTINUE
+      CALL NJGRAF(RECUP,FAIL)
+      GO TO 81
+   79 RECUP=ZERO
+   81 RECUPS=RECUPS*RECUP
+      IF(NBUG6.NE.0) WRITE(IWRITE,207) RECUPS,RECUP
+ 1164 IF(NOVLPS.LT.2) GO TO 170
+      IF(IMATCH(2).EQ.0) GO TO 84
+      IF(LMU.NE.LNUP.OR.LNU.NE.LMUP) GO TO 84
+      IF(MU.EQ.NU.OR.MUP.EQ.NUP) GO TO 84
+      DO 938 KK=1,3
+      IF(JBAR(MU,KK).NE.JPBAR(NUP,KK)) GO TO 84
+      IF(JBAR(NU,KK).NE.JPBAR(MUP,KK)) GO TO 84
+  938 CONTINUE
+   68 DO 82 J=1,NJ23
+      DO 83 KK=1,3
+      J2(J,KK)=J2STO(J,KK)
+      J3(J,KK)=J3STO(J,KK)
+   83 CONTINUE
+   82 CONTINUE
+      JSTO=J3(IROWMU,ICOLMU)
+      J3(IROWMU,ICOLMU)=J3(IROWNU,ICOLNU)
+      J3(IROWNU,ICOLNU)=JSTO
+*
+*     EVALUATE ORBITAL AND SPIN RECOUPLING COEFFICIENTS
+*
+      DO 500 I = 1,NJ1S
+	 FREE(I) = .FALSE.
+  500 CONTINUE
+*
+      CALL NJGRAF(RECUP,FAIL)
+*
+   86 RECUPT=RECUPT*RECUP
+      IF(NBUG6.NE.0) WRITE(IWRITE,207) RECUPT,RECUP
+      GO TO 170
+   84 RECUP=ZERO
+      GO TO 86
+  170 K=K+1
+      DO 168 J=1,NJ23
+      DO 169 KK=1,3
+      J2(J,KK)=J2STO(J,KK)
+      J3(J,KK)=J3STO(J,KK)
+  169 CONTINUE
+  168 CONTINUE
+      IF(K.EQ.3) GO TO 155
+*
+*     PERMUTATION FACTOR
+*
+  182 VALML=RECUPS
+      IF(NOVLPS.EQ.2) VALML2=RECUPT
+      RML=RML+VALML
+      IF(NOVLPS.EQ.2) RML2=RML2+VALML2
+      IF(NBUG6.NE.0) WRITE(IWRITE,2005) VALML,VALML2,RML,RML2
+ 2005 FORMAT(30X,4F10.6)
+  112 CONTINUE
+  111 CONTINUE
+      GO TO 184
+  183 RML=ZERO
+      IF(NOVLPS.EQ.2) RML2=ZERO
+  184 SQRN=DSQRT(DFLOAT(NOSH1(IRHO)*NOSH2(ISIG)))
+      FACTR=FACTR*SQRN*DFLOAT(MINUS)*DSQRT(AJF)
+      VSHELL=RML*FACTR
+      IF(NOVLPS.EQ.2) VSHEL2=RML2*FACTR*(-ONE)**NKAP
+      CALL PRNTML(IRHO,ISIG,VSHELL,VSHEL2)
+  189 IF(NOVSTO.EQ.0) GO TO 289
+      MU=MUSTO
+      NU=NUSTO
+      MUP=MUPSTO
+      NUP=NUPSTO
+      NOVLPS=NOVSTO
+      LMU=LMUSTO
+      LNU=LNUSTO
+      LMUP=LMUPST
+      LNUP=LNUPST
+  289 RML=ZERO
+      RML2=ZERO
+      IF(ISUM.EQ.0) GO TO 190
+      IF(IBACK3.EQ.1) GO TO 509
+      IRHO=IRHO+1
+      ISIG=IRHO
+      IF(NBUG6.NE.0) WRITE(IWRITE,1216) IRHO,ISIG
+ 1216 FORMAT(15H AT 289, IRHO =,I3,7H ISIG =,I3)
+      IF(IRHO.LE.IHSH) GO TO 1509
+      RETURN
+*
+*     NO SUM OVER SHELLS IBACK3=1 IMPLIES ISIG=NUP OR IRHO=NU
+*     TO BE CONSIDERED ALSO
+*
+  190 IF(IBACK3.EQ.1) GO TO 506
+      RETURN
+  300 IF(NBUG6.NE.0) WRITE(IWRITE,302)
+      RETURN
+  301 IF(NBUG6.NE.0) WRITE(IWRITE,303)
+      RETURN
+      END

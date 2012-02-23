@@ -1,0 +1,88 @@
+1
+
+
+         HARTREE-FOCK WAVE FUNCTIONS FOR  Fe+20 1S     Z = 26.0
+
+              CORE =  1s( 2)
+
+
+           CONFIGURATION                                     WEIGHT
+
+
+
+     1        2s( 2)  2p( 2)                                 1.00000000
+                 1S0     1S0
+                            1S0
+
+     2        2s( 0)  2p( 4)                                 0.00000000
+                 1S0     1S0
+                            1S0
+
+
+         INPUT DATA
+         ----- ----
+
+             WAVE FUNCTION  PROCEDURE
+                 NL  SIGMA METH ACC OPT
+
+
+
+       1   1s  1  0    1.0   1 0.0   0
+       2   2s  2  0    2.0   1 0.0   0
+       3   2p  2  1    2.0   1 0.0   0
+
+
+
+        INITIAL ESTIMATES 
+
+          NL    SIGMA      E(NL)    AZ(NL)    FUNCTIONS
+
+
+          1s     1.00      0.000   255.000    SCREENED HYDROGENIC    
+          2s     2.00      0.000    86.603    SCREENED HYDROGENIC    
+          2p     2.00      0.000   625.000    SCREENED HYDROGENIC    
+
+      WEIGHTS
+    1  0.9768    2  0.2142
+
+
+          TOTAL ENERGY =     -931.390482349
+    1     -931.0708938
+    2       -1.4576895   -924.7417506
+
+
+          NUMBER OF FUNCTIONS ITERATED          =     3
+          MAXIMUM WEIGHTED CHANGE IN FUNCTIONS  =  0.12D-06
+          TOLERANCE FOR THE MCHF ITERATION      =  0.38D-09
+
+
+
+
+          OVERLAP INTEGRALS FOR ATOM Fe+20  TERM 1S    
+
+                    (NL)   (NL)       INTEGRAL
+
+
+
+
+
+                        ATOM Fe+20    TERM 1S    
+
+  nl       E(nl)        I(nl)       KE(nl)        Rel(nl)   S(nl)     Az(nl)
+  1s   602.5098903  -337.945241   330.391477    -2.878043   0.32    261.83108
+  2s   128.2237554   -83.847658    67.255932    -0.698738   2.12     82.22268
+  2p   121.6481846   -83.570181    68.013105    -0.304787   2.89    581.26741
+
+
+  nl      Delta(R)     1/R**3       1/R         R        R**2
+  1s      5455.475       0.0000   25.70526   0.05841    0.00455
+  2s       537.989       0.0000    5.81168   0.25122    0.07364
+  2p         0.000     549.5995    5.83013   0.21639    0.05660
+
+
+     ENERGY (a.u.)
+     ------
+           Total                -931.390482349
+           Potential           -1862.780962832
+           Kinetic               931.390480483
+           Ratio                   2.000000002

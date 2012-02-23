@@ -1,0 +1,143 @@
+      The MCHF Atomic Structure Package
+      ==================================
+
+	Charlotte Froese Fischer
+
+	and collaborators:
+
+	 Alan Hibbert and Ronnie Glass
+	 Michel R. Godefroid
+	 Bin Liu
+	 Tomas Brage
+	 Gregory Miecznik
+	 Nathalie Vaeck
+	 Per J\"onsson
+	 Claes Goran Wahlstrom
+         Jinhua Xi
+         Gediminas Gaigalas
+
+	 December 20, 1996
+	 -----------------
+
+Installation:
+-------------
+
+This directory contains:
+. README (the present file)
+. make_atsp, a script file which on most Unix systems
+  will compile and link the atomic structure package; i.e.
+  the command
+       make_atsp
+  issued from the current directory will
+  . compile and make the libraries
+  . compile and link the programs
+  . compile and link the utility routines
+ 
+. three subdirectories
+  . bin -- a directory that will contain the library and
+	executables oncce the package is installed
+  . examples -  a directory which contains a subdirectory
+	for examples of each major program.  The latter contains
+	. one or more <name>.ex file which is a script file
+	  for a complete calculation
+	. output files and output (.out) for the examples.
+  . src - directory with source files and a makefile for
+	generating the package. This makefile has been prepared
+	in a simple manner to compile on many Unix workstations.
+	Even so, it is advisable to review the compiler flags
+	set in the makefile
+
+I/O related matters.
+--------------------
+ 
+  The applications have been written for easy interactive use
+where the standard output can also be redirected to a file
+rather than the screen. In order that the prompts for input
+not also be redirected, "standard error" should be set to be
+the screen.
+
+  Most unix systems have predefined units:
+
+  standard input  -- unit 5
+  standard output -- unit 6
+  standard error  -- unit 0 ( used here) 
+
+However, Hewlett Packard uses unit=7 for standard error.  For
+files which used to be directed to the printer (long lines)
+it was customary to use unit=3.  The early sections of
+applications define the unit numbers as indicated above.
+Systems deviating from this convention will be easier to use
+if code is modified to the environment.
+
+  In the transition codes (MLTPOL, LSTR, LSJTR) it may happen
+that the files defining the inital state and final state may
+be the same for transitions where parity does not change as
+for some forbidden transitions.  Most systems allow two unit
+numbers to be associated with the same file through extensions
+to standard F77, but not all. The present code does not use the 
+extensions, but various possibilities are included in the code and 
+may be used to replace the present, more simplistic implementation.
+See the subroutine, CFGIN2, for possible extensions.
+
+ For the LSTR and LSJTR, it is useful to collect results in one
+file by appending to an existing file.  Again, the append option
+is not standard, but can be implemented by choosing an
+appropriate statement.  The OPEN statements that position the 
+file pointer, again, are near the beginning of the main program.
+
+Application Installation
+------------------------
+
+The file make_atsp should be an executable. This can be achieved
+with the  command "chmod +x make_atsp".  In theory, the command
+"make_atsp" should then bring up the system, but since compilers
+differ, it may be desirable to enter each Unix command in the
+script file separately, so as to be able to make sure one step
+has completed successfully before attempting the next.
+
+For the script files (names ending in ".ex") in the examples
+directory, it is helpful to "set clobber"; otherwise, if the
+file exists, the step may be aborted.  This may happen when, for
+some reason or other, the example is run more than once, though
+an effort has been made to avoid this possibility.
+
+Post Installation Considerations
+---------------------------------
+
+The dimensions in the current version have been set for moderate
+size calculations, appropriate for simple cases and for
+learning.  All important parameters are defined by KEYWORDS
+and can easily be changed with the use of an editor.
+
+However, it is important to remember some relationships.
+
+COM.f -- library file, independent of parameters of COMMON
+ANG.f -- library for angular integrations
+         Name  Value   Purpose
+	 ----  -----   -------
+	 NWD   30      Maximum number of radial wave functions
+	 NCD   100     Maximum number of configuration states
+	 NWD2  2*NWD   Appropriate for transitions with two wfn files
+	 NCD2  2*NCD   Appropriate for transitions with two CSF files
+	 NCD4  4*NCD   Appropriate for Breit Pauli calculation
+NJGRAF.f -- Parameters of the form KFLxx (Change with care) Each
+	    must be consistent across all applications
+RAD3.f -- library for radial properties (single set)
+         Name  Value   Purpose
+	 ----  -----   -------
+         NWD   30      Maximum number of radial wave functions
+	 NOD   220     Maximum number of points in a radial function
+	 IWRITE  6     Unit number for output
+RAD6.f -- library for radial properties (two sets as in transitions)
+	  same as RAD3.f except that NWD2 = 2*NWD is used as 
+	  dimension parameter.
+
+Application programs  -- in each application, PARAMETERS may be
+set to have values that are consistent with the libraries that are
+used in their installation (see makefile for details).  Thus, in
+MCHF for example, NCDIM may be freely increased (or decreased)
+since this parameter does not appear in any library.  Of course,
+it should be modified in the entire MCHF.f file.  But this
+parameter also appears in NONH.f, so it would be more consistent
+to change it in all applications.
+

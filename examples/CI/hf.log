@@ -1,0 +1,74 @@
+1
+
+
+         HARTREE-FOCK WAVE FUNCTIONS FOR  Na+   3P     Z = 11.0
+
+              Core =  1s(   2)  2s(   2)
+     Configuration =  2p(   5) 3s1(   1)                              
+
+
+         INPUT DATA
+         ----- ----
+
+             WAVE FUNCTION  PROCEDURE
+                 NL  SIGMA METH ACC OPT
+
+
+
+       1   1s  1  0    1.0   1 0.0   0
+       2   2s  2  0    3.0   1 0.0   0
+       3   2p  2  1    6.0   1 0.0   0
+       4  3s1  3  0    9.0   1 0.0   0
+
+
+
+        INITIAL ESTIMATES 
+
+          NL    SIGMA      E(NL)    AZ(NL)    FUNCTIONS
+
+
+          1s     1.00      0.000    66.408    SCREENED HYDROGENIC    
+          2s     3.00      0.000    19.000    SCREENED HYDROGENIC    
+          2p     6.00      0.000    29.212    SCREENED HYDROGENIC    
+         3s1     9.00      0.000     3.538    SCREENED HYDROGENIC    
+
+      LEAST SELF-CONSISTENT FUNCTION IS  2s :WEIGHTED MAXIMUM CHANGE =  3.22D-01
+
+      LEAST SELF-CONSISTENT FUNCTION IS  1s :WEIGHTED MAXIMUM CHANGE =  2.26D-02
+
+      LEAST SELF-CONSISTENT FUNCTION IS  2p :WEIGHTED MAXIMUM CHANGE =  1.59D-03
+
+      LEAST SELF-CONSISTENT FUNCTION IS  2p :WEIGHTED MAXIMUM CHANGE =  2.14D-04
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3s1 :WEIGHTED MAXIMUM CHANGE =  1.44D-05
+
+      LEAST SELF-CONSISTENT FUNCTION IS  1s :WEIGHTED MAXIMUM CHANGE =  1.46D-06
+
+
+          NUMBER OF FUNCTIONS ITERATED          =     4
+          MAXIMUM WEIGHTED CHANGE IN FUNCTIONS  =  0.38D-07
+
+
+
+
+                        ATOM Na+      TERM 3P    
+
+  nl       E(nl)        I(nl)       KE(nl)        Rel(nl)   S(nl)       Az(nl)
+  1s    82.9350660   -60.408310    56.315599    -0.083565   0.493     70.311550
+  2s     7.1021655   -13.889642     7.280651    -0.011969   3.050     17.689816
+  2p     4.7190755   -13.190234     6.518613    -0.003639   4.262     41.411334
+ 3s1     1.0386110    -4.130723     0.730446    -0.000801   6.441      4.418631
+
+
+  nl      Delta(R)     1/R**3       1/R         R        R**2
+  1s       393.408       0.0000   10.61126   0.14277    0.02744
+  2s        24.902       0.0000    1.92457   0.75475    0.68258
+  2p         0.000      19.0462    1.79171   0.74208    0.69743
+ 3s1         1.554       0.0000    0.44192   2.96150   10.04491
+
+
+     TOTAL ENERGY (a.u.)
+     ----- ------
+           Non-Relativistic     -160.51601227    Kinetic      160.51601203
+           Relativistic Shift     -0.20030681    Potential   -321.03202431
+           Relativistic         -160.71631908    Ratio        -2.000000001

@@ -1,0 +1,592 @@
+
+
+
+
+
+
+
+                      =============================
+                       H A R T R E E - F O C K . 86
+                      =============================
+
+
+               THE DIMENSIONS FOR THE CURRENT VERSION ARE:
+                          NWF= 20        NO=220
+
+
+
+ START OF CASE
+ =============
+
+
+
+
+
+          WEAK ORTHOGONALIZATION DURING THE SCF CYCLE=   T
+          SCF CONVERGENCE TOLERANCE (FUNCTIONS)      = 1.00D-08
+          NUMBER OF POINTS IN THE MAXIMUM RANGE      = 220
+
+
+          ITERATION NUMBER  1
+          ----------------
+
+          SCF CONVERGENCE CRITERIA (SCFTOL*SQRT(Z*NWF)) =   6.6D-08
+
+          C( 1s3s1) =    -0.15027   V( 1s3s1) =   -44.02505   EPS = 0.003413
+          C( 2s3s1) =    -0.05808   V( 2s3s1) =    -3.85577   EPS = 0.015063
+          E(3s1 1s) =    -0.00368   E( 1s3s1) =    -0.00184
+          E(3s1 2s) =    -0.01192   E( 2s3s1) =    -0.00596
+
+                     EL         ED             AZ           NORM       DPM
+                     1s     89.1458211     70.8030341   0.9405031    1.32D-01
+                     2s      8.4919803     19.3798649   2.5781193    2.28D-01
+                     2p      6.7639353     46.4805604   0.7189410    5.12D-01
+                    3s1      0.9475398      4.5591975   0.7862928    6.43D-01
+                     2p      3.9210156     37.2232619   1.5905869    1.82D-01
+                    3s1      1.0964372      3.2072799   1.0285642    2.04D-01
+                     2p      4.8866653     42.0162357   1.0657253    9.18D-02
+
+
+      < 1s| 2s>= 1.4D-02
+      < 1s|3s1>=-6.4D-04
+      < 2s|3s1>=-5.8D-02
+
+
+          ITERATION NUMBER  2
+          ----------------
+
+          SCF CONVERGENCE CRITERIA (SCFTOL*SQRT(Z*NWF)) =   1.3D-07
+
+          C( 1s3s1) =     0.05171   V( 1s3s1) =   -40.46354   EPS =-0.001278
+          C( 2s3s1) =     0.13314   V( 2s3s1) =    -2.69806   EPS =-0.049348
+          E(3s1 1s) =    -0.02599   E( 1s3s1) =    -0.01300
+          E(3s1 2s) =     0.09030   E( 2s3s1) =     0.04515
+
+                     EL         ED             AZ           NORM       DPM
+                     1s     82.2983106     70.2741360   1.0090321    1.60D-02
+                     2s      6.8707216     17.6048090   1.0470516    7.07D-02
+                     2p      4.5965032     41.0480630   1.0151089    2.38D-02
+                    3s1      1.0361361      4.5072188   1.2162435    5.06D-02
+                     2s      7.1525536     17.7075703   0.9979095    1.08D-02
+                     2p      4.7542429     41.5488085   0.9972604    9.98D-03
+                    3s1      1.0381850      4.4568218   1.0079316    2.77D-03
+
+
+      < 1s| 2s>=-5.9D-04
+      < 1s|3s1>=-1.3D-04
+      < 2s|3s1>= 1.9D-03
+
+
+          ITERATION NUMBER  3
+          ----------------
+
+          SCF CONVERGENCE CRITERIA (SCFTOL*SQRT(Z*NWF)) =   2.7D-07
+
+          C( 1s3s1) =    -0.00242   V( 1s3s1) =   -40.77757   EPS = 0.000059
+          C( 2s3s1) =    -0.00215   V( 2s3s1) =    -2.82264   EPS = 0.000760
+          E(3s1 1s) =    -0.02256   E( 1s3s1) =    -0.01128
+          E(3s1 2s) =     0.06391   E( 2s3s1) =     0.03195
+
+                     EL         ED             AZ           NORM       DPM
+                     1s     82.8875525     70.3098600   1.0002675    9.22D-04
+                     2s      7.0855926     17.6731681   1.0012527    2.45D-03
+                     2p      4.7069512     41.3612841   1.0015983    3.78D-03
+                    3s1      1.0390387      4.4208216   0.9991781    1.30D-03
+                     2p      4.7254554     41.4383543   0.9994441    1.54D-03
+                     2s      7.0997427     17.6881847   0.9997460    5.50D-04
+                     2p      4.7165115     41.4021642   1.0002753    7.10D-04
+
+
+      < 1s| 2s>=-2.0D-05
+      < 1s|3s1>=-1.4D-05
+      < 2s|3s1>=-3.1D-04
+
+
+          ITERATION NUMBER  4
+          ----------------
+
+          SCF CONVERGENCE CRITERIA (SCFTOL*SQRT(Z*NWF)) =   5.3D-07
+
+          C( 1s3s1) =    -0.00037   V( 1s3s1) =   -40.80249   EPS = 0.000009
+          C( 2s3s1) =    -0.00051   V( 2s3s1) =    -2.83094   EPS = 0.000182
+          E(3s1 1s) =    -0.02237   E( 1s3s1) =    -0.01119
+          E(3s1 2s) =     0.06313   E( 2s3s1) =     0.03157
+
+                     EL         ED             AZ           NORM       DPM
+                     1s     82.9382107     70.3117843   1.0000326    9.98D-05
+                     2s      7.1029986     17.6902520   0.9999792    1.88D-04
+                     2p      4.7196098     41.4144330   0.9999044    2.54D-04
+                    3s1      1.0385859      4.4186928   1.0008415    3.90D-04
+                     2p      4.7186748     41.4096476   1.0000360    9.59D-05
+                    3s1      1.0386206      4.4184299   1.0000598    3.93D-05
+                     2s      7.1022926     17.6899891   1.0000096    4.99D-05
+
+
+      < 1s| 2s>= 3.5D-06
+      < 1s|3s1>= 6.3D-07
+      < 2s|3s1>=-1.4D-05
+
+
+          ITERATION NUMBER  5
+          ----------------
+
+          SCF CONVERGENCE CRITERIA (SCFTOL*SQRT(Z*NWF)) =   1.1D-06
+
+          C( 1s3s1) =     0.00003   V( 1s3s1) =   -40.80125   EPS =-0.000001
+          C( 2s3s1) =    -0.00001   V( 2s3s1) =    -2.83064   EPS = 0.000002
+          E(3s1 1s) =    -0.02236   E( 1s3s1) =    -0.01118
+          E(3s1 2s) =     0.06311   E( 2s3s1) =     0.03156
+
+                     EL         ED             AZ           NORM       DPM
+                     1s     82.9355010     70.3115713   0.9999982    6.73D-06
+                     2s      7.1023329     17.6899799   0.9999974    7.74D-06
+                     2p      4.7192173     41.4119211   0.9999832    4.45D-05
+                    3s1      1.0386061      4.4186176   1.0000045    1.44D-05
+                     2p      4.7190014     41.4110215   1.0000068    1.80D-05
+                     2p      4.7190926     41.4112966   0.9999972    7.34D-06
+                     2p      4.7190646     41.4112849   1.0000002    4.15D-07
+
+
+      < 1s| 2s>= 4.7D-07
+      < 1s|3s1>= 1.6D-07
+      < 2s|3s1>= 7.0D-06
+
+
+          ITERATION NUMBER  6
+          ----------------
+
+          SCF CONVERGENCE CRITERIA (SCFTOL*SQRT(Z*NWF)) =   2.1D-06
+
+          C( 1s3s1) =     0.00000   V( 1s3s1) =   -40.80103   EPS = 0.000000
+          C( 2s3s1) =     0.00001   V( 2s3s1) =    -2.83056   EPS =-0.000004
+          E(3s1 1s) =    -0.02236   E( 1s3s1) =    -0.01118
+          E(3s1 2s) =     0.06312   E( 2s3s1) =     0.03156
+
+                     EL         ED             AZ           NORM       DPM
+                     1s     82.9350468     70.3115491   0.9999997    1.04D-06
+                     2s      7.1021671     17.6898201   1.0000022    7.19D-06
+                     2p      4.7190832     41.4113314   0.9999996    1.16D-06
+                    3s1      1.0386110      4.4186317   0.9999883    4.07D-06
+                     2s      7.1021653     17.6898167   1.0000000    1.11D-07
+                    3s1      1.0386110      4.4186291   1.0000006    2.44D-07
+                     2p      4.7190753     41.4113335   1.0000000    7.18D-08
+
+
+      < 1s| 2s>=-9.9D-10
+      < 1s|3s1>= 1.2D-09
+      < 2s|3s1>=-9.6D-08
+
+
+          ITERATION NUMBER  7
+          ----------------
+
+          SCF CONVERGENCE CRITERIA (SCFTOL*SQRT(Z*NWF)) =   4.2D-06
+
+          C( 1s3s1) =     0.00000   V( 1s3s1) =   -40.80104   EPS = 0.000000
+          C( 2s3s1) =     0.00000   V( 2s3s1) =    -2.83056   EPS = 0.000000
+          E(3s1 1s) =    -0.02236   E( 1s3s1) =    -0.01118
+          E(3s1 2s) =     0.06312   E( 2s3s1) =     0.03156
+
+                     EL         ED             AZ           NORM       DPM
+                     1s     82.9350660     70.3115502   1.0000000    2.69D-08
+                     2s      7.1021655     17.6898167   1.0000000    4.57D-09
+                     2p      4.7190755     41.4113344   1.0000000    1.12D-08
+                    3s1      1.0386110      4.4186314   0.9999999    1.71D-08
+
+
+      < 1s| 2s>= 3.2D-09
+      < 1s|3s1>= 1.1D-09
+      < 2s|3s1>= 1.9D-09
+
+
+ END OF CASE
+ ===========
+
+
+
+
+
+                    ============================
+                       N O N - W E I G H T S    
+                    ============================
+
+
+
+ STATE  (WITH  2 CONFIGURATIONS):
+ -------------------------------
+
+
+ THERE ARE  5 ORBITALS AS FOLLOWS:
+
+       2p 3s1 3p1 3p2 3d2
+
+ THERE ARE  2 CLOSED SUBSHELLS COMMON TO ALL CONFIGURATIONS AS FOLLOWS:
+
+       1s  2s
+
+ CONFIGURATION  1 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3s1( 1) 3p1( 1)
+                           COUPLING SCHEME:     2P1     2S1     2P1
+                                                           3P0     2S0
+
+ CONFIGURATION  2 ( OCCUPIED ORBITALS= 3 ):  2p( 5) 3p2( 1) 3d2( 1)
+                           COUPLING SCHEME:     2P1     2P1     2D1
+                                                           3D0     2S0
+
+
+                    ===================
+                      MCHF  ...  1988
+                    ===================
+
+
+          THE DIMENSIONS FOR THE CURRENT VERSION ARE:
+            NCFG=100       NWF= 30        NO=220
+
+
+
+ Na    2S       11.   220  7  4  2  F  T
+        WAVE FUNCTIONS NOT FOUND FOR 3p1
+        WAVE FUNCTIONS NOT FOUND FOR 3p2
+        WAVE FUNCTIONS NOT FOUND FOR 3d2
+
+  F.1D-09.1D-06 12  00.0  0  T  F
+
+
+
+          WEAK ORTHOGONALIZATION DURING THE SCF CYCLE=   F
+          ACCELERATING PARAMETER FOR MCHF ITERATION  = 0.00
+          SCF CONVERGENCE TOLERANCE (FUNCTIONS)      = 1.00D-07
+          NUMBER OF POINTS IN THE MAXIMUM RANGE      = 220
+          RELATIVISTIC DIAGONAL  ENERGY CORRECTIONS  =   F
+
+
+          TOTAL ENERGY =     -159.595155871
+
+      WEIGHTS
+  1  0.9972  2  0.0743
+
+
+          ITERATION NUMBER  1
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  8.8D-07
+
+          E(3s1 1s) =    -0.02015   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.00361   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -2.13776   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.70936   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 1.5D-03
+      < 2s|3s1>= 3.8D-02
+                    3s1      0.3465998      1.9251252   3.5207710    2.62D-01
+          ED =  -1.602998; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      < 2p|3p1>=-3.2D-02
+                    3p1      0.2659046      2.9704562   3.7861243    6.82D-01
+          ED =  -1.082104; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+      < 2p|3p2>=-2.6D-03
+                    3p2      0.0034793      0.1570816 190.2360379**  8.19D-01
+          ED =  -1.874416; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+                    3d2      0.0030573     -0.0490960  27.2172559**  8.72D-01
+
+
+          TOTAL ENERGY =     -160.560118256
+
+      WEIGHTS
+  1  1.0000  2  0.0000
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  6.80D-01
+
+
+          ITERATION NUMBER  2
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.8D-06
+
+          E(3s1 1s) =    -0.01501   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.04509   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.40981   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -2.96758   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 4.4D-04
+      < 2s|3s1>= 5.7D-03
+                    3s1      0.5274441      4.3914849   0.4930173    2.61D-01
+      < 2p|3p1>=-1.7D-02
+                    3p1      0.2032968      1.7560234   1.2309815    1.42D-01
+      < 2p|3p2>= 1.2D-02
+                    3p2      0.2888843      0.6600291 248.3397056**  4.26D-01
+          ED =  -5.199024; ADJUSTED TO ALLOWED MINIMUM ENERGY
+      WARNING: FUNCTIONS TRUNCATED BY NMRVS IN TAIL REGION
+                    3d2      0.0034669      0.0920530**************  1.53D-01
+
+
+          TOTAL ENERGY =     -160.619035257
+
+      WEIGHTS
+  1  1.0000  2  0.0013
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3s1 :WEIGHTED MAXIMUM CHANGE =  2.61D-01
+
+
+          ITERATION NUMBER  3
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.0D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  3.5D-06
+
+          E(3s1 1s) =    -0.02230   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06311   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.24671   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -1.35781   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 6.4D-05
+      < 2s|3s1>= 6.1D-04
+                    3s1      0.6713525      4.3948342   1.0128755    1.00D-02
+      < 2p|3p1>= 2.4D-03
+                    3p1      0.2063578      1.9829011   0.9424569    1.52D-02
+      < 2p|3p2>= 3.0D-01
+                    3p2      1.3724259      8.2100839  18.9811603**  5.75D-01
+                    3d2     14.6519585      1.9875527   6.4379477**  5.15D-01
+
+
+          TOTAL ENERGY =     -160.628969992
+
+      WEIGHTS
+  1  0.9887  2  0.1497
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  1.52D-02
+
+
+          ITERATION NUMBER  4
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.7D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  7.0D-06
+
+          E(3s1 1s) =    -0.02255   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06330   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.27588   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.05032   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 7.7D-06
+      < 2s|3s1>= 8.4D-05
+                    3s1      0.6816097      4.3526061   1.0110174    5.47D-03
+      < 2p|3p1>=-2.6D-02
+                    3p1      0.2260849      2.1285681   0.6456390    3.84D-02
+      < 2p|3p2>= 1.3D-01
+                    3p2      1.0677778      6.7558662   0.9928334**  1.90D-01
+                    3d2      0.6270662      0.4309305   1.2773495**  1.18D-01
+
+
+          TOTAL ENERGY =     -160.633369793
+
+      WEIGHTS
+  1  0.9761  2  0.2174
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  3.80D-02
+
+
+          ITERATION NUMBER  5
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  3.8D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.4D-05
+
+          E(3s1 1s) =    -0.02232   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06219   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.30087   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01830   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 2.7D-06
+      < 2s|3s1>= 4.3D-05
+                    3s1      0.6658412      4.3146391   1.0089996    5.33D-03
+          METHOD 1 UNABLE TO SOLVE EQUATION FOR ELECTRON3p1
+          NC =   3   NJ = 147   ED =   0.305097   EL =   0.081633   EU =   9.000000
+          E(3s1 1s) =    -0.02222   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06197   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.30080   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01793   E( 2p3p2) =     0.00001
+          METHOD 1 UNABLE TO SOLVE EQUATION FOR ELECTRON3p1
+          NC =   3   NJ = 147   ED =   0.305094   EL =   0.081633   EU =   9.000000
+      < 2p|3p1>= 8.0D-03
+                    3p1      0.2351468      2.4550679   1.0000000*   1.94D-02
+      < 2p|3p2>= 3.3D-02
+                    3p2      0.8511391      8.1254728   0.9893472**  5.95D-02
+                    3d2      0.5510993      0.4379942   1.0027924**  4.69D-03
+
+
+          TOTAL ENERGY =     -160.633762610
+
+      WEIGHTS
+  1  0.9737  2  0.2279
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  1.89D-02
+
+
+          ITERATION NUMBER  6
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  5.4D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  2.8D-05
+
+          E(3s1 1s) =    -0.02225   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06172   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.33933   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01567   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 1.0D-06
+      < 2s|3s1>= 9.1D-06
+                    3s1      0.6545673      4.2987524   1.0037732    2.53D-03
+      < 2p|3p1>= 1.2D-02
+                    3p1      0.2361130      2.4838873   1.1844855    1.37D-02
+      < 2p|3p2>= 8.7D-03
+                    3p2      0.8322210      8.5773489   0.9940724**  1.71D-02
+                    3d2      0.5241565      0.4323231   1.0031481**  4.59D-03
+
+
+          TOTAL ENERGY =     -160.633777457
+
+      WEIGHTS
+  1  0.9733  2  0.2296
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  1.33D-02
+
+
+          ITERATION NUMBER  7
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  7.5D-10
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  5.6D-05
+
+          E(3s1 1s) =    -0.02221   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06156   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.34299   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01435   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 1.0D-07
+      < 2s|3s1>= 5.3D-07
+                    3s1      0.6537874      4.2984502   1.0000897    1.40D-04
+          E(3s1 1s) =    -0.02221   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06155   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.34299   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01435   E( 2p3p2) =     0.00001
+      < 2p|3p1>=-2.3D-03
+                    3p1      0.2361781      2.3888851   1.0000000*   5.37D-03
+      < 2p|3p2>= 1.5D-03
+                    3p2      0.8259492      8.7030945   0.9987986**  3.69D-03
+                    3d2      0.5174785      0.4288592   1.0022984**  4.13D-03
+
+
+          TOTAL ENERGY =     -160.633793903
+
+      WEIGHTS
+  1  0.9735  2  0.2288
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  5.23D-03
+
+
+          ITERATION NUMBER  8
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.1D-09
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  1.1D-04
+
+          E(3s1 1s) =    -0.02222   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06159   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.33187   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01360   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 1.1D-07
+      < 2s|3s1>= 3.6D-06
+                    3s1      0.6563464      4.3036500   0.9988389    6.44D-04
+      < 2p|3p1>= 3.3D-04
+                    3p1      0.2361733      2.4034175   1.0000000*   8.00D-04
+      < 2p|3p2>= 7.8D-04
+                    3p2      0.8294001      8.7359236   0.9992456**  1.44D-03
+                    3d2      0.5211614      0.4304135   0.9992925**  1.24D-03
+
+
+          TOTAL ENERGY =     -160.633794911
+
+      WEIGHTS
+  1  0.9735  2  0.2287
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p1 :WEIGHTED MAXIMUM CHANGE =  7.78D-04
+
+
+          ITERATION NUMBER  9
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  1.5D-09
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  2.2D-04
+
+          E(3s1 1s) =    -0.02223   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06161   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.33344   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01374   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 7.8D-09
+      < 2s|3s1>=-1.6D-07
+                    3s1      0.6560901      4.3032907   1.0000840    4.28D-05
+      < 2p|3p1>=-2.5D-05
+                    3p1      0.2361646      2.4021615   1.0000000*   6.82D-05
+      < 2p|3p2>= 1.8D-04
+                    3p2      0.8293990      8.7458211   0.9998344**  3.67D-04
+                    3d2      0.5210969      0.4299025   1.0000165**  4.55D-05
+
+
+          TOTAL ENERGY =     -160.633794925
+
+      WEIGHTS
+  1  0.9735  2  0.2287
+
+      LEAST SELF-CONSISTENT FUNCTION IS 3p2 :WEIGHTED MAXIMUM CHANGE =  8.39D-05
+
+
+          ITERATION NUMBER 10
+          ----------------
+
+          CONVERGENCE CRITERIA:ENERGY  (CFGTOL)            =  2.1D-09
+                              :FUNCTION(SCFTOL*SQRT(Z*NWF))=  4.5D-04
+
+          E(3s1 1s) =    -0.02223   E( 1s3s1) =     0.00001
+          E(3s1 2s) =     0.06160   E( 2s3s1) =     0.00001
+          E(3p1 2p) =    -0.33332   E( 2p3p1) =     0.00001
+          E(3p2 2p) =    -0.01371   E( 2p3p2) =     0.00001
+
+                     EL         ED             AZ           NORM       DPM
+      < 1s|3s1>= 2.3D-09
+      < 2s|3s1>= 4.1D-08
+                    3s1      0.6560892      4.3033536   0.9999859    6.96D-06
+      < 2p|3p1>= 4.4D-06
+                    3p1      0.2361651      2.4023613   1.0000000*   1.06D-05
+      < 2p|3p2>= 5.3D-05
+                    3p2      0.8293812      8.7485971   0.9999531**  1.06D-04
+                    3d2      0.5210792      0.4299066   0.9999985**  7.70D-06
+
+
+          TOTAL ENERGY =     -160.633794926
+
+      WEIGHTS
+  1  0.9735  2  0.2287
+
+
+     ENERGY (a.u.)
+     ------
+           Total                -160.633794926
+           Potential            -321.229910135
+           Kinetic               160.596115209
+           Ratio                   2.000234624

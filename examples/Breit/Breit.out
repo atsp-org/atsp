@@ -1,0 +1,214 @@
+
+                    =======================
+                     B R E I T - P A U L I 
+                    =======================
+
+
+
+
+
+ THE TYPE OF CALCULATION IS DEFINED BY THE FOLLOWING PARAMETERS - 
+      BREIT-PAULI OPERATORS             IREL   = 1
+      PHASE CONVENTION PARAMETER        ICSTAS = 1
+
+1
+
+
+
+                             ---------------------
+                             THE CONFIGURATION SET
+                             ---------------------
+
+
+
+
+
+ STATE  (WITH  4 CONFIGURATIONS):
+ -------------------------------
+
+
+ THERE ARE  2 ORBITALS AS FOLLOWS:
+
+       3s  3p
+
+ THERE ARE  3 CLOSED SUBSHELLS COMMON TO ALL CONFIGURATIONS AS FOLLOWS:
+
+       1s  2s  2p
+
+ CONFIGURATION  1 ( OCCUPIED ORBITALS= 2 ):  3s( 2)  3p( 1)
+                           COUPLING SCHEME:     1S0     2P1
+                                                           2P0
+
+ CONFIGURATION  2 ( OCCUPIED ORBITALS= 1 ):  3p( 3)
+                           COUPLING SCHEME:     2P1
+
+ CONFIGURATION  3 ( OCCUPIED ORBITALS= 1 ):  3p( 3)
+                           COUPLING SCHEME:     2D3
+
+ CONFIGURATION  4 ( OCCUPIED ORBITALS= 1 ):  3p( 3)
+                           COUPLING SCHEME:     4S3
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   1/SO /CONFIG   1)
+                                       6.00000000           S-O( 3p, 3p)
+ (CONFIG   1/SOO/CONFIG   1)
+                                     -12.00000000           N 0( 3p, 3s/ 3p, 3s)
+                                     -12.00000000           N-1( 3p, 3s/ 3s, 3p)
+                                      -6.00000000           V 0( 3s, 3p/ 3p, 3s)
+                                       6.00000000           V 0( 3p, 3s/ 3s, 3p)
+                                       6.00000000           N 1( 3p, 3s/ 3s, 3p)
+ (CONFIG   1/SDD/CONFIG   1)
+                                     -12.00000000           N 0( 3p, 1s/ 3p, 1s)
+                                     -12.00000000           N-1( 3p, 1s/ 1s, 3p)
+                                       6.00000000           N 1( 1s, 3p/ 3p, 1s)
+                                      -6.00000000           V 0( 1s, 3p/ 3p, 1s)
+                                       6.00000000           V 0( 3p, 1s/ 1s, 3p)
+                                     -12.00000000           N 0( 3p, 2s/ 3p, 2s)
+                                     -12.00000000           N-1( 3p, 2s/ 2s, 3p)
+                                       6.00000000           N 1( 2s, 3p/ 3p, 2s)
+                                      -6.00000000           V 0( 2s, 3p/ 3p, 2s)
+                                       6.00000000           V 0( 3p, 2s/ 2s, 3p)
+                                     -36.00000000           N 0( 3p, 2p/ 3p, 2p)
+                                      18.00000000           N 0( 3p, 2p/ 2p, 3p)
+                                       0.00000000           N 2( 2p, 3p/ 3p, 2p)
+                                     -10.80000000           V 1( 2p, 3p/ 3p, 2p)
+                                      10.80000000           V 1( 3p, 2p/ 2p, 3p)
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   2/SOO/CONFIG   1)
+                                       2.82842712           V 0( 3p, 3p/ 3s, 3s)
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   2/SOO/CONFIG   2)
+                                     -12.00000000           N 0( 3p, 3p/ 3p, 3p)
+                                      -3.00000000           N 0( 3p, 3p/ 3p, 3p)
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   3/SOO/CONFIG   1)
+                                       3.65148372           V 0( 3p, 3p/ 3s, 3s)
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   3/SO /CONFIG   2)
+                                      -7.74596669           S-O( 3p, 3p)
+ (CONFIG   3/SOO/CONFIG   2)
+                                       8.83040203           N 0( 3p, 3p/ 3p, 3p)
+                                      -1.85903201           V 1( 3p, 3p/ 3p, 3p)
+                                       1.85903201           N 2( 3p, 3p/ 3p, 3p)
+ (CONFIG   3/SDD/CONFIG   2)
+                                      15.49193338           N 0( 3s, 1s/ 3s, 1s)
+                                      15.49193338           N-1( 3s, 1s/ 1s, 3s)
+                                      -7.74596669           N 1( 1s, 3s/ 3s, 1s)
+                                       7.74596669           V 0( 1s, 3s/ 3s, 1s)
+                                      -7.74596669           V 0( 3s, 1s/ 1s, 3s)
+                                      15.49193338           N 0( 3s, 2s/ 3s, 2s)
+                                      15.49193338           N-1( 3s, 2s/ 2s, 3s)
+                                      -7.74596669           N 1( 2s, 3s/ 3s, 2s)
+                                       7.74596669           V 0( 2s, 3s/ 3s, 2s)
+                                      -7.74596669           V 0( 3s, 2s/ 2s, 3s)
+                                      46.47580015           N 0( 3s, 2p/ 3s, 2p)
+                                     -23.23790008           N 0( 3s, 2p/ 2p, 3s)
+                                       0.00000000           N 2( 2p, 3s/ 3s, 2p)
+                                      13.94274005           V 1( 2p, 3s/ 3s, 2p)
+                                     -13.94274005           V 1( 3s, 2p/ 2p, 3s)
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   3/SOO/CONFIG   3)
+                                     -26.83281573           N 0( 3p, 3p/ 3p, 3p)
+                                     -22.80789337           N 0( 3p, 3p/ 3p, 3p)
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   4/SOO/CONFIG   1)
+                                      -3.26598632           V 0( 3p, 3p/ 3s, 3s)
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   4/SO /CONFIG   2)
+                                       6.92820323           S-O( 3p, 3p)
+ (CONFIG   4/SOO/CONFIG   2)
+                                      -4.15692194           N 0( 3p, 3p/ 3p, 3p)
+                                       4.15692194           V 1( 3p, 3p/ 3p, 3p)
+                                      -4.15692194           N 2( 3p, 3p/ 3p, 3p)
+ (CONFIG   4/SDD/CONFIG   2)
+                                     -13.85640646           N 0( 3s, 1s/ 3s, 1s)
+                                     -13.85640646           N-1( 3s, 1s/ 1s, 3s)
+                                       6.92820323           N 1( 1s, 3s/ 3s, 1s)
+                                      -6.92820323           V 0( 1s, 3s/ 3s, 1s)
+                                       6.92820323           V 0( 3s, 1s/ 1s, 3s)
+                                     -13.85640646           N 0( 3s, 2s/ 3s, 2s)
+                                     -13.85640646           N-1( 3s, 2s/ 2s, 3s)
+                                       6.92820323           N 1( 2s, 3s/ 3s, 2s)
+                                      -6.92820323           V 0( 2s, 3s/ 3s, 2s)
+                                       6.92820323           V 0( 3s, 2s/ 2s, 3s)
+                                     -41.56921938           N 0( 3s, 2p/ 3s, 2p)
+                                      20.78460969           N 0( 3s, 2p/ 2p, 3s)
+                                       0.00000000           N 2( 2p, 3s/ 3s, 2p)
+                                     -12.47076581           V 1( 2p, 3s/ 3s, 2p)
+                                      12.47076581           V 1( 3s, 2p/ 2p, 3s)
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   4/SOO/CONFIG   3)
+ (CONFIG   4/SS /CONFIG   3)
+                                     -12.00000000           N 0( 3p, 3p/ 3p, 3p)
+ (CONFIG   4/SDD/CONFIG   3)
+                                     -13.85640646           N 0( 3s, 1s/ 3s, 1s)
+                                     -13.85640646           N-1( 3s, 1s/ 1s, 3s)
+                                       6.92820323           N 1( 1s, 3s/ 3s, 1s)
+                                      -6.92820323           V 0( 1s, 3s/ 3s, 1s)
+                                       6.92820323           V 0( 3s, 1s/ 1s, 3s)
+                                     -13.85640646           N 0( 3s, 2s/ 3s, 2s)
+                                     -13.85640646           N-1( 3s, 2s/ 2s, 3s)
+                                       6.92820323           N 1( 2s, 3s/ 3s, 2s)
+                                      -6.92820323           V 0( 2s, 3s/ 3s, 2s)
+                                       6.92820323           V 0( 3s, 2s/ 2s, 3s)
+                                     -41.56921938           N 0( 3s, 2p/ 3s, 2p)
+                                      20.78460969           N 0( 3s, 2p/ 2p, 3s)
+                                       0.00000000           N 2( 2p, 3s/ 3s, 2p)
+                                     -12.47076581           V 1( 2p, 3s/ 3s, 2p)
+                                      12.47076581           V 1( 3s, 2p/ 2p, 3s)
+
+
+
+                              MULTIPLYING FACTOR           TYPE OF INTEGRAL
+ (CONFIG   4/SOO/CONFIG   4)
+ (CONFIG   4/SDD/CONFIG   4)
+                                     -13.85640646           N 0( 3s, 1s/ 3s, 1s)
+                                     -13.85640646           N-1( 3s, 1s/ 1s, 3s)
+                                       6.92820323           N 1( 1s, 3s/ 3s, 1s)
+                                      -6.92820323           V 0( 1s, 3s/ 3s, 1s)
+                                       6.92820323           V 0( 3s, 1s/ 1s, 3s)
+                                     -13.85640646           N 0( 3s, 2s/ 3s, 2s)
+                                     -13.85640646           N-1( 3s, 2s/ 2s, 3s)
+                                       6.92820323           N 1( 2s, 3s/ 3s, 2s)
+                                      -6.92820323           V 0( 2s, 3s/ 3s, 2s)
+                                       6.92820323           V 0( 3s, 2s/ 2s, 3s)
+                                     -41.56921938           N 0( 3s, 2p/ 3s, 2p)
+                                      20.78460969           N 0( 3s, 2p/ 2p, 3s)
+                                       0.00000000           N 2( 2p, 3s/ 3s, 2p)
+                                     -12.47076581           V 1( 2p, 3s/ 3s, 2p)
+                                      12.47076581           V 1( 3s, 2p/ 2p, 3s)
+
+
+ MATRIX ELEMENTS CONSTRUCTED USING THE SPHERICAL HARMONIC PHASE CONVENTION OF
+
+                CONDON AND SHORTLEY, THEORY OF ATOMIC STRUCTURE
+                -----------------------------------------------
+
+
+
