@@ -1,3 +1,6 @@
+#! /bin/sh
+
+set -e
 #
 #   Script (command) file illustrating the use of the Nonh program
 #
@@ -17,7 +20,7 @@ S1
 #
 #..... Step 2. Obtain the energy expression
 #
-time Nonh >Nonh1.out <<S2
+time ../../src/NONH >Nonh1.out <<S2
 y
 y
 S2
@@ -46,7 +49,7 @@ S1
 #
 #..... Step 2. Obtain the energy expression
 #
-time Nonh >Nonh2.out<<S2
+time ../../src/NONH >Nonh2.out<<S2
 y
 y
 S2
