@@ -1704,6 +1704,10 @@ CSUN            end if
 *       If the replacement duplicates a configuration in the previous
 *   replacement, it should not sent to CI.LST
 *
+            print *, "This code should never get executed, because"
+            print *, "it uses an uninitialized variable. Aborting..."
+            stop 1
+*           The variable NP is not initialized below:
             DO 40 I=1,NP
                 L = PP(I)
                 READ (FILE2(I),42) (ELC(J),QC(J), J=1,L)
