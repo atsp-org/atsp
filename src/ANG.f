@@ -691,7 +691,8 @@
 *
     3 FORMAT(18(1X,A3))
     4 FORMAT(3A1)
-    5 FORMAT(9(1X,A3,1H(,I2,1H)))
+*   5 FORMAT(9(1X,A3,'(',I2,')'))
+    5 FORMAT(9(1X,A3,1X,I2,1X))
     6 FORMAT(9(1X,4X,I1,A1,I1))
     7 FORMAT(A72)
     8 FORMAT(A3)
