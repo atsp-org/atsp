@@ -436,7 +436,7 @@ CSUN : RTIME/60.,TIMES(1)/60., TIMES(2)/60.
       NCFG = 0
       WRITE(ERR,'(/A/A/)') ' Enter configurations followed by weights',
      :   ' Example:  1s(2)2s(2)2p(1),1.0 '
-    2 WRITE(ERR,'($,I6,A)') NCFG+1,'.  '
+    2 WRITE(ERR,'(I6,A,$)') NCFG+1,'.  '
       READ(IUC,'(A)',END=10)  STRING
       IF (STRING(1:1) .NE. '*' .AND. STRING(1:3) .NE. '   ') THEN
          ICOMMA = INDEX(STRING,',')
