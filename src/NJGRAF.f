@@ -680,7 +680,7 @@ c
   305 format(i6,2x,6f5.1,10x,g15.8)
   306 format(' number of independent sums:',i3)
   307 format(' sum nr.',i2,' sum value=',g15.8,' recup=',g15.8)
-  308 format( 'recoupling coefficient zero because of unsatisfied delta',
+  308 format('recoupling coefficient zero because of unsatisfied delta',
      +'j1',i3,'=',i3,'j2',i3,'=',i3)
   309 format('   not involving summation variable')
   310 format(' summation variable reached maximum increment',2i6)

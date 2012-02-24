@@ -1724,7 +1724,7 @@ C     END IF
            DO 12 J = 1,I-1
               IF (DABS(E(I,J)) .GT. 1.D-10 ) THEN
                  IJ = IJ + 1
-                 IF ( IJ.GT.(NWD)) STOP '  TOO MANY LAGRANGE MULTIPLIERS'
+                 IF (IJ.GT.(NWD)) STOP '  TOO MANY LAGRANGE MULTIPLIERS'
                  IV(IJ) = I
                  JV(IJ) = J
               END IF
@@ -2362,7 +2362,7 @@ C     END IF
  60      JV = IJE(IP)
          IF (JV .LT. I .AND. IP .LE. IEPTR(I)) THEN
             IJ = IJ+1
-            IF ( IJ .GT. (NWD)) STOP ' TOO MANY ORTHOGONALITY CONDITIONS'
+            IF (IJ .GT. (NWD)) STOP ' TOO MANY ORTHOGONALITY CONDITIONS'
             BC(IJ) = QUADR(I,JV,0)
             AC(IJ,IJ) = D1
             DO 62 JJ = IBEGIN,IP-1
