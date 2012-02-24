@@ -311,10 +311,10 @@
 *
       IP = 0
       DO 10 I = NCLOSD+1,NWF
-         ISUMI = SUM(I)
+         ISUMI = int(SUM(I))
          DSUMI = SUM(I) - ISUMI
          DO 12 J = NCLOSD+1,NWF
-            ISUMJ = SUM(J)
+            ISUMJ = int(SUM(J))
             DSUMJ = SUM(J) - ISUMJ
             IF ( I .NE. J) THEN
          C = SUM(J)
@@ -1195,7 +1195,7 @@
      :        -5,125,-25,140,20,-40,-100,-55/
 
       DONE = .TRUE.
-      N = Q
+      N = int(Q)
       IF (N .GT. 2*L+1) N = 4*L+2 - N
       IF (N .GT. 1) THEN
          IF (L .EQ. 1) THEN
@@ -1571,11 +1571,11 @@ CGG
             IF (((L(NOS(1)).EQ.1).AND.(SUM(NOS(2)).EQ.1.D0)).OR.
      :          ((L(NOS(2)).EQ.1).AND.(SUM(NOS(1)).EQ.1.D0))) THEN
                IF (L(NOS(1)).EQ.1.AND.SUM(NOS(2)).EQ.1.D0) THEN
-                  ISUMP=SUM(NOS(1))
+                  ISUMP=int(SUM(NOS(1)))
                   NP = NOS(1)
                   NL = NOS(2)
                ELSE
-                  ISUMP = SUM(NOS(2))
+                  ISUMP = int(SUM(NOS(2)))
                   NP = NOS(2)
                   NL = NOS(1)
                ENDIF
@@ -2242,7 +2242,7 @@ CGG
 *
 *  --- search for a partially unfilled p- or d-shell
 *
-      N = Q
+      N = int(Q)
       IF (N .GT. 2*L+1) N = 4*L+2 - N
       IP = 0
       NSL = 0
@@ -3050,7 +3050,7 @@ CGG
 *   iterated appear last in the list.
 *
         SUBROUTINE REORD(OF, ELC, NWF, IERR)
-        CHARACTER*3 OF(30), ELC
+        CHARACTER*3 OF(20), ELC
 *
         IERR = 1
         CALL EPTR(OF, ELC, I, *99)

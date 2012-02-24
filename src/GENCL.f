@@ -236,7 +236,7 @@ CSUN            end if
 *       The first Reference Set is defined as the standard value
 *
             IF (I .EQ. 1) THEN
-                CONST = SUM
+                CONST = int(SUM)
                 PARITY = MOD(NL,2)
             ELSE
 *
@@ -524,8 +524,8 @@ CSUN            end if
                     CH1 = COUPLE(N)(2:2)
                     S = (ICTOI(CH3)-1)/2.
                     L = LVAL(CH1)
-                    LMIN = 2*ABS(S-L)
-                    LMAX = 2*ABS(S+L)
+                    LMIN = int(2*ABS(S-L))
+                    LMAX = int(2*ABS(S+L))
                     IF (LMIN .LT. MIN) MIN = LMIN
                     IF (LMAX .GT. MAX) MAX = LMAX
 215             CONTINUE
@@ -835,7 +835,7 @@ CSUN            end if
                             NR = NELS
                             TEMP = ELL(1)//' = '//ELR(1)
                               CALL DEL(TEMP)
-                              REPL(NR) = TEMP
+                              REPL(NR) = TEMP(:60)
                             CALL PRINT (ELC,QB,K,NC,4)
                         ENDIF
                     ENDIF
@@ -1188,7 +1188,7 @@ CSUN            end if
                     IF (K .LE. HALF) THEN
                         POSIT(I) = LPOSIT(L)+K-1
                     ELSE
-                        POSIT(I) = LPOSIT(L)+(FULL-K)-1
+                        POSIT(I) = LPOSIT(L)+(int(FULL)-K)-1
                     ENDIF
                     NALFA = NALFA*NTERM(POSIT(I))
                     CH3 = '   '
@@ -1273,7 +1273,7 @@ CSUN            end if
                     L2 = LVAL(A2(2:2))
                     L3 = ABS(L1-L2)
                     L4 = ABS(L1+L2)
-                    MBETA = (S4-S3+1)*(L4-L3+1)
+                    MBETA = int((S4-S3+1)*(L4-L3+1))
 *
      
 **************
@@ -1292,7 +1292,7 @@ CSUN            end if
 *     PARENT  =  Current pointer to the parent of Beta(i)
 *
                     DO 22 S=S3,S4
-                        KS = 2*S
+                        KS = int(2*S)
                         CH1 = CHAR(ORD0+1+KS)
                         DO 22 L=L3,L4
                             WRITE (FBETA(J-1,CHILD),25)
@@ -1383,8 +1383,8 @@ CSUN            end if
                     CH1 = CH2(2:2)
                     S = (ICTOI(CH3)-1)/2.
                     L = LVAL(CH1)
-                    LMIN = 2*ABS(S-L)
-                    LMAX = 2*ABS(S+L)
+                    LMIN = int(2*ABS(S-L))
+                    LMAX = int(2*ABS(S+L))
                     IF (LMIN.GT.MAX .OR. LMAX.LT.MIN) GOTO 29
      
 ***************
@@ -1796,7 +1796,7 @@ CSUN            end if
      :  ' CONFIGURATION AND COUPLINGS FOR D-REPLACEMENT'//)
                         SSTR = STR(:N)//ELR(1)//'.'//ELR(2)
                         CALL DEL(SSTR)
-                        REPL(NR) = SSTR
+                        REPL(NR) = SSTR(:60)
                         CALL PRINT (ELC,QB,K,NC,4)
                     ENDIF
 10          CONTINUE
@@ -1824,7 +1824,7 @@ CSUN            end if
      : ' CONFIGURATION AND COUPLINGS FOR D-REPLACEMENT'//)
                         SSTR = STR(:N)//ELR(1)//'(2)'
                        CALL DEL(SSTR)
-                       REPL(NR) = SSTR
+                       REPL(NR) = SSTR(:60)
                         CALL PRINT (ELC,QB,K,NC,4)
                     ENDIF
                 ENDIF
