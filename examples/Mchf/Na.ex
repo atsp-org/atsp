@@ -1,3 +1,6 @@
+#! /bin/sh
+
+set -e
 #
 #   MCHF Script file showing the importance of the method
 #            used in solving the Mchf SCF equations for a core
@@ -8,7 +11,7 @@
 #
 #
 rm -f Na.out
-time HF >Na.out <<S1
+time ../../src/HF >Na.out <<S1
 Na+,3P,11.
   1s  2s
 2p(5)3s1(1)
@@ -36,11 +39,11 @@ Na 2S
   2p( 5) 3p2( 1) 3d2( 1)
      2P1     2P1     2D1     3D0     2S0
 S2a
-time Nonh >>Na.out <<S2b
+time ../../src/NONH >>Na.out <<S2b
 n
 y
 S2b
-time Mchf >>Na.out <<S2c
+time ../../src/MCHF >>Na.out <<S2c
 Na,2S,11.
 =4
 y
