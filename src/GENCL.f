@@ -264,7 +264,7 @@ CSUN            end if
         J = INDEX(ACT,'b')
         IF (I.NE.0 .OR. J.NE.0) GOTO 120
         IF (ACT .ne. '   ') then
-	   WRITE(ISCW,132)
+	   WRITE(0,132)
 132        FORMAT('Type of set generation ?')
            READ *, ITYPE
 	END IF
@@ -595,7 +595,7 @@ CSUN            end if
 	else if (itype .eq. 3) then
  	   MINQ1 = max0(MIN0(F(1),CONST)-3,0)
 	else
-	   WRITE(ISCW,*) ' Unknown type: Re-enter'
+	   WRITE(0,*) ' Unknown type: Re-enter'
 	   READ *, itype
 	   GO TO 305
 	end if
