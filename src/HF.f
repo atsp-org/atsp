@@ -821,9 +821,9 @@
          NIT = 0
       ELSE IF (INDEX(STRING,'=') .NE. 0) THEN
          J = INDEX(STRING,'=')
-	 JJ = INDEX(STRING,' ')
+         JJ = INDEX(STRING,' ')
          READ(STRING(J+1:),'(I2)') NIT
-	 IF (JJ .EQ. J+2) NIT= MOD(NIT,10)
+         IF (JJ .EQ. J+2) NIT= MOD(NIT,10)
       ELSE
          NIT = 0
          J = 1
@@ -1208,8 +1208,8 @@ CGG
          ELSE IF (L .EQ. 3) THEN
             CALL DEVF(IEL, L, N, I, DONE)
 CGG
-	 ELSE
-	    DONE = .FALSE.
+         ELSE
+            DONE = .FALSE.
          END IF
       END IF
       RETURN
@@ -1525,16 +1525,16 @@ CGG
               END IF
               CALL LOOKTM(L(IIL),SL,SENOR,SUM(IIL),IP,NSL)
               IF (NSL .NE. 1) THEN
-		     WRITE(0,'(A,A3,A,A3,A)') ' Allowed terms are ',
+                     WRITE(0,'(A,A3,A,A3,A)') ' Allowed terms are ',
      :                    SLM, ' or ', SLP,' plus seniority'
-		     GO TO 5
-	          END IF
-	       END IF
+                     GO TO 5
+                  END IF
+               END IF
                CALL DEV(IIL,L(IIL),SUM(IIL),IP,DONE)
                IF (DONE ) THEN
                   SP = ICHAR(SL(1:1)) - ICHAR('0')
                   CSP = (SP - 1)/2.
-		  IF (SL .EQ. SLM) THEN
+                  IF (SL .EQ. SLM) THEN
                      C = -CSP/(2*L(IIL)+1)
                   ELSE
                      C = (CSP + 1)/(2*L(IIL)+1)
@@ -2257,14 +2257,14 @@ CGG
 1        I = IBEGIN
 10       IF (SL .EQ. TERMS(I)(1:2)) THEN
             IF (SEN .EQ. ' ' .OR. SEN .EQ. TERMS(I)(3:3)) THEN
-	       NSL = NSL + 1
-	       IP = I
+               NSL = NSL + 1
+               IP = I
             END IF
          END IF
          I = I+1
          IF (I .LE. IEND) GO TO 10
       ELSE IF ( N .EQ. 1 .AND. SL(1:1) .EQ. '2') THEN
-	 NSL = 1
+         NSL = 1
 CGG
       ELSE IF ( L .EQ. 3) THEN
          CALL LOOKF( L, SL, SEN, N, IP, NSL)

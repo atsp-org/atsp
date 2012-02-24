@@ -1,6 +1,6 @@
 * ======================================================================
 *
-	PROGRAM NONH
+        PROGRAM NONH
 *
 *                C O P Y R I G H T -- 1994
 *
@@ -35,7 +35,7 @@
      :NJCOMP(NWD),NOCCSH(NCD),NELCSH(5,NCD),NOCORB(5,NCD),J1QNRD(9,NCD)
       COMMON /DIAGNL/IDIAG,JA,JB
       COMMON /FOUT/NOV(2),IOVLAP(10,2),NF,NG,NR,NL,NZ,NN,NV,NS,IFLAG,NIJ
-	  CHARACTER*2 ANS, INPUT*24
+          CHARACTER*2 ANS, INPUT*24
 *
     1 FORMAT(//' IOUT =  INT.LST (OUTPUT FILE)'//)
 *
@@ -52,7 +52,7 @@
 *
 CSUN      i = iargc()
 CSUN      if (i .eq. 0) then
-		 INPUT = 'cfg.inp'
+                 INPUT = 'cfg.inp'
 CSUN      else
 CSUN             call getarg(1,INPUT)
 CSUN      end if
@@ -112,12 +112,12 @@ CDBG  WRITE(IWRITE,1) IBUG1,IBUG2,IBUG3
           READ(5,*) NEW, NZERO
       END IF
       IF ( NEW .EQ. 0 ) NEW = NCFG
-	  IF (NZERO .EQ. 0) THEN
-		 NZERO=NCFG
-		 IFIRST=0
-	  ELSE
-		 IFIRST=1
-	  END IF
+          IF (NZERO .EQ. 0) THEN
+                 NZERO=NCFG
+                 IFIRST=0
+          ELSE
+                 IFIRST=1
+          END IF
 *
 *     SET FACTORIALS AND LOG OF FACTORIALS
 *
@@ -139,7 +139,7 @@ CDBG  WRITE(IWRITE,1) IBUG1,IBUG2,IBUG3
       END
 *
 *     ------------------------------------------------------------------
-*	A L L A D D
+*       A L L A D D
 *     ------------------------------------------------------------------
 *
       SUBROUTINE ALLADD(IHSH,M3,M4,M5,M6,M7,M8,M9,M10,
@@ -167,7 +167,7 @@ CDBG  WRITE(IWRITE,1) IBUG1,IBUG2,IBUG3
       END
 *
 *     ------------------------------------------------------------------
-*	A N G M O M
+*       A N G M O M
 *     ------------------------------------------------------------------
 *
       SUBROUTINE ANGMOM(NEW,NZERO,IFIRST)
@@ -249,7 +249,7 @@ CDBG  WRITE(IWRITE,1) IBUG1,IBUG2,IBUG3
       END
 *
 *     ------------------------------------------------------------------
-*	C H O P
+*       C H O P
 *     ------------------------------------------------------------------
 *
       SUBROUTINE CHOP
@@ -298,7 +298,7 @@ CDBG  WRITE(IWRITE,1) IBUG1,IBUG2,IBUG3
       END
 *
 *     ------------------------------------------------------------------
-*	C L S H E L
+*       C L S H E L
 *     ------------------------------------------------------------------
 *
       SUBROUTINE CLSHEL (ISIG, ISIGP, IRHO )
@@ -425,9 +425,9 @@ CDBG  WRITE(IWRITE,1) IBUG1,IBUG2,IBUG3
      :   IAJCLD(J),IAJCMP(JSIGP),
      :   (IAJCMP(IOVL(II)),IAJCMP(IOVR(II)),IOVEP(II),II=1,NOVLPS)
       IF (IALL.EQ.0) THEN
-	 CALL OVLSET(NOVLPS,IOVL(1),IOVR(1),IOVEP(1),
+         CALL OVLSET(NOVLPS,IOVL(1),IOVR(1),IOVEP(1),
      :                      IOVL(2),IOVR(2),IOVEP(2),IPTR)
-	 CALL SAVE(3,2.*AC2,IZERO,64-J,JSIG,64-J,JSIGP,JA,JB,IPTR)
+         CALL SAVE(3,2.*AC2,IZERO,64-J,JSIG,64-J,JSIGP,JA,JB,IPTR)
       END IF
    15 IF (NINTS .EQ. 0) GO TO 11
       DO 12 N=1,NINTS
@@ -437,9 +437,9 @@ CDBG  WRITE(IWRITE,1) IBUG1,IBUG2,IBUG3
      :    IAJCMP(JSIG),IAJCMP(JSIGP),IAJCLD(J),
      :    (IAJCMP(IOVL(II)),IAJCMP(IOVR(II)),IOVEP(II),II=1,NOVLPS)
       IF (IALL.EQ.0) THEN
-	 CALL OVLSET(NOVLPS,IOVL(1),IOVR(1),IOVEP(1),
+         CALL OVLSET(NOVLPS,IOVL(1),IOVR(1),IOVEP(1),
      :                      IOVL(2),IOVR(2),IOVEP(2),IPTR)
-	 CALL SAVE(3,2.*ZA,K,64-J,JSIG,JSIGP,64-J,JA,JB,IPTR)
+         CALL SAVE(3,2.*ZA,K,64-J,JSIG,JSIGP,64-J,JA,JB,IPTR)
       END IF
    12 CONTINUE
    11 CONTINUE
@@ -505,7 +505,7 @@ CDBG  WRITE(IWRITE,1) IBUG1,IBUG2,IBUG3
       END
 *
 *     ------------------------------------------------------------------
-*	C N D E N S
+*       C N D E N S
 *     ------------------------------------------------------------------
 *
       SUBROUTINE CNDENS(I1L)
@@ -2156,7 +2156,7 @@ CDBG      print*,' j3 = ',j3
      :     IAJCMP(JSIGP),IAJCMP(JMU),IAJCMP(JMUP),IOVEP(1)
          YY = -Y
          IF (IALL.NE.0) YY = YY/2.
-	 CALL OVLSET(1,JMU,JMUP,IOVEP(1),0,0,0,IPTR)
+         CALL OVLSET(1,JMU,JMUP,IOVEP(1),0,0,0,IPTR)
          CALL SAVE(4,YY,0,0,JSIG,0,JSIGP,JA,JB,IPTR)
          B1ELC(IBK+1) = Y
       ENDIF
@@ -2168,7 +2168,7 @@ CDBG      print*,' j3 = ',j3
      :      IAJCMP(JNUP),IOVEP(2)
          YY = -Y
          IF (IALL.NE.0) YY = YY/2.
-	 CALL OVLSET(2,JMU,JMUP,IOVEP(1),JNU,JNUP,IOVEP(2),IPTR)
+         CALL OVLSET(2,JMU,JMUP,IOVEP(1),JNU,JNUP,IOVEP(2),IPTR)
          CALL SAVE(4,YY,0,0,JSIG,0,JSIGP,JA,JB,IPTR)
          B1ELC(IBK+1) = Y
       ENDIF
@@ -2179,7 +2179,7 @@ CDBG      print*,' j3 = ',j3
      :   IAJCMP(JNUP),IOVEP(1)
          YY = -Y2
          IF (IALL.NE.0) YY = YY/2.
-	 CALL OVLSET(2,JMU,JNUP,IOVEP(1),JNU,JMUP,IOVEP(2),IPTR)
+         CALL OVLSET(2,JMU,JNUP,IOVEP(1),JNU,JMUP,IOVEP(2),IPTR)
          CALL SAVE(4,YY,0,0,JSIG,0,JSIGP,JA,JB,IPTR)
          B1ELC(IBK+2) = Y2
  1000 IF(NOVSTO.EQ.0) GO TO 289
@@ -2206,7 +2206,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	J 2 3 A N G
+*       J 2 3 A N G
 *     ------------------------------------------------------------------
 *
       SUBROUTINE J23ANG(IRHO,ISIG,IRHOP,ISIGP,JANGDI)
@@ -2358,7 +2358,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	J 2 3 S P N
+*       J 2 3 S P N
 *     ------------------------------------------------------------------
 *
       SUBROUTINE J23SPN(IRHO,ISIG,IRHOP,ISIGP,JSNDIR)
@@ -2523,7 +2523,7 @@ CDBG      print*,' j3 = ',j3
       END
 *     MCHF_NONH  (Part 2 of 2)
 *     ------------------------------------------------------------------
-*	M A T C H
+*       M A T C H
 *     ------------------------------------------------------------------
 *
       INTEGER FUNCTION MATCH(IA, IB, IC, ID)
@@ -2693,7 +2693,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	M E K E E P
+*       M E K E E P
 *     ------------------------------------------------------------------
 *
       SUBROUTINE MEKEEP(IRHO,ISIG,IRHOP,ISIGP)
@@ -2723,7 +2723,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	M E R E S T
+*       M E R E S T
 *     ------------------------------------------------------------------
 *
       SUBROUTINE MEREST(IRHO,ISIG,IRHOP,ISIGP)
@@ -2754,7 +2754,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	M O D J 2 3
+*       M O D J 2 3
 *     ------------------------------------------------------------------
 *
       SUBROUTINE MODJ23(KK)
@@ -2842,7 +2842,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	N O R T B P
+*       N O R T B P
 *     ------------------------------------------------------------------
 *
       SUBROUTINE NORTBP(JA,JB)
@@ -2932,7 +2932,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	N S C R A P
+*       N S C R A P
 *     ------------------------------------------------------------------
 *
       SUBROUTINE NSCRAP(IX,IRS,IR1)
@@ -2954,7 +2954,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	O R T H O G
+*       O R T H O G
 *     ------------------------------------------------------------------
 *
       SUBROUTINE ORTHOG(LET)
@@ -3032,7 +3032,7 @@ CDBG      print*,' j3 = ',j3
       END
 
 *     ------------------------------------------------------------------
-*	O U T L S
+*       O U T L S
 *     ------------------------------------------------------------------
 *
       SUBROUTINE OUTLS
@@ -3075,63 +3075,63 @@ CDBG      print*,' j3 = ',j3
 * --- TERMINATE  INTEGERAL LISTS and Rewind
 *
       DO 1 J = 1,4
-	 ENDFILE(UNIT=ISC(J))
-	 REWIND(UNIT=ISC(J))
+         ENDFILE(UNIT=ISC(J))
+         REWIND(UNIT=ISC(J))
     1 CONTINUE
 *
 *     Test if current dimensions are big enough
 *
       N = MAX(NF,NG,NR,NL,NZ,NN,NV,NS)
       IF (N .GT. NCDIM) THEN
-	 WRITE(0,'(A/A,I10)') ' NCDIM dimension in OUT too small',
+         WRITE(0,'(A/A,I10)') ' NCDIM dimension in OUT too small',
      :    ' Must be increased to at least',N
-	 STOP 1
+         STOP 1
       END IF
 *
 *===  Begin processing data
 *
       NINT = 0
       DO 100 ICASE = 1,4
-	 N = NCOUNT(ICASE)
-	 IF (ICASE .LE. 2) THEN
-	    DO 102 J = 1,N
-	      READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J)
-  102	    CONTINUE
-	 ELSE
-	    DO 104 J = 1,N
-	      READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J),IPTR(J)
+         N = NCOUNT(ICASE)
+         IF (ICASE .LE. 2) THEN
+            DO 102 J = 1,N
+              READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J)
+  102       CONTINUE
+         ELSE
+            DO 104 J = 1,N
+              READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J),IPTR(J)
   104       CONTINUE
-	 END IF
-	 CALL QSORT(N,IPACK,IPT,ISTACK,LSTACK,IERR)
-	 IF (IERR .EQ. 1) THEN
-	    WRITE(0,*) ' Stack dimension not large enough for sort',
+         END IF
+         CALL QSORT(N,IPACK,IPT,ISTACK,LSTACK,IERR)
+         IF (IERR .EQ. 1) THEN
+            WRITE(0,*) ' Stack dimension not large enough for sort',
      :           'CASE = ',icase, 'N = ',n
-	    STOP 1
-	 END IF
+            STOP 1
+         END IF
 *
 *        Output the list of integrals with pointers to the data
 *
-	 LAST = 0
+         LAST = 0
   110    J = LAST +1
-	 LAST = J
-	 IF (J .LE. N) THEN
+         LAST = J
+         IF (J .LE. N) THEN
 *
 *          Unpack electron data
 *
            K = IPACK(IPT(J))
-   	   I4 = MOD(K,64)
-   	   K = K/64
-     	   IF (ICASE.LE.2 .OR. ICASE.EQ.4 .OR. ICASE.EQ.5) THEN
-   	     I2 = MOD(K,64)
-   	     K = K/64
-	   ELSE
-	      I3 = MOD(K,64)
-	      K = K/64
-	      I2 = MOD(K,64)
-	      K = K/64
-	      I1 = MOD(K,64)
-	      K = K/64
-	   END IF
+           I4 = MOD(K,64)
+           K = K/64
+           IF (ICASE.LE.2 .OR. ICASE.EQ.4 .OR. ICASE.EQ.5) THEN
+             I2 = MOD(K,64)
+             K = K/64
+           ELSE
+              I3 = MOD(K,64)
+              K = K/64
+              I2 = MOD(K,64)
+              K = K/64
+              I1 = MOD(K,64)
+              K = K/64
+           END IF
 *
 *           Find  last item in the list with this integral
 *           
@@ -3140,72 +3140,72 @@ CDBG      print*,' j3 = ',j3
              IF (IPACK(IPT(J)) .EQ. IPACK(IPT(LAST))) GO TO 120
            END IF
            LAST = LAST -1
-	   NINT = NINT + 1
+           NINT = NINT + 1
            IF (ICASE .LE. 2) THEN
              WRITE(IOUT,10) INT(ICASE),K,IAJCMP(I2),IAJCMP(I4),LAST
            ELSE IF (ICASE .EQ. 4) THEN
              WRITE(IOUT,12) INT(ICASE),IAJCMP(I2),IAJCMP(I4),LAST
            ELSE
-	     DO 140 J = 1,4
-	       IF (II(J) .LT. 32) THEN
-	         IEL(J) = IAJCMP(II(J))
-	       ELSE
-	         IEL(J) = IAJCLD(64-II(J))
-	       END IF
+             DO 140 J = 1,4
+               IF (II(J) .LT. 32) THEN
+                 IEL(J) = IAJCMP(II(J))
+               ELSE
+                 IEL(J) = IAJCLD(64-II(J))
+               END IF
   140        CONTINUE
-	     WRITE(IOUT,11) INT(ICASE),K,(IEL(J),J=1,4),LAST
+             WRITE(IOUT,11) INT(ICASE),K,(IEL(J),J=1,4),LAST
            END IF
-	   GO TO 110
-	END IF
+           GO TO 110
+        END IF
         WRITE(IOUT,34) 
 *
 *             Write out the data for the integrals
 *
         DO 150 J = 1,N
-  	  K = IPT(J)
+          K = IPT(J)
           IF (ICASE .LE. 2) THEN
             WRITE(IOUT,20) C(K),INT(ICASE),JA(K),JB(K)
-  	  ELSE IF (ICASE .LE. 4) THEN
-  	    WRITE(IOUT,20) C(K),INT(ICASE),JA(K),JB(K),IPTR(K)
+          ELSE IF (ICASE .LE. 4) THEN
+            WRITE(IOUT,20) C(K),INT(ICASE),JA(K),JB(K),IPTR(K)
           END IF
   150   CONTINUE
         IF (ICASE .LE. 2) THEN
            WRITE(IOUT,30) 
         ELSE IF (ICASE .EQ. 3) THEN
-  	   WRITE(IOUT,31)
+           WRITE(IOUT,31)
         ELSE
-  	   WRITE(IOUT,32)
+           WRITE(IOUT,32)
         END IF
         IF (ICASE .EQ. 2) THEN
            M = NOV(1)
-  	   DO 160 J = 1,M
-  	      K = IOVLAP(J,1)
-  	      I2 = MOD(K,64)
-  	      K = k/64
-  	      I1 = MOD(K,64)
-  	      K = K/64
-  	      WRITE(IOUT,13) K,IAJCMP(I1),IAJCMP(I2)
+           DO 160 J = 1,M
+              K = IOVLAP(J,1)
+              I2 = MOD(K,64)
+              K = k/64
+              I1 = MOD(K,64)
+              K = K/64
+              WRITE(IOUT,13) K,IAJCMP(I1),IAJCMP(I2)
   160      CONTINUE
-  	   WRITE(IOUT,34) 
+           WRITE(IOUT,34) 
            M = NOV(2)
-  	   DO 170 J = 1,M
-  	     K = IOVLAP(J,2)
-  	     I4 = MOD(K,64)
-  	     K = K/64
-  	     I3 = MOD(K,64)
-  	     K = K/64
-  	     I2 = MOD(K,64)
-  	     K = K/64
-  	     I1 = MOD(K,64)
-  	     K = K/64
-  	     K1 = MOD(K,16)
-  	     K = K/16
-  	     WRITE(IOUT,13) K,IAJCMP(I1),IAJCMP(I2),
+           DO 170 J = 1,M
+             K = IOVLAP(J,2)
+             I4 = MOD(K,64)
+             K = K/64
+             I3 = MOD(K,64)
+             K = K/64
+             I2 = MOD(K,64)
+             K = K/64
+             I1 = MOD(K,64)
+             K = K/64
+             K1 = MOD(K,16)
+             K = K/16
+             WRITE(IOUT,13) K,IAJCMP(I1),IAJCMP(I2),
      :                            K1,IAJCMP(I3),IAJCMP(I4)
   170      CONTINUE
-  	   WRITE(IOUT,34)
+           WRITE(IOUT,34)
         END IF
-	CLOSE(UNIT=ISC(ICASE))
+        CLOSE(UNIT=ISC(ICASE))
   100 CONTINUE
       WRITE(IOUT,103)
       WRITE(0,*) 'The total number of integrals =',NINT+NOV(1)+NOV(2)
@@ -3220,47 +3220,47 @@ CDBG      print*,' j3 = ',j3
       COMMON /FOUT/NOV(2),IOVLAP(10,2),NF,NG,NR,NL,NZ,NN,NV,NS,IFLAG,NIJ
 
       IF ( N .EQ. 0) THEN
-	 IPTR = 0
-	 RETURN
+         IPTR = 0
+         RETURN
       ELSE
-	 IF (I1 .GT. I2) THEN
-	    IT = I1
-	    I1 = I2
-	    I2 = IT
-	 END IF
-	 IF (N .EQ. 1) THEN
-	    IPACK = (IOV*64 + I1)*64 +I2
-	 ELSE
-	    IF (I3 .GT. I4) THEN
-	       IT = I3
-	       I3 = I4
-	       I4 = IT
-	    END IF
-	    IF (I1 .GT. I3) THEN
-	       IT = I1
-	       I1 = I3
-	       I3 = I1
-	       IT = I2
-	       I2 = I4
-	       I4 = I2
-	       IT = IOV
-	       IOV = JOV
-	       JOV = IT
-	    END IF
-	    IPACK = ((((IOV*16+JOV)*64+I1)*64+I2)*64+I3)*64+I4
-	 END IF
+         IF (I1 .GT. I2) THEN
+            IT = I1
+            I1 = I2
+            I2 = IT
+         END IF
+         IF (N .EQ. 1) THEN
+            IPACK = (IOV*64 + I1)*64 +I2
+         ELSE
+            IF (I3 .GT. I4) THEN
+               IT = I3
+               I3 = I4
+               I4 = IT
+            END IF
+            IF (I1 .GT. I3) THEN
+               IT = I1
+               I1 = I3
+               I3 = I1
+               IT = I2
+               I2 = I4
+               I4 = I2
+               IT = IOV
+               IOV = JOV
+               JOV = IT
+            END IF
+            IPACK = ((((IOV*16+JOV)*64+I1)*64+I2)*64+I3)*64+I4
+         END IF
       END IF
 
       M = NOV(N)
       DO 10 I = 1,M
-	 IF ( IOVLAP(I,N) .EQ. IPACK) THEN
-	    IF (N .EQ. 1) THEN
-	       IPTR = I
-	    ELSE
-	       IPTR = -I
-	    END IF
-	    RETURN
-	 END IF
+         IF ( IOVLAP(I,N) .EQ. IPACK) THEN
+            IF (N .EQ. 1) THEN
+               IPTR = I
+            ELSE
+               IPTR = -I
+            END IF
+            RETURN
+         END IF
 10    CONTINUE
       M = M + 1
       NOV(N) = M
@@ -3268,12 +3268,12 @@ CDBG      print*,' j3 = ',j3
       IF (N .EQ. 1) THEN
          IPTR = M
       ELSE
-	 IPTR = -M
+         IPTR = -M
       END IF
       END
 *
 *     ------------------------------------------------------------------
-*	P I K U P 1
+*       P I K U P 1
 *     ------------------------------------------------------------------
 *
       SUBROUTINE PIKUP1(IX,IRS,MU,NU,IR1,IR2,IC1,IC2)
@@ -3302,7 +3302,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	P I K U P 2
+*       P I K U P 2
 *     ------------------------------------------------------------------
 *
       SUBROUTINE PIKUP2(IX,IRS,IR1,IMU,IR2,IC2)
@@ -3326,7 +3326,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	P R N T W T
+*       P R N T W T
 *     ------------------------------------------------------------------
 *
       SUBROUTINE PRNTWT(IRHO,ISIG,IRHOP,ISIGP)
@@ -3556,7 +3556,7 @@ CDBG      print*,' j3 = ',j3
       IF (IALL .NE. 0) Y = B
       IF (IALL.EQ.0 .AND. JA.NE.JB) Y = Y+Y
       IF (DABS(Y) .GE. 1.D-10) THEN
-	 CALL OVLSET(1,JMU,JMUP,IOVEP(1),0,0,0,IPTR)
+         CALL OVLSET(1,JMU,JMUP,IOVEP(1),0,0,0,IPTR)
          CALL SAVE(3,Y,K,JRHO,JSIG,JSIGP,JRHOP,JA,JB,IPTR)
       END IF
       GO TO 21
@@ -3566,7 +3566,7 @@ CDBG      print*,' j3 = ',j3
       IF (IALL .NE. 0) Y = B
       IF (IALL.EQ.0 .AND. JA.NE.JB) Y = Y+Y
       IF (DABS(Y) .GE. 1.D-10) THEN
-	 CALL OVLSET(2,JMU,JMUP,IOVEP(1),JNU,JNUP,IOVEP(2),IPTR)
+         CALL OVLSET(2,JMU,JMUP,IOVEP(1),JNU,JNUP,IOVEP(2),IPTR)
          CALL SAVE(3,Y,K,JRHO,JSIG,JSIGP,JRHOP,JA,JB,IPTR)
       END IF
       IF(NONORT.EQ.0) GO TO 21
@@ -3576,7 +3576,7 @@ CDBG      print*,' j3 = ',j3
       IF ( IALL .NE. 0) Y2 = B2
       IF (IALL.EQ.0 .AND. JA.NE.JB) Y2 = Y2+Y2
       IF (DABS(Y2) .GE. 1.D-10) THEN
-	 CALL OVLSET(2,JNU,JMUP,IOVEP(2),JMU,JNUP,IOVEP(1),IPTR)
+         CALL OVLSET(2,JNU,JMUP,IOVEP(2),JMU,JNUP,IOVEP(1),IPTR)
          CALL SAVE(3,Y2,K,JRHO,JSIG,JSIGP,JRHOP,JA,JB,IPTR)
       END IF
    21 CONTINUE
@@ -3584,7 +3584,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	R E D U C E
+*       R E D U C E
 *     ------------------------------------------------------------------
 *
       SUBROUTINE REDUCE(IRHO,ISIG,IRHOP,ISIGP,LESSEN)
@@ -3705,7 +3705,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	R K W T S
+*       R K W T S
 *     ------------------------------------------------------------------
 *
       SUBROUTINE RKWTS
@@ -3891,7 +3891,7 @@ CDBG      print*,' j3 = ',j3
             IA=0
             IB=1
             IBACK3=0
-	    IBK = 2
+            IBK = 2
             GO TO 20
          ENDIF
       ENDIF
@@ -3968,7 +3968,7 @@ CDBG      print*,' j3 = ',j3
             IC=0
             ID=1
             IBACK3=0
-	    IBK=2
+            IBK=2
             GO TO 20
          ENDIF
       ENDIF
@@ -4150,26 +4150,26 @@ CDBG      print*,' j3 = ',j3
   125 CONTINUE
       IF (NCLOSD.EQ.0) GO TO 128
       IF (NOVLPS.NE.0) THEN
-	 IA = IASTO
-	 IB = IBSTO
-	 IC = ICSTO
-	 ID = IDSTO
-	 MGO = MATCH(IA,IB,IC,ID)
-	 IF (MGO .NE. 2) GO TO 129
+         IA = IASTO
+         IB = IBSTO
+         IC = ICSTO
+         ID = IDSTO
+         MGO = MATCH(IA,IB,IC,ID)
+         IF (MGO .NE. 2) GO TO 129
       END IF
       CALL CLSHEL(IRSTO,IRPSTO,IZERO)
 129   IF (NOVSTO.NE.0) THEN
-	 MU = MUSTO
-	 NU = NUSTO
-	 MUP = MUPSTO
-	 NUP = NUPSTO
-	 NOVLPS = NOVSTO
-	 LMU = LMUSTO
- 	 LNU = LNUSTO
-	 LMUP = LMUPST
-	 LNUP = LNUPST
-	 IRHO = IRSTO
-	 IRHOP = IRPSTO
+         MU = MUSTO
+         NU = NUSTO
+         MUP = MUPSTO
+         NUP = NUPSTO
+         NOVLPS = NOVSTO
+         LMU = LMUSTO
+         LNU = LNUSTO
+         LMUP = LMUPST
+         LNUP = LNUPST
+         IRHO = IRSTO
+         IRHOP = IRPSTO
       ENDIF
 128   IF (IBACK3.EQ.1) GO TO 102
       RETURN
@@ -4343,7 +4343,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	S C R A P
+*       S C R A P
 *     ------------------------------------------------------------------
 *
       SUBROUTINE SCRAP(IX,IRS,IR1)
@@ -4472,7 +4472,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	S E T U P
+*       S E T U P
 *     ------------------------------------------------------------------
 *
       SUBROUTINE SETUP(JA,JB)
@@ -4633,15 +4633,15 @@ CDBG      print*,' j3 = ',j3
 *     SINCE WE COUPLE THE SHELL TO A DUMMY SINGLET S.
 *
          IF(IC .LE.1) THEN 
-	    I2 = 1
+            I2 = 1
          ELSE
-	    I2 = NOCCSH(JC)+IC-1
+            I2 = NOCCSH(JC)+IC-1
          END IF
          JD = J1QNRD(I2,JC)
          IF (IC .LE. 1) THEN
-	    J1QN(I2HSH,1,I) = 0
+            J1QN(I2HSH,1,I) = 0
          ELSE
-	    J1QN(I2HSH,1,I) = MOD(JD,64)
+            J1QN(I2HSH,1,I) = MOD(JD,64)
          END IF
          JD = JD/64
          J1QN(I2HSH,2,I) = MOD(JD, 64)
@@ -4670,7 +4670,7 @@ CDBG      print*,' j3 = ',j3
       END
 *
 *     ------------------------------------------------------------------
-*	U S E E A V
+*       U S E E A V
 *     ------------------------------------------------------------------
 *
       SUBROUTINE USEEAV(IRHO,ISIG)

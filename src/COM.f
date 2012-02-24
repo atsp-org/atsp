@@ -12,28 +12,28 @@
 *  rational numbers. To improve the accuracy, certain commonly
 *  occurring coefficients are improved to machine precision.
 *
-	DOUBLE PRECISION FUNCTION ACURAT(C)
-	IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	INTEGER NUM
-	INTEGER DEN(11)
-	DATA DEN/2,3,7,9,15,35,49,175,189,315,441/
-	DATA D1/1.D0/
+        DOUBLE PRECISION FUNCTION ACURAT(C)
+        IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+        INTEGER NUM
+        INTEGER DEN(11)
+        DATA DEN/2,3,7,9,15,35,49,175,189,315,441/
+        DATA D1/1.D0/
 *
-	C2 = C*C
-	ACURAT = C
-	DO 1 I = 1,11
-	   PROD = DEN(I)*C2
-	   NUM = NINT(PROD)
-	   EPS = ABS(NUM-PROD)/DEN(I)
-	   IF (EPS .LE. 1.E-8) THEN
-	      IF (EPS .NE. 0.) THEN
-	         ACURAT = SQRT((NUM*D1)/DEN(I))
-	  	 IF (C .LT. 0.) ACURAT = -ACURAT
-		 RETURN
-	      END IF
-	   END IF
-  1	CONTINUE
-	END
+        C2 = C*C
+        ACURAT = C
+        DO 1 I = 1,11
+           PROD = DEN(I)*C2
+           NUM = NINT(PROD)
+           EPS = ABS(NUM-PROD)/DEN(I)
+           IF (EPS .LE. 1.E-8) THEN
+              IF (EPS .NE. 0.) THEN
+                 ACURAT = SQRT((NUM*D1)/DEN(I))
+                 IF (C .LT. 0.) ACURAT = -ACURAT
+                 RETURN
+              END IF
+           END IF
+  1     CONTINUE
+        END
 *
 *     -------------------------------------------------------------
 *        B I S E C T
@@ -286,7 +286,7 @@
       END 
 *
 *     ------------------------------------------------------------------
-*	B W I N T
+*       B W I N T
 *     ------------------------------------------------------------------
 *
       SUBROUTINE BWINT(LC,LO)
@@ -603,12 +603,12 @@
       CALL YKF(I,J,K,REL) 
       GK = QUADS(I,J,1) 
       IF (MASS .GT. 0) THEN
- 	 IF (MASS .EQ. 1) THEN
+         IF (MASS .EQ. 1) THEN
             IF (K .EQ. 1) GK = GK + RMASS*GRAD(I,J)**2
-	 ELSE
-	    GK = GK*(D1 + RMASS/D2)
-	    IF (K .EQ. 1) GK = GK + Z*RMASS*QUADR(I,J,1)*QUADR(J,I,-2)
-	 END IF
+         ELSE
+            GK = GK*(D1 + RMASS/D2)
+            IF (K .EQ. 1) GK = GK + Z*RMASS*QUADR(I,J,1)*QUADR(J,I,-2)
+         END IF
       END IF
       RETURN 
       END 
@@ -636,12 +636,12 @@
       SAVE = .FALSE.
       IMAX = MAX(I,J,K,L,M,N)
       IF (IMAX .LE. 4) THEN
-	 RAC = RACA(I,J,K,L,M,N)
-	 IF (RAC .EQ. UNDEF) THEN
-	    SAVE = .TRUE.
-	 ELSE
-	    RETURN
-	 END IF
+         RAC = RACA(I,J,K,L,M,N)
+         IF (RAC .EQ. UNDEF) THEN
+            SAVE = .TRUE.
+         ELSE
+            RETURN
+         END IF
       END IF
       J1 = I+J+M 
       J2 = K+L+M 
@@ -676,10 +676,10 @@
      :               GAM(J2+1-K)+GAM(J2+1-L)+GAM(J2+1-M)-GAM(J2+2) + 
      :               GAM(J3+1-I)+GAM(J3+1-K)+GAM(J3+1-N)-GAM(J3+2) + 
      :               GAM(J4+1-J)+GAM(J4+1-L)+GAM(J4+1-N)-GAM(J4+2))/TWO) 
-	      IF (MOD(J5+NUMIN,2) .EQ. 0) RAC = -RAC
-	  ELSE
-	      RAC = ZERO
-	  END IF
+              IF (MOD(J5+NUMIN,2) .EQ. 0) RAC = -RAC
+          ELSE
+              RAC = ZERO
+          END IF
       ELSE 
          RAC = ZERO 
       END IF 
@@ -890,7 +890,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	I N T A C T
+*       I N T A C T
 *     ------------------------------------------------------------------
 *
       SUBROUTINE INTACT(L,LP,IEQUIV)
@@ -1059,7 +1059,7 @@
 * 
 * 
 *     ------------------------------------------------------------------ 
-*	P A C K 
+*       P A C K 
 *     ------------------------------------------------------------------ 
 *  Subroutine written by Bin LIU 
 * 
@@ -1071,87 +1071,87 @@
 * 
       SUBROUTINE PACK (M, EL, Q, COUPLE, STR) 
  
-	  INTEGER FULL,Q(5),CONST 
-	  CHARACTER*3 EL(5),COUPLE(9),CH3
-	  CHARACTER   CH1
-	  CHARACTER*66 STR
+          INTEGER FULL,Q(5),CONST 
+          CHARACTER*3 EL(5),COUPLE(9),CH3
+          CHARACTER   CH1
+          CHARACTER*66 STR
 * 
 *  FULL   :  4l+2 
 *  CONST  :   constant for converting lowercase to uppercase 
 *  CH*    :  temporary variables 
 * 
-	  CONST = ICHAR('a') - ICHAR('A') 
-	  STR=' ' 
-	  J = 0
+          CONST = ICHAR('a') - ICHAR('A') 
+          STR=' ' 
+          J = 0
 * 
 *   -----  begin to encode  ----- 
 * 
-	  DO 100 I=1,M 
-	    N = Q(I)
-	    IF (N .EQ. 0) GO TO 100
-	    K = 3
-	    IF (EL(I)(3:3) .EQ. ' ') K = 2
-	    IF (EL(I)(1:1) .EQ. ' ') THEN
-		EL(I)=EL(I)(2:3)//' ' 
-		K = 2
-	    END IF
-	    CH1=EL(I)(2:2) 
-	    IF ((CH1.GE.'A') .AND. (CH1.LE.'Z')) 
+          DO 100 I=1,M 
+            N = Q(I)
+            IF (N .EQ. 0) GO TO 100
+            K = 3
+            IF (EL(I)(3:3) .EQ. ' ') K = 2
+            IF (EL(I)(1:1) .EQ. ' ') THEN
+                EL(I)=EL(I)(2:3)//' ' 
+                K = 2
+            END IF
+            CH1=EL(I)(2:2) 
+            IF ((CH1.GE.'A') .AND. (CH1.LE.'Z')) 
      :            EL(I)(2:2)=CHAR(ICHAR(CH1)+CONST) 
-	    FULL=4*LVAL(CH1)+2 
+            FULL=4*LVAL(CH1)+2 
 * 
 *  -----  convert Qi into character  ----- 
 * 
-	    WRITE(CH3,'(I2)') Q(I) 
-	    STR=STR(1:J)//EL(I)(1:K)
-	    J= J + K
+            WRITE(CH3,'(I2)') Q(I) 
+            STR=STR(1:J)//EL(I)(1:K)
+            J= J + K
 * 
 *  -----  If Qi<>1, add Qi 
 *           If Qi<4l+1, add TERMi for the shell ----- 
 * 
-	    IF (N .NE. 1) THEN 
- 		IF (N .GT. 9) THEN 
-	          STR=STR(1:J)//'('//CH3(1:2)//')' 
-		  J = J + 4
-	        ELSE 
-	          STR=STR(1:J)//'('//CH3(2:2)//')' 
-		  J = J + 3
-	        ENDIF 
-	        IF (N .LT. FULL-1 .AND. M .NE. 1) THEN 
-		    CH3=COUPLE(I) 
-		    CH1= CH3(2:2) 
-		    IF (CH1.GE.'a' .AND. CH1.LE.'z') 
-     :			CH3(2:2) = CHAR(ICHAR(CH1)-CONST) 
-	            STR=STR(1:J)//CH3 
-	            J= J + 3
-	        ENDIF 
-	    ENDIF 
+            IF (N .NE. 1) THEN 
+                IF (N .GT. 9) THEN 
+                  STR=STR(1:J)//'('//CH3(1:2)//')' 
+                  J = J + 4
+                ELSE 
+                  STR=STR(1:J)//'('//CH3(2:2)//')' 
+                  J = J + 3
+                ENDIF 
+                IF (N .LT. FULL-1 .AND. M .NE. 1) THEN 
+                    CH3=COUPLE(I) 
+                    CH1= CH3(2:2) 
+                    IF (CH1.GE.'a' .AND. CH1.LE.'z') 
+     :                  CH3(2:2) = CHAR(ICHAR(CH1)-CONST) 
+                    STR=STR(1:J)//CH3 
+                    J= J + 3
+                ENDIF 
+            ENDIF 
 * 
 *  -----  If i=1 or Qi=4l+2 and i<>m, 
 *           insert '.'; else _RESULTANTi.  ----- 
 * 
 50          IF ((I.NE.1 .AND. N.NE.FULL )
      :           .OR. I.EQ.M  ) THEN 
-		CH3=COUPLE(M+I-1) 
-		CH1 = CH3(2:2) 
-		IF (CH1.GE.'a' .AND. CH1.LE.'z') 
-     :			CH3(2:2) = CHAR(ICHAR(CH1)-CONST) 
-		K = 2 
-		IF (M .EQ. 1) K = 3 
-	        STR=STR(1:J)//'_'//CH3(1:K) 
-		J = J + K + 1
-	    ENDIF 
-	    IF (I .NE. M .AND. N.NE.0 ) THEN 
-		J = J + 1
-	        STR(J:J)='.' 
-	    ENDIF 
-100	  CONTINUE 
+                CH3=COUPLE(M+I-1) 
+                CH1 = CH3(2:2) 
+                IF (CH1.GE.'a' .AND. CH1.LE.'z') 
+     :                  CH3(2:2) = CHAR(ICHAR(CH1)-CONST) 
+                K = 2 
+                IF (M .EQ. 1) K = 3 
+                STR=STR(1:J)//'_'//CH3(1:K) 
+                J = J + K + 1
+            ENDIF 
+            IF (I .NE. M .AND. N.NE.0 ) THEN 
+                J = J + 1
+                STR(J:J)='.' 
+            ENDIF 
+100       CONTINUE 
 *
 *>>>>>    Because of a compiler error on the SUN, the following is
 *         needed to have the string printed correctly.
-	  STR = STR(1:J)
-	  RETURN 
-	END 
+          STR = STR(1:J)
+          RETURN 
+        END 
 *
 *    --------------------------------------------------------------
 *            R E F O R M
@@ -1200,13 +1200,13 @@
       CALL YKF(I,II,K,REL) 
       RK = QUADS(J,JJ,1) 
       IF (MASS .GT. 0) THEN
- 	 IF (MASS .EQ. 1) THEN
+         IF (MASS .EQ. 1) THEN
             IF (K .EQ. 1) RK = RK - RMASS*GRAD(I,II)*GRAD(J,JJ)
-	 ELSE
-	    RK = RK*(D1 + RMASS/D2)
-	    IF (K .EQ. 1) RK = RK + Z*RMASS/D2*(
+         ELSE
+            RK = RK*(D1 + RMASS/D2)
+            IF (K .EQ. 1) RK = RK + Z*RMASS/D2*(
      :        QUADR(I,II,1)*QUADR(J,JJ,-2)+QUADR(I,II,-2)*QUADR(J,JJ,1))
-	 END IF
+         END IF
       END IF
       RETURN 
       END 

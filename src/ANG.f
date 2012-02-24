@@ -8,9 +8,9 @@
 *     NOTE:  This file contains routines for programs using one atomic 
 *            state and two atomic states as in transitions. The COMMONS
 *            are different, thus there will be warning messages if this
-*	     file compiled without first using fsplit.
+*            file compiled without first using fsplit.
 *     ------------------------------------------------------------------
-*	A N A L Y S E 1
+*       A N A L Y S E 1
 *     ------------------------------------------------------------------
 *
       SUBROUTINE ANALY1(IREAD,IWRITE,NCLOSD,MAXORB,N,NCFG,NOCCSH,LIST,
@@ -53,7 +53,7 @@
 *
          NCFG = NCFG + 1
          IF (NCFG .GT. NCD )
-     :	    WRITE(IWRITE,'(A,I5)') ' TOO MANY CONFIGURATIONS: MAX=',NCD
+     :      WRITE(IWRITE,'(A,I5)') ' TOO MANY CONFIGURATIONS: MAX=',NCD
          J = 2
          I = 0
  30      IF (LINE(J:J+2) .NE. '   ' .AND. I.LT.(5)) THEN
@@ -67,9 +67,9 @@
                IF ( OF(K) .NE. EL(I) ) THEN
                   K = K+1
                   IF (K .GT. NWD) THEN
-		     WRITE(IWRITE,*) ' TOO MANY ELECTRONS: MAX=',NWD
-		     STOP
-		  END IF
+                     WRITE(IWRITE,*) ' TOO MANY ELECTRONS: MAX=',NWD
+                     STOP
+                  END IF
                   GO TO 40
                  ELSE
                   IEL(I) = K
@@ -145,7 +145,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	A N A L Y S 2
+*       A N A L Y S 2
 *     ------------------------------------------------------------------
 *
       SUBROUTINE ANALY2(NCLOSI,NCLOSF,MCFG,KCFG,LIST,LORTH)
@@ -212,8 +212,8 @@
          NCFG = NCFG + 1
          IF (NCFG .GT. (NCD4) ) THEN
             WRITE(IWRITE,*) ' TOO MANY CONFIGURATIONS: MAX=',NCD4
-	    STOP
-	 END IF
+            STOP
+         END IF
          J = 2
          I = 0
  30      IF (LINE(J:J+2) .NE. '   ' .AND. I.LT.(5)) THEN
@@ -227,9 +227,9 @@
                IF ( OF(K,ISTATE) .NE. EL(I) ) THEN
                   K = K+1
                   IF (K .GT. (NWD)) THEN
-		     WRITE(IWRITE,*) ' TOO MANY ELECTRONS: MAX=',NWD
-		     STOP
-		  END IF
+                     WRITE(IWRITE,*) ' TOO MANY ELECTRONS: MAX=',NWD
+                     STOP
+                  END IF
                   GO TO 40
                  ELSE
                   IEL(I) = K
@@ -424,9 +424,9 @@
 *               We have the next electron
 *
                 IF (IORD.GT.(2*NWD)) THEN
-		  WRITE(IWRITE,*) ' Too many electrons: MAX=',2*NWD
-		  STOP
-		END IF
+                  WRITE(IWRITE,*) ' Too many electrons: MAX=',2*NWD
+                  STOP
+                END IF
                 LIST(IORD) = OF(I-IORIG,ISTATE)
                 IORD = IORD+1
                 DO 303 J = 1,IORIG+LASTEL
@@ -454,12 +454,12 @@
       END
 *
 *     ------------------------------------------------------------------
-*	C F G I N 2
+*       C F G I N 2
 *     ------------------------------------------------------------------
 *
       SUBROUTINE CFGIN2(MCFG,KCFG,LORTH,INPUT)
 *
-*	Read two sets of configurations and determine the orthogonality
+*       Read two sets of configurations and determine the orthogonality
 *       conditions between them
 *
       IMPLICIT DOUBLE PRECISION(A-H,O-Z)
@@ -562,11 +562,11 @@
       END
 *
 *     ------------------------------------------------------------------
-*	C F G N 1
+*       C F G N 1
 *     ------------------------------------------------------------------
 *
-*	Read the configurations for a state and determine the
-*	non-orthogonal orbitals
+*       Read the configurations for a state and determine the
+*       non-orthogonal orbitals
 *
       SUBROUTINE CFGN1(INPUT)
       IMPLICIT DOUBLE PRECISION(A-H,O-Z)
@@ -591,12 +591,12 @@
 *
       DO 10 I = 1,MAXORB
          WRITE(BUFFER,'(A3)') IAJCMP(I)
-	 READ(BUFFER,'(3A1)') (JAJCMP(I,J),J=1,3)
-	 IF (JAJCMP(I,1) .EQ. ' ') THEN
-	    JAJCMP(I,1) = JAJCMP(I,2)
-	    JAJCMP(I,2) = JAJCMP(I,3)
-	    JAJCMP(I,3) = ' '
-	 END IF
+         READ(BUFFER,'(3A1)') (JAJCMP(I,J),J=1,3)
+         IF (JAJCMP(I,1) .EQ. ' ') THEN
+            JAJCMP(I,1) = JAJCMP(I,2)
+            JAJCMP(I,2) = JAJCMP(I,3)
+            JAJCMP(I,3) = ' '
+         END IF
 10    CONTINUE
 *
 *  ---  INITIALIZE THE ORTHOGONALITY ARRAY
@@ -669,10 +669,10 @@
       END
 *
 *     ------------------------------------------------------------------
-*	C F G O 1
+*       C F G O 1
 *     ------------------------------------------------------------------
 *
-*	Read configurations for one state, assuming orthogonality of
+*       Read configurations for one state, assuming orthogonality of
 *       the orbitals
 *
       SUBROUTINE CFGO1(NCFG,MAXORB,IAJCMP,LJCOMP,NJCOMP,NOCCSH,
@@ -773,7 +773,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	C F G T S T
+*       C F G T S T
 *     ------------------------------------------------------------------
 *
       SUBROUTINE CFGTST(NCFG,LJCOMP,NOCCSH,NELCSH,NOCORB,J1QNRD,NCD)
@@ -820,11 +820,11 @@
             LQU=LJCOMP(NA)
             NC=NELCSH(J,I)
             NELSUM = NELSUM + NC
-	    JD = J1QNRD(J,I)
+            JD = J1QNRD(J,I)
             JA = MOD(JD,64)
-	    JD = JD/64
-	    JB = MOD(JD,64)
-	    JC = JD/64
+            JD = JD/64
+            JB = MOD(JD,64)
+            JC = JD/64
             LQUMAX = 4*LQU + 2
             IF (NC .GT. LQUMAX) THEN
                WRITE(IWRITE,15) I,J
@@ -867,12 +867,12 @@
                J2 = N+J-1
                J1 = J2-1
                IF (J.EQ.2) J1 = 1
-	       JE = J1QNRD(J1,I)/64
-	       JD = MOD(JE,64)
-	       JE = JE/64
-	       JG = J1QNRD(J2,I)/64
-	       JF = MOD(JG,64)
-	       JG = JG/64
+               JE = J1QNRD(J1,I)/64
+               JD = MOD(JE,64)
+               JE = JE/64
+               JG = J1QNRD(J2,I)/64
+               JF = MOD(JG,64)
+               JG = JG/64
                IF (JF.GE.(JB+JD) .OR. JF.LE.IABS(JB-JD) .OR.
      :             JG.GE.(JC+JE) .OR. JG.LE.IABS(JC-JE) .OR.
      :             MOD(JC+JE-JG,2).EQ.0 ) THEN
@@ -961,7 +961,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	C F P
+*       C F P
 *     ------------------------------------------------------------------
 *
       SUBROUTINE CFP(LIJ,N,IVI,ILI,ISI,IVJ,ILJ,ISJ,COEFP)
@@ -981,7 +981,7 @@
 *     ARE INCLUDED, THIS COMPUTED GO TO NEEDS MODIFYING TO ACCOUNT FOR
 *     THIS
 *
-	
+        
       GO TO (1,2,3,4,4) K
 *
 * --- FALSE CALL FOR S-SHELLS
@@ -1006,7 +1006,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	C F P D
+*       C F P D
 *     ------------------------------------------------------------------
 *
       SUBROUTINE CFPD(N,IVI,LI,ISI,IVJ,LJ,ISJ,COEFP)
@@ -1197,7 +1197,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	C F P F
+*       C F P F
 *     ------------------------------------------------------------------
 *
       SUBROUTINE CFPF(N,IVI,ILI,ISI,IVJ,ILJ,ISJ,COEFP)
@@ -1212,7 +1212,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	C F P P
+*       C F P P
 *     ------------------------------------------------------------------
 *
       SUBROUTINE CFPP(N,LI,ISI,LJ,ISJ,COEFP)
@@ -1344,7 +1344,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	N T A B 1
+*       N T A B 1
 *     ------------------------------------------------------------------
 *
       FUNCTION NTAB1(NELCTS,K)
@@ -1376,7 +1376,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	M U M D A D
+*       M U M D A D
 *     ------------------------------------------------------------------
 *
       SUBROUTINE MUMDAD(II,IJ,IK,M,X)
@@ -1441,7 +1441,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	F I N D
+*       F I N D
 *     ------------------------------------------------------------------
 *
       CHARACTER*3 FUNCTION FIND (I,OF,EL)
@@ -1462,7 +1462,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	G S T A T E
+*       G S T A T E
 *     ------------------------------------------------------------------
 *
       SUBROUTINE GSTATE(NFIRST,NLAST)
@@ -1535,13 +1535,13 @@
       END
 *
 *     ------------------------------------------------------------------
-*	O R T H
+*       O R T H
 *
 *     ------------------------------------------------------------------
 *
       SUBROUTINE ORTH
 *
-*	Determine the orthogonality between initial and final state
+*       Determine the orthogonality between initial and final state
 *
       IMPLICIT DOUBLE PRECISION(A-H,O-Z)
       PARAMETER (NWD=30,NCD=100,NCD4=4*NCD)
@@ -1588,7 +1588,7 @@
       RETURN
       END
 *     ------------------------------------------------------------------
-*	T E N S O R
+*       T E N S O R
 *     ------------------------------------------------------------------
 *
       SUBROUTINE TENSOR(KA,KB,ISPIN,IRHO,ISIG,VSHELL)
@@ -1960,7 +1960,7 @@
 *     EVALUATE ORBITAL AND SPIN RECOUPLING COEFFICIENTS
 *
   164 DO 500 I = 1,MN1
-	 FREE(I) = .FALSE.
+         FREE(I) = .FALSE.
   500 CONTINUE
 *
       CALL NJGRAF(RECUP,FAIL)
@@ -2187,83 +2187,83 @@
 *
 *     Fk, Gk, L, or Z data
 *
-	 IF (I2 .GT. I4) THEN
-	    II2 = I4
-	    II4 = I2
-	 ELSE
-	    II2 = I2
-	    II4 = I4
-	 END IF
-	 IPACK = (K*64 + II2)*64 + II4
-	 IF (ICASE .NE. 4) THEN
-	   WRITE(ISC(ICASE)) C,IPACK,JA,JB
-	 ELSE
-	   WRITE(ISC(ICASE)) C,IPACK,JA,JB,IPTR
-	 END IF
+         IF (I2 .GT. I4) THEN
+            II2 = I4
+            II4 = I2
+         ELSE
+            II2 = I2
+            II4 = I4
+         END IF
+         IPACK = (K*64 + II2)*64 + II4
+         IF (ICASE .NE. 4) THEN
+           WRITE(ISC(ICASE)) C,IPACK,JA,JB
+         ELSE
+           WRITE(ISC(ICASE)) C,IPACK,JA,JB,IPTR
+         END IF
       ELSE IF(ICASE .EQ. 3) THEN
-	 J = 1
-	 IMIN = I1
-	 IF (I2 .LT. IMIN) THEN
-	    IMIN=I2
-	    J = 2
-	 END IF
-	 IF (I3 .LT. IMIN) THEN
-	    IMIN = I3
-	    J = 3
-	 END IF
-	 IF (I4 .LT. IMIN) THEN
-	    IMIN = I4
-	    J = 4
-	 END IF
-	 GO TO (10,20,30,40) J
+         J = 1
+         IMIN = I1
+         IF (I2 .LT. IMIN) THEN
+            IMIN=I2
+            J = 2
+         END IF
+         IF (I3 .LT. IMIN) THEN
+            IMIN = I3
+            J = 3
+         END IF
+         IF (I4 .LT. IMIN) THEN
+            IMIN = I4
+            J = 4
+         END IF
+         GO TO (10,20,30,40) J
 10       II1 = I1
          II2 = I2
          II3 = I3
          II4 = I4
          Go to 50
-	
+        
 20       II1 = I2
-	 II2 = I1
-	 II3 = I4
-	 II4 = I3
-	 GO TO 50
+         II2 = I1
+         II3 = I4
+         II4 = I3
+         GO TO 50
 
 30       II1 = I3
-	 II2 = I4
-	 II3 = I1
-	 II4 = I2
-	 GO TO 50
+         II2 = I4
+         II3 = I1
+         II4 = I2
+         GO TO 50
 
 40       II1 = I4
-	 II2 = I3
-	 II3 = I2
-	 II4 = I1
+         II2 = I3
+         II3 = I2
+         II4 = I1
 
 50       IPACK = (((K*64+II1)*64+II2)*64+II3)*64+II4
-	 WRITE(ISC(3)) C,IPACK,JA,JB,IPTR
+         WRITE(ISC(3)) C,IPACK,JA,JB,IPTR
       ELSE 
-	 II1 = I1
-	 II3 = I3
-	 IF (I2 .GT. I4) THEN
-	    II2 = I4
-	    II4 = I2
-	 ELSE
-	    II2 = I2
-	    II4 = I4
-	 END IF
-	 IF (ICASE .NE. 7) THEN
-	    IF (I1 .GT. I3) THEN
-	       II1 = I3
-	       II3 = I1
-	    END IF
-	 END IF
+         II1 = I1
+         II3 = I3
+         IF (I2 .GT. I4) THEN
+            II2 = I4
+            II4 = I2
+         ELSE
+            II2 = I2
+            II4 = I4
+         END IF
+         IF (ICASE .NE. 7) THEN
+            IF (I1 .GT. I3) THEN
+               II1 = I3
+               II3 = I1
+            END IF
+         END IF
 *
 * ... Because the k-value may be -1, for these integrals, a
 *     value of k+1 is stored.
 *
-	 KK = K + 1
+         KK = K + 1
          IPACK = (((KK*64+II1)*64+II2)*64+II3)*64+II4
-	 WRITE(ISC(ICASE)) C,IPACK,JA,JB
+         WRITE(ISC(ICASE)) C,IPACK,JA,JB
       END IF
       NCOUNT(ICASE) = NCOUNT(ICASE) + 1
       IFLAG = 1
@@ -2271,7 +2271,7 @@
 *
 *     ------------------------------------------------------------------
 *
-*	T R I T S T
+*       T R I T S T
 *     ------------------------------------------------------------------
 *
       DOUBLE PRECISION FUNCTION TRITST(L,M,N)
@@ -2291,7 +2291,7 @@
       END
 *
 *     ------------------------------------------------------------------
-*	V I J O U T
+*       V I J O U T
 *     ------------------------------------------------------------------
 *
       SUBROUTINE VIJOUT(JA,JB)

@@ -167,7 +167,7 @@ c..........putting the link to 0.sub zero changes nbtr
 c           write(*,*)jdif,' should be 0.Is :',j1(jdif),'recup ->0'
             return
             else
-	     call zero(1,jdif,fail)
+             call zero(1,jdif,fail)
              if (fail)return
            endif
           endif
@@ -1075,10 +1075,10 @@ c
                 endif
                enddo
 c
-		      endif !! endif(noel)
-		      jsum2(nsv)=jmin
-		      maxlp(nsv)=jmax
-		      if(ldiag(nsv))jsum3(nsv)=0
+                      endif !! endif(noel)
+                      jsum2(nsv)=jmin
+                      maxlp(nsv)=jmax
+                      if(ldiag(nsv))jsum3(nsv)=0
           enddo
 c
           already=.false.
@@ -2322,7 +2322,7 @@ c.......11/23/93 correction for case of free ends
           if(i2.eq.i1) i2=tab1(ja,2)
           if(i3.eq.i1) i3=tab1(jc,2)
 c.......4/13/94 case of inactive triads before first
-	  if(i2.lt.ifirst.or.i3.lt.ifirst)go to 250
+          if(i2.lt.ifirst.or.i3.lt.ifirst)go to 250
       idist=iabs(il(i3)-il(i2))
       if(idist.lt.ncm) go to 800
 c.........inactive triads beyond ilast
@@ -3280,11 +3280,11 @@ c
       do 11 i=1,m
         if(j1(i).ne.1.or.free(i).or.ial(i).le.1)go to 11
         nzero=nzero+1
-	if (nzero .gt. kflz) then
-	   print 100, nzero, kflz
+        if (nzero .gt. kflz) then
+           print 100, nzero, kflz
   100      format(1x,'Dimension error in ZERO: nzero=',I5,' KFLZ=',I5)
-	   stop
-	endif
+           stop
+        endif
         jzero(nzero)=i
    11 continue
 *

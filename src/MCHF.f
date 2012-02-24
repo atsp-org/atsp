@@ -1,11 +1,11 @@
 *     ------------------------------------------------------------------
-*	 MULTICONFIGURATION HARTREE-FOCK PROGRAM
+*        MULTICONFIGURATION HARTREE-FOCK PROGRAM
 *
 *                 C O P Y R I G H T -- 1994
 *
 *     Written and Revised by:  Charlotte Froese Fischer
 *                              Department of Computer Science
-*			       Vanderbilt University
+*                              Vanderbilt University
 *     September, 1988
 *
 *     Computer Physics Communication, Vol. 64, 431 (1991)
@@ -38,9 +38,9 @@
 *   first  are  obtained  by  scaling  the previous results.
 *   Mixing coefficients are left unchanged.
 *
-	PROGRAM MCHF
+        PROGRAM MCHF
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH,IOU(7)
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -51,13 +51,13 @@
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :     ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
-	LOGICAL PRINT,LD
-	CHARACTER*24 ANS*1,NAME(7), FILE
+        LOGICAL PRINT,LD
+        CHARACTER*24 ANS*1,NAME(7), FILE
 CSUN  REAL TIMES(2),DTIME
       EQUIVALENCE (IUC,IOU(1)),(OUC,IOU(4))
       DATA NAME/'cfg.inp','int.lst','wfn.inp','cfg.out',' ',
@@ -65,19 +65,19 @@ CSUN  REAL TIMES(2),DTIME
 *
 CSUN     RTIME = DTIME(TIMES)
 *  ***** Define unit numbers and open files *********************
-*								*
-*	 UNIT NUMBERS AND FILE NAMES MAY BE MACHINE		*
-*	 DEPENDENT. CHECK THE FOLLOWING SECTION. 		*
-*								*
-*	 IN - Standard input unit, normally the terminal	*
-*	 OUT- Standard output unit, normally the terminal	*
+*                                                               *
+*        UNIT NUMBERS AND FILE NAMES MAY BE MACHINE             *
+*        DEPENDENT. CHECK THE FOLLOWING SECTION.                *
+*                                                               *
+*        IN - Standard input unit, normally the terminal        *
+*        OUT- Standard output unit, normally the terminal       *
 *        ERR- Prompts and Error messages, always the terminal   *
-*	 PRI- Printer output unit or file.			*
-*								*
-	IN = 5
-	OUT = 6
-	ERR = 0
-	PRI = 3
+*        PRI- Printer output unit or file.                      *
+*                                                               *
+        IN = 5
+        OUT = 6
+        ERR = 0
+        PRI = 3
 *
 *  *****  WRITE OUT HEADER
 *
@@ -96,9 +96,9 @@ CSUN     RTIME = DTIME(TIMES)
 *
       CALL INITA
       CALL INITR
-*								*
+*                                                               *
 *  ***** IN THE OPEN STATEMENTS CHECK FOR VALID FILE NAMES ******
-*								*
+*                                                               *
 1     WRITE(ERR,'(//A/A//)') ' START OF CASE',' ============='
 CSUN       i = iargc()
 CSUN       do 999 j = 1,i
@@ -230,131 +230,131 @@ CSUN : RTIME/60.,TIMES(1)/60., TIMES(2)/60.
       END
 *
 *----------------------------------------------------------------------
-*	C O E F
+*       C O E F
 *----------------------------------------------------------------------
 *
-*	This function returns the coefficient of a given Slater
+*       This function returns the coefficient of a given Slater
 *  integral in the expansion of the energy
 *
-	DOUBLE PRECISION FUNCTION COEF(INT)
-	IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+        DOUBLE PRECISION FUNCTION COEF(INT)
+        IMPLICIT DOUBLE PRECISION(A-H,O-Z)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (NCD=100,IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (NCD=100,IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	COEF = 0.D0
-	IBEGIN = 1
-	IF (INT .GT. 1) IBEGIN = CPTR(INT-1)+1
-	IEND = CPTR(INT)
-	DO 1 II = IBEGIN,IEND
-	   T = WT(IH(II))*WT(JH(II))*COEFF(II)
- 	   IF (OPTR(II).NE.0) T = T*VALUE(OPTR(II))
-	   IF (IH(II) .NE. JH(II)) T = T+T
-	   COEF = COEF+T
-  1	CONTINUE
-	END
+        COEF = 0.D0
+        IBEGIN = 1
+        IF (INT .GT. 1) IBEGIN = CPTR(INT-1)+1
+        IEND = CPTR(INT)
+        DO 1 II = IBEGIN,IEND
+           T = WT(IH(II))*WT(JH(II))*COEFF(II)
+           IF (OPTR(II).NE.0) T = T*VALUE(OPTR(II))
+           IF (IH(II) .NE. JH(II)) T = T+T
+           COEF = COEF+T
+  1     CONTINUE
+        END
 *
 *----------------------------------------------------------------------
-* 	C O N T C
+*       C O N T C
 *----------------------------------------------------------------------
 *
-*	Contributions to first and second-order energy corrections 
+*       Contributions to first and second-order energy corrections 
 *   from the rotation of orbitals from a given integral
 *
-	SUBROUTINE CONTC(INT,DC,U,COEF)
-	IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	DIMENSION U(*)
+        SUBROUTINE CONTC(INT,DC,U,COEF)
+        IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+        DIMENSION U(*)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (NCD=100,IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (NCD=100,IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	COEF = 0.D0
-	IBEGIN = 1
-	IF (INT .GT. 1) IBEGIN = CPTR(INT-1)+1
-	IEND = CPTR(INT)
-	DO 1 II = IBEGIN,IEND
-	   T = COEFF(II)
- 	   IF (OPTR(II).NE.0) T = T*VALUE(OPTR(II))
-	   U(IH(II)) = U(IH(II)) + WT(JH(II))*T*DC
-	   IF (IH(II) .NE. JH(II)) THEN
-		U(JH(II)) = U(JH(II)) + WT(IH(II))*T*DC
-		T = T+T
-	   END IF
-	   COEF = COEF+T*WT(IH(II))*WT(JH(II))
-  1	CONTINUE
-	END
+        COEF = 0.D0
+        IBEGIN = 1
+        IF (INT .GT. 1) IBEGIN = CPTR(INT-1)+1
+        IEND = CPTR(INT)
+        DO 1 II = IBEGIN,IEND
+           T = COEFF(II)
+           IF (OPTR(II).NE.0) T = T*VALUE(OPTR(II))
+           U(IH(II)) = U(IH(II)) + WT(JH(II))*T*DC
+           IF (IH(II) .NE. JH(II)) THEN
+                U(JH(II)) = U(JH(II)) + WT(IH(II))*T*DC
+                T = T+T
+           END IF
+           COEF = COEF+T*WT(IH(II))*WT(JH(II))
+  1     CONTINUE
+        END
 *
 *-----------------------------------------------------------------------
-* 	C O N T O V
+*       C O N T O V
 *-----------------------------------------------------------------------
 *     Contribution to the first and second order variation of the
 *   energy from the presence of an overlap integral.  The present
 *   implementation is incomplete in that it excludes the case
 *   where one orbital is in an integral and the other in an overlap.
 *
-	SUBROUTINE CONTOV(M,DC,U,COV)
+        SUBROUTINE CONTOV(M,DC,U,COV)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	DIMENSION U(*)
+        DIMENSION U(*)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (NCD=100,IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (NCD=100,IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	COV = 0.D0
-	IBEGIN = INTPTR(4)+1
-	IEND =INTPTR(6)
-	DO 10 I = IBEGIN,IEND
-	   JBEGIN = CPTR(I-1)+1
-	   JEND = CPTR(I)
-	   DO 12 J = JBEGIN,JEND
-	      IF ( OPTR(J) .EQ. M) THEN
+        COV = 0.D0
+        IBEGIN = INTPTR(4)+1
+        IEND =INTPTR(6)
+        DO 10 I = IBEGIN,IEND
+           JBEGIN = CPTR(I-1)+1
+           JEND = CPTR(I)
+           DO 12 J = JBEGIN,JEND
+              IF ( OPTR(J) .EQ. M) THEN
                  CC =  COEFF(J)*VALUE(I)
-		 U(IH(J)) = U(IH(J)) + WT(JH(J))*CC*DC
-		 IF (IH(J) .NE. JH(J)) THEN
-		    U(JH(J)) = U(JH(J)) + WT(IH(J))*CC*DC
-		    CC = 2*CC
-		 END IF
-		 COV = COV + CC*WT(IH(J))*WT(JH(J))
-	      END IF
- 12	   CONTINUE
- 10	CONTINUE
-	END
+                 U(IH(J)) = U(IH(J)) + WT(JH(J))*CC*DC
+                 IF (IH(J) .NE. JH(J)) THEN
+                    U(JH(J)) = U(JH(J)) + WT(IH(J))*CC*DC
+                    CC = 2*CC
+                 END IF
+                 COV = COV + CC*WT(IH(J))*WT(JH(J))
+              END IF
+ 12        CONTINUE
+ 10     CONTINUE
+        END
 *
 *-----------------------------------------------------------------------
-* 	C O V
+*       C O V
 *-----------------------------------------------------------------------
 *
 *       The coefficient of a particular overlap integral in the
 *   expression for the energy.
 *
-	DOUBLE PRECISION FUNCTION COV(M)
+        DOUBLE PRECISION FUNCTION COV(M)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (NCD=100,IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (NCD=100,IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	COV = 0.D0
-	IBEGIN = INTPTR(4)+1
-	IEND =INTPTR(6)
-	DO 10 I = IBEGIN,IEND
-	   JBEGIN = CPTR(I-1)+1
-	   JEND = CPTR(I)
-	   DO 12 J = JBEGIN,JEND
-	      IF ( OPTR(J) .EQ. M) THEN
+        COV = 0.D0
+        IBEGIN = INTPTR(4)+1
+        IEND =INTPTR(6)
+        DO 10 I = IBEGIN,IEND
+           JBEGIN = CPTR(I-1)+1
+           JEND = CPTR(I)
+           DO 12 J = JBEGIN,JEND
+              IF ( OPTR(J) .EQ. M) THEN
                  CC =  COEFF(J)*WT(IH(J))*WT(JH(J))*VALUE(I)
-		 IF (IH(J) .NE. JH(J)) CC = 2*CC
-		 COV = COV + CC
-	      END IF
- 12	   CONTINUE
- 10	CONTINUE
-	END
+                 IF (IH(J) .NE. JH(J)) CC = 2*CC
+                 COV = COV + CC
+              END IF
+ 12        CONTINUE
+ 10     CONTINUE
+        END
 *
 *     ------------------------------------------------------------------
 *              D A T A
@@ -367,7 +367,7 @@ CSUN : RTIME/60.,TIMES(1)/60., TIMES(2)/60.
 *
       SUBROUTINE DATA
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100,IDIM=550,NCDIM=3000)
+        PARAMETER (NWD=30,NOD=220,NCD=100,IDIM=550,NCDIM=3000)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -381,19 +381,19 @@ CSUN : RTIME/60.,TIMES(1)/60., TIMES(2)/60.
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
         COMMON ZZ(NWD),IND(NWD),IELI(5),NOCCSH(NCD)
 *
-	LOGICAL SETORT,STRONG
-	CHARACTER*3 EL1,EL2,ELCLSD(18),ELORT(10,2),
+        LOGICAL SETORT,STRONG
+        CHARACTER*3 EL1,EL2,ELCLSD(18),ELORT(10,2),
      :              ELI(5),ANS*1,STRING*40,LIST*72
 *
     1 FORMAT(18(1X,A3))
@@ -513,11 +513,11 @@ C     END IF
          METH(I) = 1
          ACC(I) = D0
          IND(I) = 0
-	 SUM(I) = 4*L(I)+2
+         SUM(I) = 4*L(I)+2
          IF (IUF .NE. 0)  IND(I) = -1
          IF( I .LT. 18) GO TO 12
          WRITE(ERR,*) ' TOO MANY CLOSED SHELLS: MAX = 18'
-	 STOP 1
+         STOP 1
       END IF
       NCLOSD = I
 *
@@ -539,9 +539,9 @@ C     END IF
                IF ( EL(K) .NE. EL1 ) THEN
                   K = K+1
                   IF (K .GT. (NWD)) THEN
-		    WRITE(ERR,*) ' TOO MANY ELECTRONS: MAX=',NWD
-		    STOP 1
-		  END IF
+                    WRITE(ERR,*) ' TOO MANY ELECTRONS: MAX=',NWD
+                    STOP 1
+                  END IF
                   GO TO 17
                END IF
               ELSE
@@ -575,9 +575,9 @@ C     END IF
          J = INDEX(LIST,'=')
          READ(LIST(J+1:),'(I3)') NIT
 221      IF (NIT .gt. NWF) THEN
-	   NIT = NIT/10
-	   GO TO 221
-	 END IF
+           NIT = NIT/10
+           GO TO 221
+         END IF
       ELSE
          NIT = 0
          J = 1
@@ -620,17 +620,17 @@ C     END IF
       IF ( ANS.NE.'Y' .AND. ANS.NE.'y' .AND. NIT.NE.0) WRITE(ERR,*)
      :   ' S, IND, METH, ACC for electrons to be varied (free-format)'
       DO 20 I = NCLOSD+1,NWF
-     	 IF (ANS.EQ.'Y' .OR. ANS.EQ.'y' .OR. I.LT.IB) THEN
-	        S(I) = SS
-			METH(I) = 3
-			IF (ID .EQ. 1) METH(I) = 1
-			ACC(I) = D0
-			IND(I) = 0
-			IF (IUF .NE. 0) IND(I) = -1
+         IF (ANS.EQ.'Y' .OR. ANS.EQ.'y' .OR. I.LT.IB) THEN
+                S(I) = SS
+                        METH(I) = 3
+                        IF (ID .EQ. 1) METH(I) = 1
+                        ACC(I) = D0
+                        IND(I) = 0
+                        IF (IUF .NE. 0) IND(I) = -1
          ELSE
             WRITE(ERR,*) EL(I)
             READ(IN,*) S(I),IND(I),METH(I),ACC(I)
-    	 END IF
+         END IF
          VARIED(I) = .TRUE.
          J = 2
          IF (EL(I)(1:1) .EQ. ' ') J = 3
@@ -640,7 +640,7 @@ C     END IF
 *
 *  *****  CHECK METHOD AND SET ORTHOGONALITY
 *
-	DO 35 NC = 1,NCFG
+        DO 35 NC = 1,NCFG
          STRING = CONFIG(NC)
          J = 2
          I = 0
@@ -667,8 +667,8 @@ C     END IF
                J2 = IELI(I2)
                IF (L(J1) .EQ. L(J2) ) THEN
                     CALL EIJSET(J1,J2,1.D-5)
-		    CALL EIJSET(J2,J1,1.D-5)
-	 	 END IF
+                    CALL EIJSET(J2,J1,1.D-5)
+                 END IF
    33       CONTINUE
    34    CONTINUE
    35 CONTINUE
@@ -684,11 +684,11 @@ C     END IF
       DO 38 I = 2,NWF
          DO 39 J = 1,I-1
             IF (L(I) .EQ. L(J) .AND. SETORT(EL(I),EL(J)) ) THEN
-		C = 1.D-5
-		IF ((I.LE.NCLOSD .AND. J.LE.NCLOSD)
-     :				.OR. (ID .NE. 0))  C = 1.D-10
-	        CALL EIJSET(I,J,C)
-		CALL EIJSET(J,I,C)
+                C = 1.D-5
+                IF ((I.LE.NCLOSD .AND. J.LE.NCLOSD)
+     :                          .OR. (ID .NE. 0))  C = 1.D-10
+                CALL EIJSET(I,J,C)
+                CALL EIJSET(J,I,C)
             END IF
    39    CONTINUE
    38  CONTINUE
@@ -703,8 +703,8 @@ C     END IF
             ELORT(I,2) = EL2
             CALL EPTR(EL,EL1,I1,*99)
             CALL EPTR(EL,EL2,I2,*99)
-	    CALL EIJSET(I1,I2,1.D-5)
-	    CALL EIJSET(I2,I1,1.D-5)
+            CALL EIJSET(I1,I2,1.D-5)
+            CALL EIJSET(I2,I1,1.D-5)
             I = I +1
             IF (I .GT. (10)) STOP ' TOO MANY ORTHOGONALITIES: MAX=(10)'
             GO TO 40
@@ -746,8 +746,8 @@ C     END IF
 *  *****  IF INPUT WEIGHTS ARE ALL ZERO, SET WT(1)=1.
 *
       IF (W .EQ. D0) THEN
-	 WT(1) = D1
-	 W = D1
+         WT(1) = D1
+         W = D1
       END IF
       W = DSQRT(W)
       DO 68 I = 1,NCFG
@@ -770,7 +770,7 @@ C     END IF
 *
       CALL WAVEFN
       DO 100 I=1,6
-	 INTPTR(I) = 0
+         INTPTR(I) = 0
 100   CONTINUE
 *
 *        Initialize the VIJ data-structure
@@ -778,18 +778,18 @@ C     END IF
       IBEGIN = 1
       IEND = IEPTR(NWF)
       DO 45 I = IBEGIN,IEND
-    	VIJ(I) = D1
+        VIJ(I) = D1
  45   CONTINUE
 *
       IF (IUD .NE. IN) CALL INTGRL
 *
 *  *****  DEFINE SUM(I)
 *
-	IBEGIN = INTPTR(5)+1
-	IEND = INTPTR(6)
-	DO 80 I = IBEGIN,IEND
-	   IF (IEL(I,1).EQ.IEL(I,2)) SUM(IEL(I,1)) = -2*COEF(I)
- 80	CONTINUE
+        IBEGIN = INTPTR(5)+1
+        IEND = INTPTR(6)
+        DO 80 I = IBEGIN,IEND
+           IF (IEL(I,1).EQ.IEL(I,2)) SUM(IEL(I,1)) = -2*COEF(I)
+ 80     CONTINUE
       RETURN
 99    STOP
       END
@@ -819,7 +819,7 @@ C     END IF
 *
       SUBROUTINE DE(I1)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -833,7 +833,7 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
@@ -842,9 +842,9 @@ C     END IF
         COMMON P2(NOD),HQ(NOD),XX(NOD),AC(30,NWD),BC(NWD),JV(NWD),
      :     AZZ,PP,FN,EM,FM,EU,FU,DELTAE,M,NODE,MK,KK,NJ
 *
-	LOGICAL DIAG
-	CHARACTER*2 ASTER(3)
-	DATA ASTER/'  ','* ','**'/
+        LOGICAL DIAG
+        CHARACTER*2 ASTER(3)
+        DATA ASTER/'  ','* ','**'/
 *
       I = I1
       ED2 = E(I,I)
@@ -910,11 +910,11 @@ C     END IF
 50    JI = IJE(IP)
       IF (JI .NE. I ) THEN
       IF (JI .GE. IB .AND. DPM(JI) .GE. DPM(I)) THEN
-*		
-*	 	The JI orbital should be orthogonalized
+*               
+*               The JI orbital should be orthogonalized
 *
          C = QUADR(I,JI,0)
-	 MM = MAX0(MAX(JI),MAX(I))
+         MM = MAX0(MAX(JI),MAX(I))
          DO 51 J = 1,MM
             P(J,JI) = P(J,JI) - C*P(J,I)
 51       CONTINUE
@@ -1007,14 +1007,14 @@ C     END IF
       GO TO 27
       END
 *-----------------------------------------------------------------------
-*		D I A G
+*               D I A G
 *-----------------------------------------------------------------------
 *     This routines sets up the interaction matrix and, given an 
 *  approximate eigenvector, finds an eigenvalue and eigenvector.
 *
       SUBROUTINE DIAG(ECONV,ACFG,CFGTOL,LAST)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER(NWD=30,NOD=220,NCD=100)
+        PARAMETER(NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -1022,7 +1022,7 @@ C     END IF
         CHARACTER CONFIG*40,EL*3,ATOM*6,TERM*6,COUPLE*3
         COMMON /LABEL/CONFIG(NCD),EL(NWD),ATOM,TERM,COUPLE(NCD,9)
 *
-	COMMON /MATRIX/ETOTAL,W(NCD,NCD)
+        COMMON /MATRIX/ETOTAL,W(NCD,NCD)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
@@ -1030,12 +1030,12 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
@@ -1043,44 +1043,44 @@ C     END IF
 *
       COMMON WP(NCD)
 *
-	LOGICAL ECONV,LAST
+        LOGICAL ECONV,LAST
 *
-	IF (LAST.AND.OUH.NE.0) WRITE(OUH,'(2X,A6,I6)') 'NCFG =',NCFG
-	DO 1 I = 1,NCFG
-	   DO 2 J = 1,NCFG
-   	      W(I,J) = D0
+        IF (LAST.AND.OUH.NE.0) WRITE(OUH,'(2X,A6,I6)') 'NCFG =',NCFG
+        DO 1 I = 1,NCFG
+           DO 2 J = 1,NCFG
+              W(I,J) = D0
   2        CONTINUE
            WP(I) = WT(I)
-	   W(I,I) = EC
+           W(I,I) = EC
   1     CONTINUE
 *
-	IBEGIN = 1
-	IEND = INTPTR(6)
-	J = 0
-	DO 10 I = IBEGIN,IEND
- 11	   IF (CPTR(I) .GT. J) THEN
-	      J = J + 1
- 	      C = COEFF(J)*VALUE(I)
-	      IF (OPTR(J) .NE. 0) C = C*VALUE(OPTR(J))
-	      W(IH(J),JH(J)) = W(IH(J),JH(J)) + C
-	      GO TO 11
-	   END IF
- 10	CONTINUE
+        IBEGIN = 1
+        IEND = INTPTR(6)
+        J = 0
+        DO 10 I = IBEGIN,IEND
+ 11        IF (CPTR(I) .GT. J) THEN
+              J = J + 1
+              C = COEFF(J)*VALUE(I)
+              IF (OPTR(J) .NE. 0) C = C*VALUE(OPTR(J))
+              W(IH(J),JH(J)) = W(IH(J),JH(J)) + C
+              GO TO 11
+           END IF
+ 10     CONTINUE
 *
 *  ***** SYMMETRIZE THE MATRIX
 *
-	DO 12 I = 1,NCFG-1
-	   DO 13 J = I+1,NCFG
-	      W(I,J) = W(J,I)
- 13	   CONTINUE
- 12	CONTINUE
+        DO 12 I = 1,NCFG-1
+           DO 13 J = I+1,NCFG
+              W(I,J) = W(J,I)
+ 13        CONTINUE
+ 12     CONTINUE
       IF (NCFG .EQ. 1) GO TO 37
       IF (ID .GT. 0) GO TO 38
 *
 *  ***** Write the matrix to disk
 *
       DO 14 I = 1,NCFG
-	 WRITE(35) (W(J,I),J=I,NCFG)
+         WRITE(35) (W(J,I),J=I,NCFG)
  14   CONTINUE
       ENDFILE(35)
       REWIND(35)
@@ -1095,10 +1095,10 @@ C     END IF
       ETPREV = D0
       DO 30 II=1,5
       IF (II .NE. 1) THEN
-	 DO 5 I = 1,NCFG
+         DO 5 I = 1,NCFG
            READ(35) (W(J,I),J=I,NCFG)
-	   DO 8 J = I+1,NCFG
-	     W(I,J) = W(J,I)
+           DO 8 J = I+1,NCFG
+             W(I,J) = W(J,I)
    8       CONTINUE
    5     CONTINUE
          REWIND(35)
@@ -1149,19 +1149,19 @@ C     END IF
 35    WT(I) = WT(I)*CC
       IF ( LAST ) THEN
          WRITE(PRI,34)
-	 WRITE(PRI,36) (I,WT(I),I=1,NCFG)
+         WRITE(PRI,36) (I,WT(I),I=1,NCFG)
  36      FORMAT(6(I5,F8.4))
-	 WRITE(PRI,32) ETOTAL
+         WRITE(PRI,32) ETOTAL
 *
 * *****  Read matrix back from disk and print
 *
-	 DO 60 I = 1,NCFG
+         DO 60 I = 1,NCFG
            READ(35) (W(J,I),J=I,NCFG)
-	   DO 68 J = I+1,NCFG
-	     W(I,J) = W(J,I)
+           DO 68 J = I+1,NCFG
+             W(I,J) = W(J,I)
   68       CONTINUE
-	   IF (OUH.NE.0) WRITE(OUH,'(5F14.7)') (W(I,J),J=1,I)
-	   WRITE(PRI,62) I, (W(I,J),J=1,I)
+           IF (OUH.NE.0) WRITE(OUH,'(5F14.7)') (W(I,J),J=1,I)
+           WRITE(PRI,62) I, (W(I,J),J=1,I)
  62        FORMAT(I5,2X,5F15.7/(7X,5F15.7))
   60     CONTINUE
          REWIND(35)
@@ -1174,11 +1174,11 @@ C     END IF
 *
 *  *****  REDEFINE SUM(I)
 *
-	IBEGIN = INTPTR(5)+1
-	IEND = INTPTR(6)
-	DO 50 I = IBEGIN,IEND
-	   IF (IEL(I,1).EQ.IEL(I,2)) SUM(IEL(I,1)) = -2*COEF(I)
- 50	CONTINUE
+        IBEGIN = INTPTR(5)+1
+        IEND = INTPTR(6)
+        DO 50 I = IBEGIN,IEND
+           IF (IEL(I,1).EQ.IEL(I,2)) SUM(IEL(I,1)) = -2*COEF(I)
+ 50     CONTINUE
 70    IF (.NOT. LAST .OR. OUC .EQ. 0 ) GO TO 49
 *
 *  *****  PUNCH CONFIGURATIONS AND WEIGHTS ON UNIT OUC
@@ -1215,7 +1215,7 @@ C     END IF
 *
       SUBROUTINE DIFF(I)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -1279,40 +1279,40 @@ C     END IF
       END
 *
 *-----------------------------------------------------------------------
-* 		E
+*               E
 *-----------------------------------------------------------------------
 *      Returns the value of the off-diagonal energy parameter
 *  for the (i,j) pair from the data structure.
 *
-	DOUBLE PRECISION FUNCTION E(I,J)
+        DOUBLE PRECISION FUNCTION E(I,J)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	IBEGIN = 1
-	IF (I .GT. 1) IBEGIN = IEPTR(I-1) + 1
-	IEND = IEPTR(I)
-	E = 0.D0
-	DO 10 II = IBEGIN,IEND
-	   IF (IJE(II) .EQ. J) THEN
-	      E = EIJ(II)
-	      RETURN
-	   END IF
- 10	CONTINUE
-	END
+        IBEGIN = 1
+        IF (I .GT. 1) IBEGIN = IEPTR(I-1) + 1
+        IEND = IEPTR(I)
+        E = 0.D0
+        DO 10 II = IBEGIN,IEND
+           IF (IJE(II) .EQ. J) THEN
+              E = EIJ(II)
+              RETURN
+           END IF
+ 10     CONTINUE
+        END
 *
 *-----------------------------------------------------------------------
-*		E I J S E T
+*               E I J S E T
 *-----------------------------------------------------------------------
 *
 *      Stores the value of the off-diagonal energy parameter for the
 *   pair (i,j) in the data structure
 *
-	SUBROUTINE EIJSET(I,J,E)
+        SUBROUTINE EIJSET(I,J,E)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
@@ -1321,58 +1321,58 @@ C     END IF
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-   	IBEGIN = 1
-	IF (I .GT. 1) IBEGIN = IEPTR(I-1)+1
-	IEND = IEPTR(I)
-	DO 10 II = IBEGIN,IEND
-	   IF (IJE(II) .EQ. J) THEN
-	      EIJ(II) = E
-	      RETURN
-	   END IF
+        IBEGIN = 1
+        IF (I .GT. 1) IBEGIN = IEPTR(I-1)+1
+        IEND = IEPTR(I)
+        DO 10 II = IBEGIN,IEND
+           IF (IJE(II) .EQ. J) THEN
+              EIJ(II) = E
+              RETURN
+           END IF
  10     CONTINUE
 *
 * ***** J-value not found - enter into list
 *
-	IF (IJE(98) .NE. 0)
-     : 	 STOP ' Too many off-diagonal energy parameters'
+        IF (IJE(98) .NE. 0)
+     :   STOP ' Too many off-diagonal energy parameters'
 *
 *  ***** Find point at which the insertion should be made
 *
-	IEND = IEPTR(I)
-	IF (IEND .NE. 0) THEN
-	   IP = 1
-	   IF (I .GT. 1) IP = IEPTR(I-1)+1
- 30	   IF (IJE(IP) .LT. J .AND. IP .LE. IEND) THEN
-	      IP = IP + 1
+        IEND = IEPTR(I)
+        IF (IEND .NE. 0) THEN
+           IP = 1
+           IF (I .GT. 1) IP = IEPTR(I-1)+1
+ 30        IF (IJE(IP) .LT. J .AND. IP .LE. IEND) THEN
+              IP = IP + 1
               GO TO 30
-	   END IF
-	ELSE
-	   IP = 1
-	END IF
+           END IF
+        ELSE
+           IP = 1
+        END IF
 *
 * *****  IP is the location in which EIJ should be stored
 *        Move other data
 *
-	
-	DO 40 JJ = (98)-1,IP,-1
-	   IJE(JJ+1) = IJE(JJ)
-	   EIJ(JJ+1) = EIJ(JJ)
- 40	CONTINUE
+        
+        DO 40 JJ = (98)-1,IP,-1
+           IJE(JJ+1) = IJE(JJ)
+           EIJ(JJ+1) = EIJ(JJ)
+ 40     CONTINUE
 *
 * ***** Space has been made - insert data
 *
-	IJE(IP) = J
-	EIJ(IP) = E
+        IJE(IP) = J
+        EIJ(IP) = E
 *
 * ***** Update pointers
 *
-	DO 50 II = I,NWF
-	   IEPTR(II) = IEPTR(II) +1
- 50	CONTINUE
-	END
+        DO 50 II = I,NWF
+           IEPTR(II) = IEPTR(II) +1
+ 50     CONTINUE
+        END
 *
 *-----------------------------------------------------------------------
-*		E P S I L O N
+*               E P S I L O N
 *-----------------------------------------------------------------------
 *
 *       Analysis the effect of a rotation of an (i,j) pair of orbitals 
@@ -1380,9 +1380,9 @@ C     END IF
 *   energy parameter data structure is set to reflect this result.
 *   Otherwise, rotation for a stationary energy is determined.
 *
-	SUBROUTINE EPSILON(IIN,JIN)
+        SUBROUTINE EPSILON(IIN,JIN)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -1390,7 +1390,7 @@ C     END IF
         CHARACTER CONFIG*40,EL*3,ATOM*6,TERM*6,COUPLE*3
         COMMON /LABEL/CONFIG(NCD),EL(NWD),ATOM,TERM,COUPLE(NCD,9)
 *
-	COMMON /MATRIX/ETOTAL,W(NCD,NCD)
+        COMMON /MATRIX/ETOTAL,W(NCD,NCD)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
@@ -1398,33 +1398,33 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	COMMON U(NCD),DWT(NCD)
+        COMMON U(NCD),DWT(NCD)
 *
-	LOGICAL ICLOSD,FOUND
+        LOGICAL ICLOSD,FOUND
 
-	IF (IIN .LT. JIN) THEN
-	   I = IIN
-	   J = JIN
-	ELSE
-	   I = JIN
-	   J = IIN
-	END IF
-	SUMI = SUM(I)
-	SUMJ = SUM(J)
-	LI = L(I)
-	LJ = L(J)
-	FULL = 4*LI+2
+        IF (IIN .LT. JIN) THEN
+           I = IIN
+           J = JIN
+        ELSE
+           I = JIN
+           J = IIN
+        END IF
+        SUMI = SUM(I)
+        SUMJ = SUM(J)
+        LI = L(I)
+        LJ = L(J)
+        FULL = 4*LI+2
         IF (ABS(SUMI-FULL).LT.1.D-8 .AND. ABS(SUMJ-FULL).LT.1.D-8) THEN
            CALL EIJSET(I,J,1.D-10)
            CALL EIJSET(J,I,1.D-10)
@@ -1435,204 +1435,204 @@ C     END IF
            RETURN
         END IF
 *
-	VPR = V(I,J)
-	DVPR = V(J,I)
-	IF (VPR .NE. D0 .AND. DABS(VPR) .LT. 1.D-4) RETURN
+        VPR = V(I,J)
+        DVPR = V(J,I)
+        IF (VPR .NE. D0 .AND. DABS(VPR) .LT. 1.D-4) RETURN
 
-	DO 2 II = 1,NCFG
-	   U(II) = D0
-2	CONTINUE
+        DO 2 II = 1,NCFG
+           U(II) = D0
+2       CONTINUE
 
-	ALL = .TRUE.
-	IF (VPR .NE. D0) THEN
-	   IF (ABS(DVPR/VPR) .LT. 0.002) ALL = .FALSE.
-	END IF
-	G = D0
-	DG = D0
-	DIFF = SUMI - SUMJ
-	IF (I .LE. NCLOSD) THEN
-	    ICLOSD = .TRUE.
-	    HLIJ = HL(EL,I,J,REL)
-	    IF (ALL) 
-     :		DG=DIFF*(HL(EL,I,I,REL)-HL(EL,J,J,REL))
-	    VI =  -SUMI*HLIJ
-	    VJ =  HLIJ
-	    TI = D0
-	    TJ = D0
-	    TT = D0
-	    VV = D0
-	    DO 10 K = 0,2*LI,2
-		IF (K .EQ. 0) THEN
-		   CIJ = (D1 - CB(LI,LJ,0))
-		   CII = D1
-		ELSE
-	  	   CIJ = -CB(LI,LJ,K)
-		   CII = -CA(LI,K)
-		END IF
-	        RKIJJJ = RK(I,J,J,J,K,REL)
-	        RKJIII = RK(J,I,I,I,K,REL)
-		TI = TI + CIJ*RKIJJJ
-    		TT = TT + (SUMI-D1)*CII*RKJIII
-		TJ = TJ + CIJ*RKJIII
-		IF (ALL) THEN
-		   FKIJ = FK(I,J,K,REL)
-		   GKIJ = GK(I,J,K,REL)
-		   FKII = FK(I,I,K,REL)
-		   FKJJ = FK(J,J,K,REL)
-		   VV = VV + SUMJ*CIJ*(FKJJ + FKII - 2*FKIJ - 4*GKIJ)
-     :		         +(SUMI-D1)*CII*(FKIJ + 2*GKIJ - FKII)
-		END IF
- 10	   CONTINUE
-	   DG = DG + D2*SUMI*VV
-	   VI = VI + D2*SUMI*(TT + SUMJ*TI)
-	   VJ = VJ - D2*SUMI*TJ
-	   VV = D0
-	   DO 20 IA = 1,NCLOSD
-		IF (IA .EQ. I) GO TO 20
-		T = RK(I,IA,J,IA,0,REL)
-		IF (ALL) 
+        ALL = .TRUE.
+        IF (VPR .NE. D0) THEN
+           IF (ABS(DVPR/VPR) .LT. 0.002) ALL = .FALSE.
+        END IF
+        G = D0
+        DG = D0
+        DIFF = SUMI - SUMJ
+        IF (I .LE. NCLOSD) THEN
+            ICLOSD = .TRUE.
+            HLIJ = HL(EL,I,J,REL)
+            IF (ALL) 
+     :          DG=DIFF*(HL(EL,I,I,REL)-HL(EL,J,J,REL))
+            VI =  -SUMI*HLIJ
+            VJ =  HLIJ
+            TI = D0
+            TJ = D0
+            TT = D0
+            VV = D0
+            DO 10 K = 0,2*LI,2
+                IF (K .EQ. 0) THEN
+                   CIJ = (D1 - CB(LI,LJ,0))
+                   CII = D1
+                ELSE
+                   CIJ = -CB(LI,LJ,K)
+                   CII = -CA(LI,K)
+                END IF
+                RKIJJJ = RK(I,J,J,J,K,REL)
+                RKJIII = RK(J,I,I,I,K,REL)
+                TI = TI + CIJ*RKIJJJ
+                TT = TT + (SUMI-D1)*CII*RKJIII
+                TJ = TJ + CIJ*RKJIII
+                IF (ALL) THEN
+                   FKIJ = FK(I,J,K,REL)
+                   GKIJ = GK(I,J,K,REL)
+                   FKII = FK(I,I,K,REL)
+                   FKJJ = FK(J,J,K,REL)
+                   VV = VV + SUMJ*CIJ*(FKJJ + FKII - 2*FKIJ - 4*GKIJ)
+     :                   +(SUMI-D1)*CII*(FKIJ + 2*GKIJ - FKII)
+                END IF
+ 10        CONTINUE
+           DG = DG + D2*SUMI*VV
+           VI = VI + D2*SUMI*(TT + SUMJ*TI)
+           VJ = VJ - D2*SUMI*TJ
+           VV = D0
+           DO 20 IA = 1,NCLOSD
+                IF (IA .EQ. I) GO TO 20
+                T = RK(I,IA,J,IA,0,REL)
+                IF (ALL) 
      :              VV = FK(J,IA,0,REL)-FK(I,IA,0,REL)
-	        DO 22 K = IABS(LI-L(IA)),LI+L(IA),2
-		   CIJ = CB(LI,L(IA),K)
-		   T = T - CIJ*RK(I,IA,IA,J,K,REL)
-	 	   IF (ALL)
-     :			 VV = VV - CIJ*(GK(J,IA,K,REL)-GK(I,IA,K,REL))
- 22		CONTINUE
-	 	DG = DG + D2*DIFF*SUM(IA)*VV
-		VI = VI + D2*SUMI*SUM(IA)*T
-		VJ = VJ - D2*SUM(IA)*T
- 20	   CONTINUE
-	   G = G + VI
-	   VJ = -D2*VJ
-	   DO 24 II = 1,NCFG
-		U(II) = U(II) + WT(II)*VI
- 24	   CONTINUE
-	ELSE
+                DO 22 K = IABS(LI-L(IA)),LI+L(IA),2
+                   CIJ = CB(LI,L(IA),K)
+                   T = T - CIJ*RK(I,IA,IA,J,K,REL)
+                   IF (ALL)
+     :                   VV = VV - CIJ*(GK(J,IA,K,REL)-GK(I,IA,K,REL))
+ 22             CONTINUE
+                DG = DG + D2*DIFF*SUM(IA)*VV
+                VI = VI + D2*SUMI*SUM(IA)*T
+                VJ = VJ - D2*SUM(IA)*T
+ 20        CONTINUE
+           G = G + VI
+           VJ = -D2*VJ
+           DO 24 II = 1,NCFG
+                U(II) = U(II) + WT(II)*VI
+ 24        CONTINUE
+        ELSE
 *
 *     ... Both orbitals are outer orbitals
 *
-	   ICLOSD = .FALSE.
-	   HLCIJ = HLC(EL,I,J,REL)
-	   IF (ALL) 
+           ICLOSD = .FALSE.
+           HLCIJ = HLC(EL,I,J,REL)
+           IF (ALL) 
      :        DG=DIFF*(HLC(EL,I,I,REL)-HLC(EL,J,J,REL))
-	   VI =   D2*HLCIJ
-	   VJ =  -D2*HLCIJ
-	END IF
+           VI =   D2*HLCIJ
+           VJ =  -D2*HLCIJ
+        END IF
 *
 *
-*	... Add contributions from integrals between outer electrons
+*       ... Add contributions from integrals between outer electrons
 *
-	IEND = 0
-	DO 40 INT = 1,6
-	   IBEGIN = IEND + 1
-	   IEND = INTPTR(INT)
-	   DO 30 II = IBEGIN,IEND
-		FOUND = .FALSE.
-		I1 = IEL(II,1)
-	 	I2 = IEL(II,2)
-		IR = (I1-I)*(I2-I)
-		JR = (I1-J)*(I2-J)
-		IF (IR .EQ. 0 .OR. JR .EQ. 0 .OR.
-     :		   (INT.EQ.6 .AND. ICLOSD)) THEN
-*		... We have found a contribution ...
-		   FOUND = .TRUE.
-		   IF (INT.EQ.5) THEN
-			CALL RPERT(I,J,II,INT,DC,DV)
-		   ELSE IF (INT.EQ.4) THEN
-			CALL O2PERT(I,J,II,INT,DC,DV)
-		   ELSE IF (INT.EQ.6 .AND. (IR.EQ.0 .OR. JR.EQ.0) 
-     :			.AND. I1.EQ.I2) THEN
-		      IF (I1.EQ.I) THEN
-			  DC = VI
-			  DV = D0
-		      ELSE IF (I1.EQ.J) THEN
-			  DC = VJ
-			  DV = D0
-		      END IF
-		   ELSE
-			CALL PERT(I,J,II,INT,DC,DV)
-		   END IF
-		ELSE IF (INT.EQ.5 .OR. INT.EQ.4) THEN
-*		   ... Continue to search for a contribution
-		   I1 = IEL(II,3)
-		   I2 = IEL(II,4)
-		   IR = (I1-I)*(I2-I)
-		   JR = (I1-J)*(I2-J)
-		   IF (IR .EQ. 0 .OR. JR .EQ. 0) THEN
-*	           ... Another contribution has been found
-		      FOUND = .TRUE.
-		      IF (INT.EQ.5) CALL RPERT(I,J,II,INT,DC,DV)
-		      IF (INT.EQ.4) CALL O2PERT(I,J,II,INT,DC,DV)
-		   END IF
-		END IF
-		IF (FOUND) THEN
-		   IF (INT .NE. 3 .AND. INT .NE. 4) THEN
-		      CALL CONTC(II,DC,U,C)
-		   ELSE
-		      CALL CONTOV(II,DC,U,C)
-		   END IF
-		   G = G + C*DC
-		   DG = DG + C*DV
-		END IF
- 30	   CONTINUE
- 40	CONTINUE
+        IEND = 0
+        DO 40 INT = 1,6
+           IBEGIN = IEND + 1
+           IEND = INTPTR(INT)
+           DO 30 II = IBEGIN,IEND
+                FOUND = .FALSE.
+                I1 = IEL(II,1)
+                I2 = IEL(II,2)
+                IR = (I1-I)*(I2-I)
+                JR = (I1-J)*(I2-J)
+                IF (IR .EQ. 0 .OR. JR .EQ. 0 .OR.
+     :             (INT.EQ.6 .AND. ICLOSD)) THEN
+*               ... We have found a contribution ...
+                   FOUND = .TRUE.
+                   IF (INT.EQ.5) THEN
+                        CALL RPERT(I,J,II,INT,DC,DV)
+                   ELSE IF (INT.EQ.4) THEN
+                        CALL O2PERT(I,J,II,INT,DC,DV)
+                   ELSE IF (INT.EQ.6 .AND. (IR.EQ.0 .OR. JR.EQ.0) 
+     :                  .AND. I1.EQ.I2) THEN
+                      IF (I1.EQ.I) THEN
+                          DC = VI
+                          DV = D0
+                      ELSE IF (I1.EQ.J) THEN
+                          DC = VJ
+                          DV = D0
+                      END IF
+                   ELSE
+                        CALL PERT(I,J,II,INT,DC,DV)
+                   END IF
+                ELSE IF (INT.EQ.5 .OR. INT.EQ.4) THEN
+*                  ... Continue to search for a contribution
+                   I1 = IEL(II,3)
+                   I2 = IEL(II,4)
+                   IR = (I1-I)*(I2-I)
+                   JR = (I1-J)*(I2-J)
+                   IF (IR .EQ. 0 .OR. JR .EQ. 0) THEN
+*                  ... Another contribution has been found
+                      FOUND = .TRUE.
+                      IF (INT.EQ.5) CALL RPERT(I,J,II,INT,DC,DV)
+                      IF (INT.EQ.4) CALL O2PERT(I,J,II,INT,DC,DV)
+                   END IF
+                END IF
+                IF (FOUND) THEN
+                   IF (INT .NE. 3 .AND. INT .NE. 4) THEN
+                      CALL CONTC(II,DC,U,C)
+                   ELSE
+                      CALL CONTOV(II,DC,U,C)
+                   END IF
+                   G = G + C*DC
+                   DG = DG + C*DV
+                END IF
+ 30        CONTINUE
+ 40     CONTINUE
 *
-	IF (.NOT. ALL) THEN
-	   DG = VPR
-	   GO TO 38
-	END IF
-	DO 32 II = 1,NCFG
-	   U(II) = U(II) - G*WT(II)
-	   W(II,1) = U(II)
- 32	CONTINUE
-	W(1,1) = D0
+        IF (.NOT. ALL) THEN
+           DG = VPR
+           GO TO 38
+        END IF
+        DO 32 II = 1,NCFG
+           U(II) = U(II) - G*WT(II)
+           W(II,1) = U(II)
+ 32     CONTINUE
+        W(1,1) = D0
 *
 *  *****  SOLVE SYSTEM OF EQUATIONS FOR PERTURBATIONS TO THE EIGENVECTOR
 *
-	
+        
       IF (NCFG .EQ. 1) GO TO 38
       IF (NCFG .EQ. 2) THEN
          W(2,1) = -W(2,1)/W(2,2)
       ELSE
-	   CALL SYMMSL((NCD),NCFG,W,W(1,1))
+           CALL SYMMSL((NCD),NCFG,W,W(1,1))
       END IF
       C = D0
       DO 36 JJ = 1,NCFG
-	 C = C + WT(JJ)*W(JJ,1)
+         C = C + WT(JJ)*W(JJ,1)
  36   CONTINUE
       DO 37 JJ = 1,NCFG
-	 W(JJ,1) = W(JJ,1) - C*WT(JJ)
-	 DG = DG + D2*W(JJ,1)*U(JJ)
+         W(JJ,1) = W(JJ,1) - C*WT(JJ)
+         DG = DG + D2*W(JJ,1)*U(JJ)
  37   CONTINUE
  38   IF (DABS(G)+DABS(DG) .GT. 4.D-5*((SUMI*SUMJ)**0.25)
      :         .OR. DABS(E(I,J)) .GT. 2.D-5) THEN
          EPS = -G/DG
-	 IF (DABS(DG) .LT. 1.D-4) THEN
-	    EPS = 2.D-5
-	 ELSE
+         IF (DABS(DG) .LT. 1.D-4) THEN
+            EPS = 2.D-5
+         ELSE
             EPS = DSIGN(DMAX1(DMIN1(DABS(EPS),0.025D0),1.1D-10),EPS)
-	 END IF
-	 IF (ALL .AND. E(I,J).NE.1.D-5) THEN
-	    DO 42 JJ = 1,NCFG
-		DWT(JJ) = DWT(JJ) + EPS*W(JJ,1)
-  42	    CONTINUE
-	 END IF
-	 CALL EIJSET(J,I,EPS)
-	 WRITE(OUT,100) EL(I),EL(J),G,EL(I),EL(J),DG,EPS
-100    	 FORMAT(10X,'C(',2A3,') =',F12.5,3X,'V(',2A3,') =',
-     :    		F12.5,3X,'EPS =',F9.6)
+         END IF
+         IF (ALL .AND. E(I,J).NE.1.D-5) THEN
+            DO 42 JJ = 1,NCFG
+                DWT(JJ) = DWT(JJ) + EPS*W(JJ,1)
+  42        CONTINUE
+         END IF
+         CALL EIJSET(J,I,EPS)
+         WRITE(OUT,100) EL(I),EL(J),G,EL(I),EL(J),DG,EPS
+100      FORMAT(10X,'C(',2A3,') =',F12.5,3X,'V(',2A3,') =',
+     :                  F12.5,3X,'EPS =',F9.6)
        ELSE
 *
 *  *****  THE ENERGY IS STATIONARY WITH RESPECT TO ROTATIONS
 *
-	CALL EIJSET(I,J,1.D-10)
-	CALL EIJSET(J,I,1.D-10)
+        CALL EIJSET(I,J,1.D-10)
+        CALL EIJSET(J,I,1.D-10)
       END IF
-	IF (ALL) THEN
-	   CALL VIJSET(I,J,DG)
-	   DDG = DG - VPR
-	   CALL VIJSET(J,I,DDG)
-	END IF
+        IF (ALL) THEN
+           CALL VIJSET(I,J,DG)
+           DDG = DG - VPR
+           CALL VIJSET(J,I,DDG)
+        END IF
       END
 *
 *     ------------------------------------------------------------------
@@ -1650,7 +1650,7 @@ C     END IF
 *
       SUBROUTINE GRANGE
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -1664,157 +1664,157 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	COMMON U(NCD),DWT(NCD),AC(30,NWD),BC(NWD),JV(NWD),IV(NWD)
-	LOGICAL DIAG, SETEQL, FIRST
+        COMMON U(NCD),DWT(NCD),AC(30,NWD),BC(NWD),JV(NWD),IV(NWD)
+        LOGICAL DIAG, SETEQL, FIRST
 *
-*	CLEAR THE ARRAY FOR CHANGING THE WT ARRAY
+*       CLEAR THE ARRAY FOR CHANGING THE WT ARRAY
  
 *
-	DO 3 I = 1,NCFG
-	   DWT(I) = D0
- 3	CONTINUE
+        DO 3 I = 1,NCFG
+           DWT(I) = D0
+ 3      CONTINUE
 *
 *  *****  ROTATE PAIRS CONNECTED BY ORTHOGONALITY BUT NOT WHEN ONE OF
 *         THE ORBITALS IS SIMULTANEOUSLY ORTHOGONAL TO A NON-ORTHOGONAL
 *         PAIR
 *
-	DO 1 I = IB,NWF-1
-  	   DO 2 J = I+1,NWF
-	      IF (DABS(E(I,J)) .GT. 1.D-10 .AND. SETEQL(I,J))
-     :		  CALL EPSILON(I,J)
+        DO 1 I = IB,NWF-1
+           DO 2 J = I+1,NWF
+              IF (DABS(E(I,J)) .GT. 1.D-10 .AND. SETEQL(I,J))
+     :            CALL EPSILON(I,J)
 2          CONTINUE
-1	CONTINUE
-	CALL ROTATE
+1       CONTINUE
+        CALL ROTATE
 *
-*	Adjust the WT array, renormalize, and recompute SUM(i)
+*       Adjust the WT array, renormalize, and recompute SUM(i)
 *
-	C = D0
-	DO 4 I = 1,NCFG
-	   WT(I) = WT(I) + DWT(I)
-	   C = C + WT(I)**2
- 4	CONTINUE
-	C = SQRT(C)
-	DO 5 I = 1,NCFG
-	   WT(I) = WT(I)/C
- 5	CONTINUE
+        C = D0
+        DO 4 I = 1,NCFG
+           WT(I) = WT(I) + DWT(I)
+           C = C + WT(I)**2
+ 4      CONTINUE
+        C = SQRT(C)
+        DO 5 I = 1,NCFG
+           WT(I) = WT(I)/C
+ 5      CONTINUE
 *
-	IBEGIN = INTPTR(5)+1
-	IEND = INTPTR(6)
-	DO 6 I = IBEGIN,IEND
-	   IF (IEL(I,1).EQ.IEL(I,2)) SUM(IEL(I,1)) = -2*COEF(I)
- 6	CONTINUE
+        IBEGIN = INTPTR(5)+1
+        IEND = INTPTR(6)
+        DO 6 I = IBEGIN,IEND
+           IF (IEL(I,1).EQ.IEL(I,2)) SUM(IEL(I,1)) = -2*COEF(I)
+ 6      CONTINUE
 *
 *  *****  FOR EACH l COMPUTE OFF-DIAGONAL ENERGY PARAMETERS
 *
-	DO 10 IL = 0,5
-	   IJ = 0
-   	   DO 11 I = IB,NWF
-	   IF ( L(I) .NE. IL ) GO TO 11
-	   DO 12 J = 1,I-1
-	      IF (DABS(E(I,J)) .GT. 1.D-10 ) THEN
-		 IJ = IJ + 1
-		 IF ( IJ.GT.(NWD)) STOP '  TOO MANY LAGRANGE MULTIPLIERS'
-	  	 IV(IJ) = I
- 		 JV(IJ) = J
-	      END IF
+        DO 10 IL = 0,5
+           IJ = 0
+           DO 11 I = IB,NWF
+           IF ( L(I) .NE. IL ) GO TO 11
+           DO 12 J = 1,I-1
+              IF (DABS(E(I,J)) .GT. 1.D-10 ) THEN
+                 IJ = IJ + 1
+                 IF ( IJ.GT.(NWD)) STOP '  TOO MANY LAGRANGE MULTIPLIERS'
+                 IV(IJ) = I
+                 JV(IJ) = J
+              END IF
 12         CONTINUE
-11	   CONTINUE
+11         CONTINUE
 *
 *  ***** IJ IS THE NUMBER OF LAGRANGE MULTIPLIERS FOR l = IL
 *
            IF (IJ .EQ. 0) GO TO 10
-	   DO 13 II = 1,IJ
-	      BC(II) = D0
-	      DO 14 III = 1,IJ
-		 AC(II,III) = D0
-14	      CONTINUE
-13	   CONTINUE
-	   DO 16 I = IB,NWF
-	      IF ( L(I) .NE. IL ) GO TO 16
-		 FIRST = .TRUE.
-		 DO 18 II = 1,IJ
-		    J = 0
-	            IF ( IV(II) .EQ. I) THEN
-		       J = JV(II)
-		     ELSE IF ( JV(II) .EQ. I) THEN
-		       J = IV(II)
-		    END IF
-	            IF ( J .NE. 0) THEN
-		       IF (FIRST) THEN
-			  CALL XCH(I,2)
-			  CALL POTL(I)
-			  DO 20 JJ = 1,NO
-			     YK(JJ) = YR(JJ)
-20			  CONTINUE
-			  FIRST = .FALSE.
-		       END IF
-		       DO 22 JJ = 1,NO
-			  YR(JJ) = P(JJ,J)
-22		       CONTINUE
-		       BC(II) = BC(II) +
-     :	                  HL(EL,I,J,REL)-D2*QUADS(I,J,1)-QUAD(J,NO,YR,X)
-		    END IF
-18 		CONTINUE
+           DO 13 II = 1,IJ
+              BC(II) = D0
+              DO 14 III = 1,IJ
+                 AC(II,III) = D0
+14            CONTINUE
+13         CONTINUE
+           DO 16 I = IB,NWF
+              IF ( L(I) .NE. IL ) GO TO 16
+                 FIRST = .TRUE.
+                 DO 18 II = 1,IJ
+                    J = 0
+                    IF ( IV(II) .EQ. I) THEN
+                       J = JV(II)
+                     ELSE IF ( JV(II) .EQ. I) THEN
+                       J = IV(II)
+                    END IF
+                    IF ( J .NE. 0) THEN
+                       IF (FIRST) THEN
+                          CALL XCH(I,2)
+                          CALL POTL(I)
+                          DO 20 JJ = 1,NO
+                             YK(JJ) = YR(JJ)
+20                        CONTINUE
+                          FIRST = .FALSE.
+                       END IF
+                       DO 22 JJ = 1,NO
+                          YR(JJ) = P(JJ,J)
+22                     CONTINUE
+                       BC(II) = BC(II) +
+     :                    HL(EL,I,J,REL)-D2*QUADS(I,J,1)-QUAD(J,NO,YR,X)
+                    END IF
+18              CONTINUE
 16         CONTINUE
-	   DO 24 II = 1,IJ
-	      DO 26 III = 1,II
-		 IF ( II .EQ. III) THEN
-		    AC(II,II) = D1/SUM(IV(II))
-		    IF (JV(II) .GE. IB) THEN
-		       AC(II,II) = AC(II,II) + D1/SUM(JV(II))
-		    END IF
-		  ELSE IF (IV(II) .EQ. IV(III) .AND.
+           DO 24 II = 1,IJ
+              DO 26 III = 1,II
+                 IF ( II .EQ. III) THEN
+                    AC(II,II) = D1/SUM(IV(II))
+                    IF (JV(II) .GE. IB) THEN
+                       AC(II,II) = AC(II,II) + D1/SUM(JV(II))
+                    END IF
+                  ELSE IF (IV(II) .EQ. IV(III) .AND.
      :                    E(JV(II),JV(III)) .EQ. D0 ) THEN
-		     AC(II,III) = QUADR(JV(II),JV(III),0)/SUM(IV(II))
-		     AC(III,II) = AC(II,III)
-	 	  ELSE IF (JV(II) .EQ. JV(III) .AND. JV(II) .GE. IB
+                     AC(II,III) = QUADR(JV(II),JV(III),0)/SUM(IV(II))
+                     AC(III,II) = AC(II,III)
+                  ELSE IF (JV(II) .EQ. JV(III) .AND. JV(II) .GE. IB
      :              .AND. E(IV(II),IV(III)) .EQ. D0) THEN
-		     AC(II,III) = QUADR(IV(II),IV(III),0)/SUM(JV(II))
-		     AC(III,II) = AC(II,III)
- 		  END IF
-26	      CONTINUE
-24	   CONTINUE
-	   CALL LINEQN(30,IJ,AC,BC)
-	   DO 28 II = 1,IJ
+                     AC(II,III) = QUADR(IV(II),IV(III),0)/SUM(JV(II))
+                     AC(III,II) = AC(II,III)
+                  END IF
+26            CONTINUE
+24         CONTINUE
+           CALL LINEQN(30,IJ,AC,BC)
+           DO 28 II = 1,IJ
               CALL EIJSET(IV(II),JV(II),BC(II)/SUM(IV(II)))
-	      IF ( JV(II) .GE. IB )
+              IF ( JV(II) .GE. IB )
      :            CALL EIJSET(JV(II),IV(II),BC(II)/SUM(JV(II)))
-28	   CONTINUE
+28         CONTINUE
 10    CONTINUE
 *
 *  *****  PRINT THE OFF-DIAGONAL ENERGY PARAMETERS
 *
-	DO 30 I = IB,NWF
-	   DO 32 J = 1,I-1
-	      IF (DABS(E(I,J)) .GT. 1.D-10) THEN
-		 WRITE(OUT,35) EL(I),EL(J),E(I,J),EL(J),EL(I),E(J,I)
+        DO 30 I = IB,NWF
+           DO 32 J = 1,I-1
+              IF (DABS(E(I,J)) .GT. 1.D-10) THEN
+                 WRITE(OUT,35) EL(I),EL(J),E(I,J),EL(J),EL(I),E(J,I)
 35               FORMAT(7X,2(3X,'E(',2A3,') =',F12.5))
-	      END IF
-32	   CONTINUE
-30	CONTINUE
-	RETURN
-	END
+              END IF
+32         CONTINUE
+30      CONTINUE
+        RETURN
+        END
 *
 *-----------------------------------------------------------------------
-*		I N T G R L
+*               I N T G R L
 *-----------------------------------------------------------------------
 *
 *    Read the integrals that define the energy expression
 *
       SUBROUTINE INTGRL
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -1825,11 +1825,11 @@ C     END IF
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
-	CHARACTER END*1, EL1*3, EL2*3, EL3*3, EL4*3
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        CHARACTER END*1, EL1*3, EL2*3, EL3*3, EL4*3
 *
     1 FORMAT(1X,A1,I2,1X,A3,1X,A3,1X,I5)
     2 FORMAT(1X,A1,I2,1X,2A3,1X,2A3,1X,I5)
@@ -1838,91 +1838,91 @@ C     END IF
 *
 * ***** READ  THE LIST OF INTEGRALS
 *
-	LAST = 0
-	IC = 1
-	I = 1
-	READ(IUD,'()')
-	DO 10 INT = 1,6
-	  IF (INT.NE.4 .AND. INT.NE.5) THEN
+        LAST = 0
+        IC = 1
+        I = 1
+        READ(IUD,'()')
+        DO 10 INT = 1,6
+          IF (INT.NE.4 .AND. INT.NE.5) THEN
 *
 *            ...F, G, L, or O1 integrals....
 *
-   12	     READ(IUD,1) END, KVAL(I), EL1, EL2, ICPTR
-	     IF (END .EQ. '*') GO TO 16
-	     IF (ICPTR+LAST .LE. (NCDIM)) THEN
-    	 	   CPTR(I) = ICPTR + LAST
-	     ELSE
-               	WRITE(ERR,*) ' Too much data-current dimensions:' ,NCDIM
-		STOP
-	     END IF
-	     CALL EPTR(EL, EL1,IEL(I,1),*999)
-	     CALL EPTR(EL, EL2,IEL(I,2),*999)
-	     I = I + 1
-	     IF (I .LE. (IDIM) ) GO TO 12
-	     WRITE(ERR,*) ' Too many integrals - MAX =',IDIM
-	     STOP
-	   ELSE
+   12        READ(IUD,1) END, KVAL(I), EL1, EL2, ICPTR
+             IF (END .EQ. '*') GO TO 16
+             IF (ICPTR+LAST .LE. (NCDIM)) THEN
+                   CPTR(I) = ICPTR + LAST
+             ELSE
+                WRITE(ERR,*) ' Too much data-current dimensions:' ,NCDIM
+                STOP
+             END IF
+             CALL EPTR(EL, EL1,IEL(I,1),*999)
+             CALL EPTR(EL, EL2,IEL(I,2),*999)
+             I = I + 1
+             IF (I .LE. (IDIM) ) GO TO 12
+             WRITE(ERR,*) ' Too many integrals - MAX =',IDIM
+             STOP
+           ELSE
    14         IF (INT.EQ.5) THEN
 *
-*	        ... R integrals ...
+*               ... R integrals ...
 *
-     	        READ(IUD,2) END, KVAL(I), EL1, EL2, EL3, EL4, ICPTR
+                READ(IUD,2) END, KVAL(I), EL1, EL2, EL3, EL4, ICPTR
 *
-	      ELSE
+              ELSE
 *
-*	         ... O2 integrals ...
+*                ... O2 integrals ...
 *
-    	     	READ(IUD, 3) END, K1, EL1, EL2, K2, EL3, EL4
-	        KVAL(I) = 64*K1 + K2
-	      END IF
-	      IF (ICPTR+LAST .LE. (NCDIM)) THEN
-    	 	   CPTR(I) = ICPTR + LAST
-	      ELSE
-		   STOP ' Too much data - current dimensions = (NCDIM)'
-	      END IF
+                READ(IUD, 3) END, K1, EL1, EL2, K2, EL3, EL4
+                KVAL(I) = 64*K1 + K2
+              END IF
+              IF (ICPTR+LAST .LE. (NCDIM)) THEN
+                   CPTR(I) = ICPTR + LAST
+              ELSE
+                   STOP ' Too much data - current dimensions = (NCDIM)'
+              END IF
 *
-	     IF ( END .EQ. '*') GO TO 16
+             IF ( END .EQ. '*') GO TO 16
              CALL EPTR(EL, EL1, IEL(I,1), *999)
              CALL EPTR(EL, EL2, IEL(I,2), *999)
              CALL EPTR(EL, EL3, IEL(I,3), *999)
              CALL EPTR(EL, EL4, IEL(I,4), *999)
-	     I = I + 1
-	     IF (I .LE. (IDIM) ) GO TO 14
-	     STOP ' Too many integrals - MAX = (IDIM)'
-	  END IF
- 16	  IF (INT .EQ. 3 .OR. INT .EQ. 4) GO TO 18
+             I = I + 1
+             IF (I .LE. (IDIM) ) GO TO 14
+             STOP ' Too many integrals - MAX = (IDIM)'
+          END IF
+ 16       IF (INT .EQ. 3 .OR. INT .EQ. 4) GO TO 18
 *
-*	... Read the data ...
+*       ... Read the data ...
 *
-   20	  READ(IUD,4) COEFF(IC), END, IH(IC), JH(IC), OPTR(IC)
-	  IF ( END .NE. '*') THEN
-	    IF (INT .LE. 2) THEN
-	      COEFF(IC) = ACURAT(COEFF(IC))
-	    ELSE
+   20     READ(IUD,4) COEFF(IC), END, IH(IC), JH(IC), OPTR(IC)
+          IF ( END .NE. '*') THEN
+            IF (INT .LE. 2) THEN
+              COEFF(IC) = ACURAT(COEFF(IC))
+            ELSE
 *
-*	  ... Shift origin for overlap integrals
+*         ... Shift origin for overlap integrals
 *
-	      IF (OPTR(IC).LT.0) THEN
-	        OPTR(IC) = INTPTR(3) - OPTR(IC)
-	      ELSE IF (OPTR(IC).GT.0) THEN
-	        OPTR(IC) = INTPTR(2) + OPTR(IC)
-	      END IF
-	    END IF
-	    IC = IC + 1
-	    GO TO 20
-	  END IF
+              IF (OPTR(IC).LT.0) THEN
+                OPTR(IC) = INTPTR(3) - OPTR(IC)
+              ELSE IF (OPTR(IC).GT.0) THEN
+                OPTR(IC) = INTPTR(2) + OPTR(IC)
+              END IF
+            END IF
+            IC = IC + 1
+            GO TO 20
+          END IF
 *
-*	... Initialize for next set ..
+*       ... Initialize for next set ..
 *
-   18	  INTPTR(INT) = I-1
-	  LAST = IC-1
-   10 	CONTINUE
-	RETURN
+   18     INTPTR(INT) = I-1
+          LAST = IC-1
+   10   CONTINUE
+        RETURN
 *
   999   WRITE(ERR,*)' Electron in ',END,'-data not found in ',
      :          'configuration list data'
         STOP
-	END
+        END
 *
 *     ------------------------------------------------------------------
 *              M E T H O D
@@ -1937,7 +1937,7 @@ C     END IF
 *
       SUBROUTINE METHD1(I)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -1951,7 +1951,7 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
@@ -2093,7 +2093,7 @@ C     END IF
 *
       SUBROUTINE NMRVS(NJ,DELTA,MM,PP,F)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -2226,7 +2226,7 @@ C     END IF
       END
 *     MCHF_ MCHF (Part 2 of 2)
 *-----------------------------------------------------------------------
-*		O 2 P E R T
+*               O 2 P E R T
 *-----------------------------------------------------------------------
 *
 *     Contribution to the energy variation from a pair of overlap
@@ -2239,74 +2239,74 @@ C     END IF
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
       DIMENSION IND(6),KV(3),OV(3)
       EQUIVALENCE (I1,IND(1)),(I2,IND(2)),(I3,IND(3)),(I4,IND(4)),
      :            (I5,IND(5)),(I6,IND(6))
 *
-	I = JIN
-	J = IIN
-	I1 = IEL(II,1)
-	I2 = IEL(II,2)
-	I3 = IEL(II,3)
-	I4 = IEL(II,4)
-	KK = KVAL(II)
-	KV(1) = KK/64
-	KV(2) = KK - 64*KV(1)
-	OV(1) = QUADR(I1,I2,0)
-	OV(2) = QUADR(I3,I4,0)
-	OVL = OV(1)**KV(1)*OV(2)**KV(2)
-	IF (ABS(OV(1)).LE.1.E-8 .OR. ABS(OV(2)).LE.1.E-8) THEN
-	   WRITE(6,20) 
+        I = JIN
+        J = IIN
+        I1 = IEL(II,1)
+        I2 = IEL(II,2)
+        I3 = IEL(II,3)
+        I4 = IEL(II,4)
+        KK = KVAL(II)
+        KV(1) = KK/64
+        KV(2) = KK - 64*KV(1)
+        OV(1) = QUADR(I1,I2,0)
+        OV(2) = QUADR(I3,I4,0)
+        OVL = OV(1)**KV(1)*OV(2)**KV(2)
+        IF (ABS(OV(1)).LE.1.E-8 .OR. ABS(OV(2)).LE.1.E-8) THEN
+           WRITE(6,20) 
      :             'Overlap Integrals too small for this code:',
      :             'Electrons',I1,I2,' have overlap =',OV(1),
      :             'Electrons',I3,I4,' have overlap =',OV(2)
- 20	   FORMAT(/A/2(1X,A,2I3,A,F8.5/))
-	   STOP
-	END IF
+ 20        FORMAT(/A/2(1X,A,2I3,A,F8.5/))
+           STOP
+        END IF
 1     DO 10 KP = 1,2
       DI = D0
       DII = D0
       DIJ = D0
       DO 2 K = 1,4
       IF (IND(K) .NE. I) GO TO 2
-	KI = (K-1)/2 + 1
-	I5 = J
-	I6 = IND(K+1 - 2*MOD(K+1,2))
-	OV(3) = QUADR(I5,I6,0)
-	KV(3) = 1
-	CK = KV(KI)
-	TI = CK*OVL/OV(KI)*OV(3)
+        KI = (K-1)/2 + 1
+        I5 = J
+        I6 = IND(K+1 - 2*MOD(K+1,2))
+        OV(3) = QUADR(I5,I6,0)
+        KV(3) = 1
+        CK = KV(KI)
+        TI = CK*OVL/OV(KI)*OV(3)
         IF (.NOT. ALL) GO TO 3
-	KV(KI) = KV(KI)-1
+        KV(KI) = KV(KI)-1
       DO 4 K2 = 1,6
       IF (IND(K2) .NE. J) GO TO 5
-	KIJ = (K2-1)/2 + 1
-	IF (KV(KIJ) .EQ. 0) GO TO 5
-	IJPAIR = K2+1 - 2*MOD(K2+1,2)
-	CKIJ = KV(KIJ)
-	DIJ = DIJ + CKIJ*TI/OV(KIJ)*QUADR(I,IND(IJPAIR),0)
+        KIJ = (K2-1)/2 + 1
+        IF (KV(KIJ) .EQ. 0) GO TO 5
+        IJPAIR = K2+1 - 2*MOD(K2+1,2)
+        CKIJ = KV(KIJ)
+        DIJ = DIJ + CKIJ*TI/OV(KIJ)*QUADR(I,IND(IJPAIR),0)
 5     IF (IND(K2) .NE. I) GO TO 4
-	KII = (K2-1)/2 + 1
-	IF (KV(KII) .EQ. 0) GO TO 4
-	IIPAIR = K2+1 - 2*MOD(K2+1,2)
-	CKII = KV(KII)
-	DII = DII + CKII*TI/OV(KII)*QUADR(J,IND(IIPAIR),0)
+        KII = (K2-1)/2 + 1
+        IF (KV(KII) .EQ. 0) GO TO 4
+        IIPAIR = K2+1 - 2*MOD(K2+1,2)
+        CKII = KV(KII)
+        DII = DII + CKII*TI/OV(KII)*QUADR(J,IND(IIPAIR),0)
 4     CONTINUE
       KV(KI) = KV(KI) + 1
 3     DI = DI + TI
 2     CONTINUE
 6     IF (KP .EQ. 2) THEN
-	  DC = DI - DJ
-	  DV = DII + DJJ - DIJ - DJI
-	  RETURN
+          DC = DI - DJ
+          DV = DII + DJJ - DIJ - DJI
+          RETURN
       ELSE
          DJ = DI
          DJJ = DII
@@ -2329,7 +2329,7 @@ C     END IF
 *
       SUBROUTINE ORTHOG
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -2343,30 +2343,30 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	LOGICAL DIAG
-	COMMON AC(30,NWD),BC(NWD)
+        LOGICAL DIAG
+        COMMON AC(30,NWD),BC(NWD)
 *
       IF (NWF .EQ. 1 .OR. IB .GT. NWF) RETURN
       II = MAX0(2,IB)
       DO 2 I = II,NWF
          DIAG = .TRUE.
-	 IBEGIN = IEPTR(I-1)+1
-	 IP = IBEGIN
-	 IJ = 0
- 60	 JV = IJE(IP)
-	 IF (JV .LT. I .AND. IP .LE. IEPTR(I)) THEN
-	    IJ = IJ+1
-	    IF ( IJ .GT. (NWD)) STOP ' TOO MANY ORTHOGONALITY CONDITIONS'
+         IBEGIN = IEPTR(I-1)+1
+         IP = IBEGIN
+         IJ = 0
+ 60      JV = IJE(IP)
+         IF (JV .LT. I .AND. IP .LE. IEPTR(I)) THEN
+            IJ = IJ+1
+            IF ( IJ .GT. (NWD)) STOP ' TOO MANY ORTHOGONALITY CONDITIONS'
             BC(IJ) = QUADR(I,JV,0)
             AC(IJ,IJ) = D1
             DO 62 JJ = IBEGIN,IP-1
-	           IK = JJ - IBEGIN + 1
+                   IK = JJ - IBEGIN + 1
                IF (E(IJE(IP),IJE(JJ)) .NE. D0 ) THEN
                   AC(IJ,IK) = D0
                   AC(IK,IJ) = D0
@@ -2376,15 +2376,15 @@ C     END IF
                   DIAG = .FALSE.
                END IF
 62          CONTINUE
-	    IP = IP+1
-	    GO TO 60
-	 END IF
+            IP = IP+1
+            GO TO 60
+         END IF
       IF ( IJ .GT. 0) THEN
          IF ( .NOT. DIAG .AND. IJ.GT.1) CALL LINEQN(30,IJ,AC,BC)
          M = MAX(I)
          AZZ = AZ(I)
-	 IP = IBEGIN
-	 CTOTAL = D0
+         IP = IBEGIN
+         CTOTAL = D0
          DO 65 JJ = 1,IJ
             C = BC(JJ)
             IF (DABS(C) .GT. 1.D-10) THEN
@@ -2395,11 +2395,11 @@ C     END IF
                   P(J,I) = P(J,I) - C*P(J,IJE(IP))
 64             CONTINUE
                AZZ = AZZ - C*AZ(IJE(IP))
-	    END IF
-	    IP = IP + 1
-	    CTOTAL = CTOTAL + ABS(C)
+            END IF
+            IP = IP + 1
+            CTOTAL = CTOTAL + ABS(C)
 65       CONTINUE
-	 IF (CTOTAL .GT. 1.D-10) THEN
+         IF (CTOTAL .GT. 1.D-10) THEN
             PNN = DSQRT(QUADR(I,I,0))
             DO 66 JJ = 1,M
                   P(JJ,I) = P(JJ,I)/PNN
@@ -2413,8 +2413,8 @@ C     END IF
             END IF
             MAX(I) = M
             AZ(I) = AZZ
-	    VARIED(I) = .TRUE.
-	 END IF
+            VARIED(I) = .TRUE.
+         END IF
       END IF
 2     CONTINUE
       END
@@ -2430,8 +2430,8 @@ C     END IF
 *
       SUBROUTINE OUTPUT(PRINT)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
-	INTEGER MMX
+        PARAMETER (NWD=30,NOD=220,NCD=100)
+        INTEGER MMX
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -2448,7 +2448,7 @@ C     END IF
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	LOGICAL PRINT
+        LOGICAL PRINT
       DIMENSION POUT(8)
       IF ( .NOT. PRINT ) GO TO 31
 *
@@ -2510,7 +2510,7 @@ C     END IF
 *
 *  *****  OUTPUT FUNCTIONS ON UNIT OUF FOR FUTURE INPUT
 *
-*	  EKI retained only for compatibility with MCHF format
+*         EKI retained only for compatibility with MCHF format
 *
       DO 3 I = 1,NWF
       MMX = MAX(I)
@@ -2522,14 +2522,14 @@ C     END IF
       END
 *
 *-----------------------------------------------------------------------
-*		P E R T
+*               P E R T
 *-----------------------------------------------------------------------
 *       Contribution to the perturbation of the energy under a rotation
 *   from either an Fk, Gk, or L integral.
 
       SUBROUTINE PERT(IIN,JIN,II,INT,DC,DV)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         CHARACTER CONFIG*40,EL*3,ATOM*6,TERM*6,COUPLE*3
         COMMON /LABEL/CONFIG(NCD),EL(NWD),ATOM,TERM,COUPLE(NCD,9)
@@ -2641,7 +2641,7 @@ C     END IF
 *
       DOUBLE PRECISION FUNCTION QUAD(I,M,F,G)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220)
+        PARAMETER (NWD=30,NOD=220)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
@@ -2649,7 +2649,7 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	DIMENSION F(NOD),G(NOD)
+        DIMENSION F(NOD),G(NOD)
 *
       D = (D1 + D5*Z*R(1))/(H1*(2*L(I) + 3))
       QUAD = RR(1)* F(1)*G(1)*( D -D5)
@@ -2673,7 +2673,7 @@ C     END IF
 *
         SUBROUTINE POTL(I)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
@@ -2681,12 +2681,12 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
@@ -2694,45 +2694,45 @@ C     END IF
 *
       DO 1 J=1,NO
 1     YR(J) = D0
-	DO 2 J = 1,NWF
-	   IF (I.GT.NCLOSD .AND. J.GT.NCLOSD) GO TO 2
-	   C = SUM(J)
-	   IF ( I.EQ.J ) C = C - D1
-	   CALL YKF(J,J,0,REL)
-	   DO 3 JJ = 1,NO
-	      YR(JJ) = YR(JJ) + C*YK(JJ)
+        DO 2 J = 1,NWF
+           IF (I.GT.NCLOSD .AND. J.GT.NCLOSD) GO TO 2
+           C = SUM(J)
+           IF ( I.EQ.J ) C = C - D1
+           CALL YKF(J,J,0,REL)
+           DO 3 JJ = 1,NO
+              YR(JJ) = YR(JJ) + C*YK(JJ)
 3          CONTINUE
-	   IF ( I.EQ.J .AND. L(I) .GT. 0) THEN
-	      DO 4 K = 2,2*L(I),2
-		 CC = -C*CA(L(I),K)
-		 CALL YKF(I,I,K,REL)
-		 DO 5 JJ = 1,NO
-		    YR(JJ) = YR(JJ) + CC*YK(JJ)
-5		 CONTINUE
-4	      CONTINUE
-	   END IF
-2	CONTINUE
+           IF ( I.EQ.J .AND. L(I) .GT. 0) THEN
+              DO 4 K = 2,2*L(I),2
+                 CC = -C*CA(L(I),K)
+                 CALL YKF(I,I,K,REL)
+                 DO 5 JJ = 1,NO
+                    YR(JJ) = YR(JJ) + CC*YK(JJ)
+5                CONTINUE
+4             CONTINUE
+           END IF
+2       CONTINUE
 *
-	SUMI = SUM(I)
-	IBEGIN = 1
-	IEND = INTPTR(1)
-	DO 10 J = IBEGIN,IEND
-	   IE = 0
-	   IF (IEL(J,1) .EQ. I) THEN
-	      IE = IEL(J,2)
+        SUMI = SUM(I)
+        IBEGIN = 1
+        IEND = INTPTR(1)
+        DO 10 J = IBEGIN,IEND
+           IE = 0
+           IF (IEL(J,1) .EQ. I) THEN
+              IE = IEL(J,2)
            ELSE IF (IEL(J,2) .EQ. I) THEN
               IE = IEL(J,1)
            END IF
            IF (IE .NE. 0) THEN
-	      C = COEF(J)/SUMI
-	      IF (IEL(J,1) .EQ. IEL(J,2)) C = 2*C
-	      CALL YKF(IE,IE,KVAL(J),REL)
-	      DO 12 JJ = 1,NO
-		 YR(JJ) = YR(JJ) + C*YK(JJ)
- 12	      CONTINUE
-	   END IF
- 10	CONTINUE
-	END
+              C = COEF(J)/SUMI
+              IF (IEL(J,1) .EQ. IEL(J,2)) C = 2*C
+              CALL YKF(IE,IE,KVAL(J),REL)
+              DO 12 JJ = 1,NO
+                 YR(JJ) = YR(JJ) + C*YK(JJ)
+ 12           CONTINUE
+           END IF
+ 10     CONTINUE
+        END
 *
 *   --------------------------------------------------------------------
 *               R E O R D
@@ -2742,8 +2742,8 @@ C     END IF
 *   iterated appear last in the list.
 *
         SUBROUTINE REORD(EL, ELC, NWF, IERR)
-    	IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
         CHARACTER*3 EL(NWD), ELC
 *
 *
@@ -2759,34 +2759,34 @@ C     END IF
 *
 *       The i'th orbital is to be placed at the end
 *
-	SI = S(I)
-	METHI = METH(I)
-	ACCI = ACC(I)
-	INDI = IND(I)
+        SI = S(I)
+        METHI = METH(I)
+        ACCI = ACC(I)
+        INDI = IND(I)
         DO 10 J = I, NWF-1
            EL(J) = EL(J+1)
-	   S(J) = S(J+1)
-	   METH(J) = METH(J+1)
-	   ACC(J) = ACC(J+1)
-	   IND(J) = IND(J+1)
+           S(J) = S(J+1)
+           METH(J) = METH(J+1)
+           ACC(J) = ACC(J+1)
+           IND(J) = IND(J+1)
 10      CONTINUE
         EL(NWF) = ELC
-	S(NWF) = SI
-	METH(NWF) = METHI
-	ACC(NWF) = ACCI
-	IND(NWF) = INDI
+        S(NWF) = SI
+        METH(NWF) = METHI
+        ACC(NWF) = ACCI
+        IND(NWF) = INDI
         IERR = 0
 99      RETURN
         END
 *
 *-----------------------------------------------------------------------
-*  		R O T A T E
+*               R O T A T E
 *-----------------------------------------------------------------------
 *     Rotate orbitals connected through orthogonality.
 *
-	SUBROUTINE ROTATE
+        SUBROUTINE ROTATE
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220)
+        PARAMETER (NWD=30,NOD=220)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
@@ -2794,34 +2794,34 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	LOGICAL SETEQL
+        LOGICAL SETEQL
 *
 *  *****  ROTATE PAIRS CONNECTED BY ORTHOGONALITY BUT NOT WHEN ONE OF
 *         THE ORBITALS IS SIMULTANEOUSLY ORTHOGONAL TO A NON-ORTHOGONAL
 *         PAIR
 *
-	DO 1 I = IB,NWF-1
-  	   DO 2 J = I+1,NWF
-	      IF (DABS(E(I,J)) .GT. 1.D-10 .AND. SETEQL(I,J)
-     :		  .AND. DABS(V(I,J)) .GT. 1.D-4) THEN
-		 EPS = E(J,I)
-		 DD = DSQRT(D1 + EPS*EPS)
-		 DO 41 JJ = 1,NO
-		    PI = (P(JJ,I) + EPS*P(JJ,J))/DD
-		    P(JJ,J) = (P(JJ,J) - EPS*P(JJ,I))/DD
-41		 P(JJ,I) = PI
-		 VARIED(I) = .TRUE.
-		 VARIED(J) = .TRUE.
-	      END IF
-2	   CONTINUE
-1	CONTINUE
-	END
+        DO 1 I = IB,NWF-1
+           DO 2 J = I+1,NWF
+              IF (DABS(E(I,J)) .GT. 1.D-10 .AND. SETEQL(I,J)
+     :            .AND. DABS(V(I,J)) .GT. 1.D-4) THEN
+                 EPS = E(J,I)
+                 DD = DSQRT(D1 + EPS*EPS)
+                 DO 41 JJ = 1,NO
+                    PI = (P(JJ,I) + EPS*P(JJ,J))/DD
+                    P(JJ,J) = (P(JJ,J) - EPS*P(JJ,I))/DD
+41               P(JJ,I) = PI
+                 VARIED(I) = .TRUE.
+                 VARIED(J) = .TRUE.
+              END IF
+2          CONTINUE
+1       CONTINUE
+        END
 *
 *     ------------------------------------------------------------------
 *              R P E R T
@@ -2839,26 +2839,26 @@ C     END IF
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
       DIMENSION IND(4)
       EQUIVALENCE (I1,IND(1)),(I2,IND(2)),(I3,IND(3)),(I4,IND(4))
 *
-	I = JIN
-	J = IIN
-	I1 = IEL(II,1)
-	I2 = IEL(II,2)
-	I3 = IEL(II,3)
-	I4 = IEL(II,4)
-	KK = KVAL(II)
-	INC = 1
-	IF (I1.EQ.I2 .AND. I3.EQ.I4) INC = 2
+        I = JIN
+        J = IIN
+        I1 = IEL(II,1)
+        I2 = IEL(II,2)
+        I3 = IEL(II,3)
+        I4 = IEL(II,4)
+        KK = KVAL(II)
+        INC = 1
+        IF (I1.EQ.I2 .AND. I3.EQ.I4) INC = 2
 1     DO 10 KP = 1,2
       DI = D0
       DII = D0
@@ -2881,9 +2881,9 @@ C     END IF
 3     IND(K) = I
 2     CONTINUE
 6     IF (KP .EQ. 2) THEN
-	  DC = INC*(DI - DJ)
-	  DV = INC*(DII + DJJ - DIJ - DJI)
-	  RETURN
+          DC = INC*(DI - DJ)
+          DV = INC*(DII + DJJ - DIJ - DJI)
+          RETURN
       ELSE
          DJ = DI
          DJJ = DII
@@ -3001,7 +3001,7 @@ C     END IF
 *
       SUBROUTINE SCF(ACFG,SCFTOL,CFGTOL,LD)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -3009,12 +3009,12 @@ C     END IF
         CHARACTER CONFIG*40,EL*3,ATOM*6,TERM*6,COUPLE*3
         COMMON /LABEL/CONFIG(NCD),EL(NWD),ATOM,TERM,COUPLE(NCD,9)
 *
-	COMMON /MATRIX/ETOTAL,W(NCD,NCD)
+        COMMON /MATRIX/ETOTAL,W(NCD,NCD)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
@@ -3022,8 +3022,8 @@ C     END IF
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	LOGICAL LAST,LD,CONV,ECONV
-	CHARACTER ANS
+        LOGICAL LAST,LD,CONV,ECONV
+        CHARACTER ANS
 *
 *  *****  SET THE SCF CONVERGENCE PARAMETER TO AN OPTIMISTIC VALUE
 *
@@ -3179,39 +3179,39 @@ C     END IF
       END
 *
 *-----------------------------------------------------------------------
-*		S E T Q L
+*               S E T Q L
 *-----------------------------------------------------------------------
 *
-*  	Determine if the orbitals (i,j) are in the same orthogonal set.
+*       Determine if the orbitals (i,j) are in the same orthogonal set.
 *
-	LOGICAL FUNCTION SETEQL(I,J)
+        LOGICAL FUNCTION SETEQL(I,J)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220)
+        PARAMETER (NWD=30,NOD=220)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	IBEGIN = 1
-	IF (I .GT. 1) IBEGIN = IEPTR(I-1) + 1
-	IEND = IEPTR(I)
-	JBEGIN = 1
-	IF (J .GT. 1) JBEGIN = IEPTR(J-1) + 1
-	JEND = IEPTR(J)
-	SETEQL = .FALSE.
-	DO 10 II = IBEGIN,IEND
-	   DO 11 JJ = JBEGIN,JEND
-	      IF (IJE(II) .EQ. IJE(JJ)) GO TO 10
+        IBEGIN = 1
+        IF (I .GT. 1) IBEGIN = IEPTR(I-1) + 1
+        IEND = IEPTR(I)
+        JBEGIN = 1
+        IF (J .GT. 1) JBEGIN = IEPTR(J-1) + 1
+        JEND = IEPTR(J)
+        SETEQL = .FALSE.
+        DO 10 II = IBEGIN,IEND
+           DO 11 JJ = JBEGIN,JEND
+              IF (IJE(II) .EQ. IJE(JJ)) GO TO 10
  11        CONTINUE
-	   RETURN
- 10	CONTINUE
-	SETEQL = .TRUE.
-	END
+           RETURN
+ 10     CONTINUE
+        SETEQL = .TRUE.
+        END
 *
 *---------------------------------------------------------------------
-*		S E T O R T
+*               S E T O R T
 *---------------------------------------------------------------------
 *
-*	Determine if orbitals for electrons (el1, el2) should be
+*       Determine if orbitals for electrons (el1, el2) should be
 *   orthogonal.
 *
       LOGICAL FUNCTION SETORT(EL1,EL2)
@@ -3252,7 +3252,7 @@ C     END IF
 *
       SUBROUTINE SOLVE(I,FIRST)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -3272,7 +3272,7 @@ C     END IF
         COMMON P2(NOD),HQ(NOD),XX(NOD),AC(30,NWD),BC(NWD),JV(NWD),
      :     AZZ,PP,FN,EM,FM,EU,FU,DELTAE,M,NODE,MK,KK,NJ
 *
-	LOGICAL FIRST
+        LOGICAL FIRST
       DIMENSION ZERO(NOD),P1(NOD)
       EQUIVALENCE (ZERO(1),XX(1)),(PDE(1),P1(1))
 *
@@ -3491,7 +3491,7 @@ C     END IF
 *
       SUBROUTINE SUMMRY
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -3499,7 +3499,7 @@ C     END IF
         CHARACTER CONFIG*40,EL*3,ATOM*6,TERM*6,COUPLE*3
         COMMON /LABEL/CONFIG(NCD),EL(NWD),ATOM,TERM,COUPLE(NCD,9)
 *
-	COMMON /MATRIX/ETOTAL,W(NCD,NCD)
+        COMMON /MATRIX/ETOTAL,W(NCD,NCD)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
@@ -3507,12 +3507,12 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
@@ -3568,7 +3568,7 @@ C     END IF
           CONT = HL(EL,IEL(I,1),IEL(I,2),REL) 
      :           -D2*Z*QUADR(IEL(I,1),IEL(I,2),-1)
           EN = EN + CONT*COEF(I)
-	    END IF
+            END IF
 32    CONTINUE
       EPOTL = ETOTAL - EN
       RATIO =-EPOTL/EN
@@ -3591,7 +3591,7 @@ C     END IF
       DO 17 I = IBEGIN,IEND
          SYMBOL = 'F'
          IF (I .GT. INTPTR(1)) SYMBOL = 'G'
-17	 WRITE(OUD,19) SYMBOL,KVAL(I),EL(IEL(I,1)),EL(IEL(I,2)),VALUE(I)
+17       WRITE(OUD,19) SYMBOL,KVAL(I),EL(IEL(I,1)),EL(IEL(I,2)),VALUE(I)
 19       FORMAT( 2X,A1,I2,1H(,A3,1H,,A3,4H ) =, F10.7)
 *
 *  *****  PRINT TABLES OF 'RK' INTEGRALS
@@ -3621,127 +3621,127 @@ C     END IF
       END
 *
 *-----------------------------------------------------------------------
-*		U P D A T E
+*               U P D A T E
 *-----------------------------------------------------------------------
 *
-*	Evaluate all integrals where at least on orbital has changed.
+*       Evaluate all integrals where at least on orbital has changed.
 *
-	SUBROUTINE UPDATE
-	IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        SUBROUTINE UPDATE
+        IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
 *
         CHARACTER CONFIG*40,EL*3,ATOM*6,TERM*6,COUPLE*3
         COMMON /LABEL/CONFIG(NCD),EL(NWD),ATOM,TERM,COUPLE(NCD,9)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	LOGICAL CHANGE
-	IBEGIN =  1
-	IEND = INTPTR(3)
-	DO 1 I = IBEGIN,IEND
-	   IF (VARIED(IEL(I,1)) .OR. VARIED(IEL(I,2))) THEN
-	      IF (I .LE. INTPTR(1)) THEN
-		 VALUE(I) = FK(IEL(I,1),IEL(I,2),KVAL(I),REL)
+        LOGICAL CHANGE
+        IBEGIN =  1
+        IEND = INTPTR(3)
+        DO 1 I = IBEGIN,IEND
+           IF (VARIED(IEL(I,1)) .OR. VARIED(IEL(I,2))) THEN
+              IF (I .LE. INTPTR(1)) THEN
+                 VALUE(I) = FK(IEL(I,1),IEL(I,2),KVAL(I),REL)
               ELSE IF (I .LE. INTPTR(2)) THEN
-		 VALUE(I) = GK(IEL(I,1),IEL(I,2),KVAL(I),REL)
-	      ELSE
-		 VALUE(I) = QUADR(IEL(I,1),IEL(I,2),0)**KVAL(I)
-	      END IF
-	   END IF
-  1	CONTINUE
+                 VALUE(I) = GK(IEL(I,1),IEL(I,2),KVAL(I),REL)
+              ELSE
+                 VALUE(I) = QUADR(IEL(I,1),IEL(I,2),0)**KVAL(I)
+              END IF
+           END IF
+  1     CONTINUE
 *
-	IBEGIN = IEND + 1
-	IEND = INTPTR(4)
-	DO 30 I = IBEGIN,IEND
-	   CHANGE = .FALSE.
-	   DO 31 J = 1,4
-	     CHANGE = CHANGE .OR. VARIED(IEL(I,J))
- 31	   CONTINUE
-	   IF (CHANGE) THEN
-	      K1 = KVAL(I)/64
-	      K2 = KVAL(I) - 64*K1
+        IBEGIN = IEND + 1
+        IEND = INTPTR(4)
+        DO 30 I = IBEGIN,IEND
+           CHANGE = .FALSE.
+           DO 31 J = 1,4
+             CHANGE = CHANGE .OR. VARIED(IEL(I,J))
+ 31        CONTINUE
+           IF (CHANGE) THEN
+              K1 = KVAL(I)/64
+              K2 = KVAL(I) - 64*K1
               VALUE(I) = QUADR(IEL(I,1),IEL(I,2),0)**K1
      :                  *QUADR(IEL(I,3),IEL(I,4),0)**K2
-	   END IF
- 30	CONTINUE
-	IBEGIN = IEND + 1
-	IEND = INTPTR(5)
-	DO 10 I = IBEGIN,IEND
-	  CHANGE = .FALSE.
-	  DO 11 J = 1,4
-	     CHANGE = CHANGE .OR. VARIED(IEL(I,J))
- 11	  CONTINUE
-	  IF (CHANGE) VALUE(I)
+           END IF
+ 30     CONTINUE
+        IBEGIN = IEND + 1
+        IEND = INTPTR(5)
+        DO 10 I = IBEGIN,IEND
+          CHANGE = .FALSE.
+          DO 11 J = 1,4
+             CHANGE = CHANGE .OR. VARIED(IEL(I,J))
+ 11       CONTINUE
+          IF (CHANGE) VALUE(I)
      :        = RK(IEL(I,1),IEL(I,2),IEL(I,3),IEL(I,4),KVAL(I),REL)
- 10	CONTINUE
+ 10     CONTINUE
 *
-	IBEGIN = IEND + 1
-	IEND = INTPTR(6)
-	DO 20 I = IBEGIN,IEND
-	   IF (VARIED(IEL(I,1)) .OR. VARIED(IEL(I,2))) 
+        IBEGIN = IEND + 1
+        IEND = INTPTR(6)
+        DO 20 I = IBEGIN,IEND
+           IF (VARIED(IEL(I,1)) .OR. VARIED(IEL(I,2))) 
      :                VALUE(I) = HLC(EL,IEL(I,1),IEL(I,2),REL)
- 20	CONTINUE
+ 20     CONTINUE
 *
 *      ... Test if any of the core functions have changed
 *
-	CHANGE = .FALSE.
-	DO 35 I = 1,NCLOSD
-	   CHANGE = CHANGE .OR. VARIED(I)
-  35	CONTINUE
-	IF (CHANGE .OR. EC.EQ.D0) CALL ECORE(EL,EC,REL)
+        CHANGE = .FALSE.
+        DO 35 I = 1,NCLOSD
+           CHANGE = CHANGE .OR. VARIED(I)
+  35    CONTINUE
+        IF (CHANGE .OR. EC.EQ.D0) CALL ECORE(EL,EC,REL)
 *
-	DO 40 I = 1,NWF
-	   VARIED(I) = .FALSE.
- 40	CONTINUE
-	END
+        DO 40 I = 1,NWF
+           VARIED(I) = .FALSE.
+ 40     CONTINUE
+        END
 *
 *-----------------------------------------------------------------------
-*		V
+*               V
 *-----------------------------------------------------------------------
 *
-*	Data structure for storing first- and second-order variations 
+*       Data structure for storing first- and second-order variations 
 *   with respect to rotations.
 *
-	DOUBLE PRECISION FUNCTION V(I,J)
+        DOUBLE PRECISION FUNCTION V(I,J)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220)
+        PARAMETER (NWD=30,NOD=220)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-	IBEGIN = 1
-	IF (I .GT. 1) IBEGIN = IEPTR(I-1) + 1
-	IEND = IEPTR(I)
-	V = 0.D0
-	DO 10 II = IBEGIN,IEND
-	   IF (IJE(II) .EQ. J) THEN
-	      V = VIJ(II)
-	      RETURN
-	   END IF
- 10	CONTINUE
-	END
+        IBEGIN = 1
+        IF (I .GT. 1) IBEGIN = IEPTR(I-1) + 1
+        IEND = IEPTR(I)
+        V = 0.D0
+        DO 10 II = IBEGIN,IEND
+           IF (IJE(II) .EQ. J) THEN
+              V = VIJ(II)
+              RETURN
+           END IF
+ 10     CONTINUE
+        END
 *
 *-----------------------------------------------------------------------
-*		V I J S E T
+*               V I J S E T
 *-----------------------------------------------------------------------
 *
-*	Enter the value V into the V(i,j) data structure
+*       Enter the value V into the V(i,j) data structure
 *
-	SUBROUTINE VIJSET(I,J,V)
+        SUBROUTINE VIJSET(I,J,V)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220)
+        PARAMETER (NWD=30,NOD=220)
 *
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
@@ -3750,16 +3750,16 @@ C     END IF
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
-   	IBEGIN = 1
-	IF (I .GT. 1) IBEGIN = IEPTR(I-1)+1
-	IEND = IEPTR(I)
-	DO 10 II = IBEGIN,IEND
-	   IF (IJE(II) .EQ. J) THEN
-	      VIJ(II) = V
-	      RETURN
-	   END IF
+        IBEGIN = 1
+        IF (I .GT. 1) IBEGIN = IEPTR(I-1)+1
+        IEND = IEPTR(I)
+        DO 10 II = IBEGIN,IEND
+           IF (IJE(II) .EQ. J) THEN
+              VIJ(II) = V
+              RETURN
+           END IF
  10     CONTINUE
-	END
+        END
 *
 *     ------------------------------------------------------------------
 *              W A V E F N
@@ -3780,7 +3780,7 @@ C     END IF
 *
       SUBROUTINE WAVEFN
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -3794,7 +3794,7 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
@@ -3802,7 +3802,7 @@ C     END IF
       COMMON ZZ(NWD),IND(NWD),PN,Z2,FN,M,K,ZT,
      1   ETI,EKI,AZI,PT(NOD),MT
 *
-	CHARACTER EL1*3,AT*6,TT*6,ATM(NWD)*6,TRM(NWD)*6,TITLE*24
+        CHARACTER EL1*3,AT*6,TT*6,ATM(NWD)*6,TRM(NWD)*6,TITLE*24
 *
 *  *****  GENERATE ARRAYS FOR R,R*R AND SQRT(R) WITH A CONSTANT MESH
 *  *****  SIZE IN THE LOG(Z*R) VARIABLE
@@ -3919,10 +3919,10 @@ C     END IF
       END
 *
 *----------------------------------------------------------------------
-*		X C H
+*               X C H
 *----------------------------------------------------------------------
 *
-*	Compute the function X(r) that includes contributions to the 
+*       Compute the function X(r) that includes contributions to the 
 *   equations for orbital(i) arising from Gk (exchange), Rk (electro-
 *   static interactions), L (one-electron part of hamiltonian), terms 
 *   in the energy expression, and optionally also contributions from 
@@ -3937,9 +3937,9 @@ C     END IF
 *              3             r SQRT(r) ( X(r) + SUM e   P )
 *                                                    ij  j
 *          
-	SUBROUTINE XCH(I,IOPT)
+        SUBROUTINE XCH(I,IOPT)
         IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	PARAMETER (NWD=30,NOD=220,NCD=100)
+        PARAMETER (NWD=30,NOD=220,NCD=100)
 *
         INTEGER IN,OUT,ERR,PRI,OUC,OUD,OUF,OUH
         COMMON /INOUT/ IN,OUT,ERR,PRI,IUC,IUD,IUF,OUC,OUD,OUF,OUH
@@ -3953,257 +3953,257 @@ C     END IF
         COMMON /RADIAL/R(NOD),RR(NOD),R2(NOD),P(NOD,NWD),YK(NOD),YR(NOD)
      :          ,X(NOD),AZ(NWD),L(NWD),MAX(NWD),N(NWD)
 *
-	INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
-	PARAMETER (IDIM=550,NCDIM=3000)
-	COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
-     :	       ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
+        INTEGER KVAL, IEL, CPTR, IH, JH, OPTR
+        PARAMETER (IDIM=550,NCDIM=3000)
+        COMMON/STATE/WT(NCD),INTPTR(6),KVAL(IDIM),IEL(IDIM,4),CPTR(IDIM)
+     :         ,VALUE(IDIM),COEFF(NCDIM),IH(NCDIM),JH(NCDIM),OPTR(NCDIM)
 *
-	LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
+        LOGICAL FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED
         COMMON /TEST/FAIL,OMIT,EZERO,REL,ALL,TRACE,VARIED(NWD)
 *
         COMMON /WAVE/EC,ED,AZD,PDE(NOD),SUM(NWD),S(NWD),DPM(NWD),
      :         ACC(NWD),METH(NWD),IEPTR(NWD),IJE(98),EIJ(98),VIJ(98),IPR
 *
- 	LOGICAL SAME,EXIT
+        LOGICAL SAME,EXIT
 *
         DO 1 J=1,NO
   1     X(J) = D0
-	DO 2 J = 1,NWF
-	   IF ((I.LE.NCLOSD .AND. I.NE.J) .OR.
+        DO 2 J = 1,NWF
+           IF ((I.LE.NCLOSD .AND. I.NE.J) .OR.
      :         (I.GT.NCLOSD .AND. J.LE.NCLOSD))  THEN
-	      DO 4 K = IABS(L(I)-L(J)),L(I)+L(J),2
-		 C = - D2*CB(L(I),L(J),K)*SUM(J)
-		 CALL YKF(J,I,K,REL)
-		 DO 6 JJ = 1,NO
-		    X(JJ) = X(JJ) + C*YK(JJ)*P(JJ,J)
-  6		 CONTINUE
-  4	      CONTINUE
-	   END IF
-  2	CONTINUE
-	SUMI = SUM(I)
-	IF (I .LE. NCLOSD) GO TO 51
+              DO 4 K = IABS(L(I)-L(J)),L(I)+L(J),2
+                 C = - D2*CB(L(I),L(J),K)*SUM(J)
+                 CALL YKF(J,I,K,REL)
+                 DO 6 JJ = 1,NO
+                    X(JJ) = X(JJ) + C*YK(JJ)*P(JJ,J)
+  6              CONTINUE
+  4           CONTINUE
+           END IF
+  2     CONTINUE
+        SUMI = SUM(I)
+        IF (I .LE. NCLOSD) GO TO 51
 *
-	IBEGIN = INTPTR(1)+1
-	IEND = INTPTR(2)
-	DO 7 INT = IBEGIN,IEND
-	   IE1 = 0
-	   IF (IEL(INT,1) .EQ. I) THEN
-	      IE1 = IEL(INT,1)
-	      IE2 = IEL(INT,2)
-	   ELSE IF (IEL(INT,2) .EQ. I) THEN
-	      IE1 = IEL(INT,2)
-	      IE2 = IEL(INT,1)
-	   END IF
-	   IF (IE1 .NE. 0) THEN
-	      C = D2*COEF(INT)/SUMI
-	      CALL YKF(IE1,IE2,KVAL(INT),REL)
-	      DO 8 JJ = 1,NO
-		 X(JJ) = X(JJ) + C*YK(JJ)*P(JJ,IE2)
- 8	      CONTINUE
-	   END IF
- 7	CONTINUE
+        IBEGIN = INTPTR(1)+1
+        IEND = INTPTR(2)
+        DO 7 INT = IBEGIN,IEND
+           IE1 = 0
+           IF (IEL(INT,1) .EQ. I) THEN
+              IE1 = IEL(INT,1)
+              IE2 = IEL(INT,2)
+           ELSE IF (IEL(INT,2) .EQ. I) THEN
+              IE1 = IEL(INT,2)
+              IE2 = IEL(INT,1)
+           END IF
+           IF (IE1 .NE. 0) THEN
+              C = D2*COEF(INT)/SUMI
+              CALL YKF(IE1,IE2,KVAL(INT),REL)
+              DO 8 JJ = 1,NO
+                 X(JJ) = X(JJ) + C*YK(JJ)*P(JJ,IE2)
+ 8            CONTINUE
+           END IF
+ 7      CONTINUE
 *
-	IBEGIN = INTPTR(4) + 1
-	IEND = INTPTR(5)
-	DO 50 INT = IBEGIN,IEND
-	   I1 = IEL(INT,1)
-	   I2 = IEL(INT,2)
-	   J1 = IEL(INT,3)
-	   J2 = IEL(INT,4)
-	   KK = KVAL(INT)
-	   IF ((I1-I)*(I2-I) .EQ. 0 .OR. (J1-I)*(J2-I) .EQ. 0) THEN
-	      C = COEF(INT)/SUMI
-	      CC = C
+        IBEGIN = INTPTR(4) + 1
+        IEND = INTPTR(5)
+        DO 50 INT = IBEGIN,IEND
+           I1 = IEL(INT,1)
+           I2 = IEL(INT,2)
+           J1 = IEL(INT,3)
+           J2 = IEL(INT,4)
+           KK = KVAL(INT)
+           IF ((I1-I)*(I2-I) .EQ. 0 .OR. (J1-I)*(J2-I) .EQ. 0) THEN
+              C = COEF(INT)/SUMI
+              CC = C
 *
 *  ***** COUNT THE NUMBER OF OCCURRENCES OF I
 *
-	      IK = 0
-	      IF (I1 .EQ. I) IK = IK + 1
-	      IF (I2 .EQ. I) IK = IK + 1
-	      IF (J1 .EQ. I) IK = IK + 1
-	      IF (J2 .EQ. I) IK = IK + 1
-	      EXIT = .FALSE.
-	      DO 11 II2=1,2
-	      DO 12 II1=1,2
-	      GO TO (10, 20, 30, 40) IK
-10	    CONTINUE
+              IK = 0
+              IF (I1 .EQ. I) IK = IK + 1
+              IF (I2 .EQ. I) IK = IK + 1
+              IF (J1 .EQ. I) IK = IK + 1
+              IF (J2 .EQ. I) IK = IK + 1
+              EXIT = .FALSE.
+              DO 11 II2=1,2
+              DO 12 II1=1,2
+              GO TO (10, 20, 30, 40) IK
+10          CONTINUE
 *
 *  ***** I OCCURS JUST ONCE IN RK
 *
-	      IF (I1 .NE. I) GO TO 13
-	      GO TO 16
-20	      CONTINUE
+              IF (I1 .NE. I) GO TO 13
+              GO TO 16
+20            CONTINUE
 *
 *  ***** I OCCURS TWICE IN THE RK INTEGRAL
 *
-	      IF (I1 .NE. I) GO TO 13
-	      IF (J1 .EQ. I) GO TO 17
+              IF (I1 .NE. I) GO TO 13
+              IF (J1 .EQ. I) GO TO 17
 *
 *  ***** TEST IF THE PAIR (I1,J1) = PAIR (I2,J2)
 *
-	      ICODE1 = 100*I1 + J1
-	      ICODE2 = 100*I2 + J2
-	      ICODE3 = 100*J2 + I2
-	      SAME = ICODE1 .EQ. ICODE2 .OR. ICODE1 .EQ. ICODE3
-	      IF ( .NOT. SAME ) GO TO 15
-	      GO TO 17
-30	      CONTINUE
+              ICODE1 = 100*I1 + J1
+              ICODE2 = 100*I2 + J2
+              ICODE3 = 100*J2 + I2
+              SAME = ICODE1 .EQ. ICODE2 .OR. ICODE1 .EQ. ICODE3
+              IF ( .NOT. SAME ) GO TO 15
+              GO TO 17
+30            CONTINUE
 *
 *  ***** I OCCURS THREE TIMES IN THE RK INTEGRAL
 *
 *
-	      IF (I1 .EQ. I) GO TO 13
-	      CALL YKF(I2, J2, KK, REL)
-	      DO 33 J = 1,NO
-33	        X(J) = X(J) + CC*P(J,I1)*YK(J)
-	      CALL YKF(I1, J1, KK, REL)
-	      CC = D2*CC
-	      DO 34 J = 1,NO
-34	         X(J) = X(J) + CC*P(J,I2)*YK(J)
-	      GO TO 50
+              IF (I1 .EQ. I) GO TO 13
+              CALL YKF(I2, J2, KK, REL)
+              DO 33 J = 1,NO
+33              X(J) = X(J) + CC*P(J,I1)*YK(J)
+              CALL YKF(I1, J1, KK, REL)
+              CC = D2*CC
+              DO 34 J = 1,NO
+34               X(J) = X(J) + CC*P(J,I2)*YK(J)
+              GO TO 50
 *
 *  ***** I OCCURS FOUR TIMES IN RK INTEGRAL
 *
-40	      CC = D4*CC
-	      GO TO 16
-17	      CC = D2*CC
-16	      EXIT = .TRUE.
-15	      CALL YKF(I2,J2,KK,REL)
-	      DO 14 J=1,NO
-14	         X(J) = X(J) +CC*P(J,J1)*YK(J)
-	      IF (EXIT) GO TO 50
-13    	      III = I1
-	      I1= I2
-	      I2= III
-	      III = J1
-	      J1 = J2
-12	      J2 = III
-	      III = I1
-	      I1 = J1
-	      J1 = III
-	      III = I2
-	      I2= J2
-11	      J2= III
-	   END IF
-50	CONTINUE
+40            CC = D4*CC
+              GO TO 16
+17            CC = D2*CC
+16            EXIT = .TRUE.
+15            CALL YKF(I2,J2,KK,REL)
+              DO 14 J=1,NO
+14               X(J) = X(J) +CC*P(J,J1)*YK(J)
+              IF (EXIT) GO TO 50
+13            III = I1
+              I1= I2
+              I2= III
+              III = J1
+              J1 = J2
+12            J2 = III
+              III = I1
+              I1 = J1
+              J1 = III
+              III = I2
+              I2= J2
+11            J2= III
+           END IF
+50      CONTINUE
 *
-51	IBEGIN = INTPTR(5) + 1
-	IEND = INTPTR(6)
-	DO 60 INT = IBEGIN,IEND
-*	  ... Include only if off-diagonal ...
-	  IF (IEL(INT,1).NE.IEL(INT,2)) THEN
-	   I1 = IEL(INT,1)
-	   I2 = IEL(INT,2)
-	   IF (I1 .NE. I) THEN
-	      ITEMP = I1
-	      I1 = I2
-	      I2 = ITEMP
-	   END IF
-	   IF (I1 .EQ. I) THEN
-	      C = COEF(INT)/SUMI
-	      CALL DIFF(I2)
-	      DO 62 J = 1,NO
-		 X(J) = X(J) + C*YK(J)/R(J)
- 62   	      CONTINUE
-	      DO 64 II = 1,NCLOSD
-		 CC = -D2*(4*L(II)+2)*C
-		 CALL YKF(II,II,0,REL)
-		 DO 65 J = 1,NO
-		    X(J) = X(J) + CC*YK(J)*P(J,I2)
- 65		 CONTINUE
-		 DO 66 K = IABS(L(I)-L(II)),L(I)+L(II),2
-		    CCC = CC*CB(L(I),L(II),K)
-		    CALL YKF(I2,II,K,REL)
-		    DO 67 J = 1,NO
-	 	       X(J) = X(J) - CCC*YK(J)*P(J,II)
- 67		    CONTINUE
- 66		 CONTINUE
- 64	      CONTINUE
-	   END IF
-	   IF (I .LE. NCLOSD) THEN
-	      C = -D2*COEF(INT)
-	      CALL YKF(I1,I2,0,REL)
-	      CC = D2*C
-	      DO 61 J = 1,NO
-		X(J) = X(J) + CC*YK(J)*P(J,I)
- 61	      CONTINUE
-	      DO 63 K = IABS(L(I)-L(I1)),L(I)+L(I1),2
-		CC = C*CB(L(I),L(I1),K)
-		CALL YKF(I2,I,K,REL)
-		DO 68 J = 1,NO
-		   X(J) = X(J) - CC*YK(J)*P(J,I1)
- 68		CONTINUE
-		CALL YKF(I1,I,K,REL)
-		DO 69 J = 1,NO
-		   X(J) = X(J) - CC*YK(J)*P(J,I2)
- 69		CONTINUE
- 63	      CONTINUE
-	   END IF
-	  END IF
- 60	CONTINUE
-	IF (I .LE. NCLOSD) GO TO 71
+51      IBEGIN = INTPTR(5) + 1
+        IEND = INTPTR(6)
+        DO 60 INT = IBEGIN,IEND
+*         ... Include only if off-diagonal ...
+          IF (IEL(INT,1).NE.IEL(INT,2)) THEN
+           I1 = IEL(INT,1)
+           I2 = IEL(INT,2)
+           IF (I1 .NE. I) THEN
+              ITEMP = I1
+              I1 = I2
+              I2 = ITEMP
+           END IF
+           IF (I1 .EQ. I) THEN
+              C = COEF(INT)/SUMI
+              CALL DIFF(I2)
+              DO 62 J = 1,NO
+                 X(J) = X(J) + C*YK(J)/R(J)
+ 62           CONTINUE
+              DO 64 II = 1,NCLOSD
+                 CC = -D2*(4*L(II)+2)*C
+                 CALL YKF(II,II,0,REL)
+                 DO 65 J = 1,NO
+                    X(J) = X(J) + CC*YK(J)*P(J,I2)
+ 65              CONTINUE
+                 DO 66 K = IABS(L(I)-L(II)),L(I)+L(II),2
+                    CCC = CC*CB(L(I),L(II),K)
+                    CALL YKF(I2,II,K,REL)
+                    DO 67 J = 1,NO
+                       X(J) = X(J) - CCC*YK(J)*P(J,II)
+ 67                 CONTINUE
+ 66              CONTINUE
+ 64           CONTINUE
+           END IF
+           IF (I .LE. NCLOSD) THEN
+              C = -D2*COEF(INT)
+              CALL YKF(I1,I2,0,REL)
+              CC = D2*C
+              DO 61 J = 1,NO
+                X(J) = X(J) + CC*YK(J)*P(J,I)
+ 61           CONTINUE
+              DO 63 K = IABS(L(I)-L(I1)),L(I)+L(I1),2
+                CC = C*CB(L(I),L(I1),K)
+                CALL YKF(I2,I,K,REL)
+                DO 68 J = 1,NO
+                   X(J) = X(J) - CC*YK(J)*P(J,I1)
+ 68             CONTINUE
+                CALL YKF(I1,I,K,REL)
+                DO 69 J = 1,NO
+                   X(J) = X(J) - CC*YK(J)*P(J,I2)
+ 69             CONTINUE
+ 63           CONTINUE
+           END IF
+          END IF
+ 60     CONTINUE
+        IF (I .LE. NCLOSD) GO TO 71
 *
-	IBEGIN = INTPTR(2) + 1
-	IEND = INTPTR(3)
-	DO 70 INT = IBEGIN,IEND
-	   I1 = IEL(INT,1)
-	   I2 = IEL(INT,2)
-	   K1 = KVAL(INT)
-	   IF (I1 .NE. I) THEN
-	      ITEMP = I1
-	      I1 = I2
-	      I2 = ITEMP
-   	   END IF
-	   IF (I1 .EQ. I) THEN
-	      C = COV(INT)/SUMI
-	      IF (K1 .GT. 1) C = C*K1*QUADR(I1,I2,0)**(K1-1)
-	      DO 72 J = 1,NO
-	         X(J) = X(J) + C*P(J,I2)*R(J)
- 72	      CONTINUE
-	   END IF
- 70	CONTINUE
+        IBEGIN = INTPTR(2) + 1
+        IEND = INTPTR(3)
+        DO 70 INT = IBEGIN,IEND
+           I1 = IEL(INT,1)
+           I2 = IEL(INT,2)
+           K1 = KVAL(INT)
+           IF (I1 .NE. I) THEN
+              ITEMP = I1
+              I1 = I2
+              I2 = ITEMP
+           END IF
+           IF (I1 .EQ. I) THEN
+              C = COV(INT)/SUMI
+              IF (K1 .GT. 1) C = C*K1*QUADR(I1,I2,0)**(K1-1)
+              DO 72 J = 1,NO
+                 X(J) = X(J) + C*P(J,I2)*R(J)
+ 72           CONTINUE
+           END IF
+ 70     CONTINUE
 *
-	IBEGIN = IEND + 1
-	IEND = INTPTR(4)
-	DO 80 INT = IBEGIN,IEND
-	   I1 = IEL(INT,1)
-	   I2 = IEL(INT,2)
-	   I3 = IEL(INT,3)
-	   I4 = IEL(INT,4)
-	   K1 = KVAL(INT)/64
-	   K2 = KVAL(INT) - 64*K1
-	   OV1 = D0
-	   OV2 = D0
-	   DO 82 II = 1,2
-	      IF (I1 .NE. I) THEN
-		 ITEMP = I1
-		 I1 = I2
-		 I2 = ITEMP
-	      END IF
-	      IF (I1 .EQ. I) THEN
-		 IF (OV2 .EQ. D0) OV2 = QUADR(I3,I4,0)
-	         C = OV2**K2*COV(INT)/SUMI
-		 IF (OV1 .EQ. D0 .AND. K1 .GT. 1)
-     :		    OV1 = QUADR(I1,I2,0)
-		 IF (K1 .GT. 1) C = K1*C*OV1**(K1-1)
-		 DO 84 J = 1,NO
-		    X(J) = X(J) + C*P(J,I2)*R(J)
- 84		 CONTINUE
-	      END IF
-	      ITEMP = I1
-	      I1 = I3
-	      I3 = ITEMP
-	      ITEMP = I2
-	      I2 = I4
-	      I4 = ITEMP
-	      ITEMP = K1
-	      K1 = K2
-	      K2 = ITEMP
-	      OTEMP = OV1
-	      OV1 = OV2
-	      OV2 = OTEMP
+        IBEGIN = IEND + 1
+        IEND = INTPTR(4)
+        DO 80 INT = IBEGIN,IEND
+           I1 = IEL(INT,1)
+           I2 = IEL(INT,2)
+           I3 = IEL(INT,3)
+           I4 = IEL(INT,4)
+           K1 = KVAL(INT)/64
+           K2 = KVAL(INT) - 64*K1
+           OV1 = D0
+           OV2 = D0
+           DO 82 II = 1,2
+              IF (I1 .NE. I) THEN
+                 ITEMP = I1
+                 I1 = I2
+                 I2 = ITEMP
+              END IF
+              IF (I1 .EQ. I) THEN
+                 IF (OV2 .EQ. D0) OV2 = QUADR(I3,I4,0)
+                 C = OV2**K2*COV(INT)/SUMI
+                 IF (OV1 .EQ. D0 .AND. K1 .GT. 1)
+     :              OV1 = QUADR(I1,I2,0)
+                 IF (K1 .GT. 1) C = K1*C*OV1**(K1-1)
+                 DO 84 J = 1,NO
+                    X(J) = X(J) + C*P(J,I2)*R(J)
+ 84              CONTINUE
+              END IF
+              ITEMP = I1
+              I1 = I3
+              I3 = ITEMP
+              ITEMP = I2
+              I2 = I4
+              I4 = ITEMP
+              ITEMP = K1
+              K1 = K2
+              K2 = ITEMP
+              OTEMP = OV1
+              OV1 = OV2
+              OV2 = OTEMP
  82        CONTINUE
- 80 	CONTINUE
+ 80     CONTINUE
  71     GO TO (75,76,77),IOPT
  76     DO 78 J = 1,NO
  78        X(J) = X(J)/R(J)
@@ -4211,12 +4211,12 @@ C     END IF
  77     DO 79 J =1,NO
  79        X(J) = R(J)*X(J)
         DO 74 J = 1,NWF
-	   IF (J .NE. I) THEN
+           IF (J .NE. I) THEN
            C = E(I,J)
            IF (DABS(C) .LE. 1.D-20 ) GO TO 74
            DO 73 JJ = 1,NO
  73        X(JJ) = X(JJ) + C*P(JJ,J)*RR(JJ)
-	   END IF
+           END IF
  74     CONTINUE
 *
 *  *****  CHECK IF EXCHANGE IS ZERO: IF SO, METHOD 2 SHOULD BE USED.

@@ -69,7 +69,7 @@
      :                 Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,
      :                 Q10,Q11,Q12,Q13,Q14,Q15
         INTEGER        F(NELS),PL,QA(NELS),QB(NELS),VL(NELS)
-	INTEGER        H(NELS)
+        INTEGER        H(NELS)
         INTEGER        LEFT,RIGHT,PARITY,CONST,SFLAG,DFLAG
         COMMON         NF,NR,NFTM,MAX,MIN,PARITY,CONST,NQ
      :                 /BLK0/ORDLA,ORDLZ,ORDUA,ORDUZ,ORD0,ORD9
@@ -100,7 +100,7 @@ CSUN            i = iargc( )
 CSUN            if (i .eq. 0) then
                    NAME = 'cfg.inp'
 CSUN            else
-CSUN 		   call getarg(1,NAME)
+CSUN               call getarg(1,NAME)
 CSUN            end if
 
 *       Obtain ASCII value for the bound of character and digit
@@ -264,10 +264,10 @@ CSUN            end if
         J = INDEX(ACT,'b')
         IF (I.NE.0 .OR. J.NE.0) GOTO 120
         IF (ACT .ne. '   ') then
-	   WRITE(0,132)
+           WRITE(0,132)
 132        FORMAT('Type of set generation ?')
            READ *, ITYPE
-	END IF
+        END IF
 ********************
 *                  Input Replacement
 *
@@ -299,9 +299,9 @@ CSUN            end if
 144     IF (TEMP(:5) .NE. '     ') THEN
             MV = MV+1
             IF (MV.GT.(NELS)) THEN
-	       WRITE(0,*) ' Virtual set too large: MAX=',NELS
-	       STOP
-	    END IF
+               WRITE(0,*) ' Virtual set too large: MAX=',NELS
+               STOP
+            END IF
             CALL DEL(TEMP)
             J = INDEX(TEMP,',')
             VL(MV) = MOD(LVAL(TEMP(2:2)),2)
@@ -350,7 +350,7 @@ CSUN            end if
 *
 150     WRITE(0,151)
 151     FORMAT ('       Final Terms  ?  ')
-	IFLAG = 0
+        IFLAG = 0
         CALL INPUT (NELS,NFTM,FINAL,IFLAG,SFLAG,DFLAG,*140,*160)
         DO 152 I=1,NFTM
             CH2 = FINAL(I)(:2)
@@ -561,17 +561,17 @@ CSUN            end if
      :          TEMP(2:2) = CHAR(N-ORDUA+ORDLA)
             ELA(MA) = TEMP(:2)
             RL(MA) = LVAL(TEMP(2:2))
-	    IF (RL(MA) .GT. 3) THEN
-	       F(MA) = 2
-	    ELSE
+            IF (RL(MA) .GT. 3) THEN
+               F(MA) = 2
+            ELSE
                F(MA) = MIN0(const,4*RL(MA)+2)
-	    END IF
+            END IF
             CALL STRSH(TEMP,4)
             GO TO 301
-	ELSE
-	   WRITE(0,*) 
+        ELSE
+           WRITE(0,*) 
      :    'Too many electrons in the active set: MAX= 15'
-	   STOP
+           STOP
         END IF
      
 ****************
@@ -587,18 +587,18 @@ CSUN            end if
 *       H(I) is the number of unassigned electrons or ``holes''
 *
 305     IF (itype .eq. 0 ) then 
-	   MINQ1 = 0
-	else if (itype .eq. 1) then
-	   MINQ1 = max0(MIN0(F(1),CONST)-1,0)
-	else if (itype .eq. 2) then
- 	   MINQ1 = max0(MIN0(F(1),CONST)-2,0)
-	else if (itype .eq. 3) then
- 	   MINQ1 = max0(MIN0(F(1),CONST)-3,0)
-	else
-	   WRITE(0,*) ' Unknown type: Re-enter'
-	   READ *, itype
-	   GO TO 305
-	end if
+           MINQ1 = 0
+        else if (itype .eq. 1) then
+           MINQ1 = max0(MIN0(F(1),CONST)-1,0)
+        else if (itype .eq. 2) then
+           MINQ1 = max0(MIN0(F(1),CONST)-2,0)
+        else if (itype .eq. 3) then
+           MINQ1 = max0(MIN0(F(1),CONST)-3,0)
+        else
+           WRITE(0,*) ' Unknown type: Re-enter'
+           READ *, itype
+           GO TO 305
+        end if
         DO 310 Q1=MIN0(F(1),CONST),MINQ1,-1
          H(1) = MAX0(0,CONST - Q1)
          DO 310 Q2=MIN0(F(2),H(1)),0,-1
@@ -854,14 +854,14 @@ CSUN            end if
             QL(2) = 1
             DO 461 I=NVIR,LVIR-1
                 ELL(1) = EL(I)
-		LL1 = LVAL(ELL(1)(2:2))
+                LL1 = LVAL(ELL(1)(2:2))
                 DO 461 J=I+1,M
                     IF (Q(I).EQ.0 .OR. Q(J).EQ.0) GOTO 461
                     ELL(2) = EL(J)
-		    LL2 = LVAL(ELL(2)(2:2))
+                    LL2 = LVAL(ELL(2)(2:2))
                     TEMP = ELL(1)//'.'//ELL(2)//' = '
-		    LLMIN = IABS(LL1 - LL2)
-		    LLMAX = LL1 + LL2
+                    LLMIN = IABS(LL1 - LL2)
+                    LLMAX = LL1 + LL2
                     PL = MOD(LLMAX, 2)
                     CALL VPAIR (ELV,MV,PL,LLMIN,LLMAX,TEMP,*500)
 461         CONTINUE
@@ -874,9 +874,9 @@ CSUN            end if
             DO 464 I=NVIR,LVIR
                 IF (Q(I) .GT. 1) THEN
                     ELL(1) = EL(I)
-		    LL1 = LVAL(ELL(1)(2:2))
-		    LLMIN = 0
-		    LLMAX = LL1 + LL1
+                    LL1 = LVAL(ELL(1)(2:2))
+                    LLMIN = 0
+                    LLMAX = LL1 + LL1
                     TEMP = ELL(1)//'(2) = '
                     PL = MOD(LLMAX, 2)
                     CALL VPAIR (ELV,MV,PL,LLMIN,LLMAX,TEMP,*500)
@@ -1117,12 +1117,12 @@ CSUN            end if
 ***************
 *           Starting position in term table for given L
 *
-	DATA  (LPOSIT(I), I=1,9)/1,4,9,11,13,15,17,19,21/
+        DATA  (LPOSIT(I), I=1,9)/1,4,9,11,13,15,17,19,21/
 
 ***************
 *        Possible terms for configurations P(1-3),D(1-5),F(1-2),G(1-2)
 *
-	DATA (TERM(I), I=1,22) /
+        DATA (TERM(I), I=1,22) /
      :'2P1',
      :'1S0 1D2 3P2',
      :'2P1 2D3 4S3',
@@ -1774,12 +1774,12 @@ CSUN            end if
             QR(2) = 1
             DO 10 I = 1,MV-1
                 ELR(1) = ELV(I)
-		LR1 = LVAL(ELR(1)(2:2))
+                LR1 = LVAL(ELR(1)(2:2))
                 DO 10 J=I+1,MV
                     ELR(2) = ELV(J)
-		    LR2 = LVAL(ELR(2)(2:2))
-		    LRMIN = IABS(LR1 - LR2)
-		    LRMAX = LR1 + LR2
+                    LR2 = LVAL(ELR(2)(2:2))
+                    LRMIN = IABS(LR1 - LR2)
+                    LRMAX = LR1 + LR2
                     PR = MOD(LRMAX, 2)
 *
 *       If the pair has the same parity with the left side, and the
@@ -1808,8 +1808,8 @@ CSUN            end if
             QR(1) = 2
             DO 20 I=1,MV
                 ELR(1) = ELV(I)
-		LR1 = LVAL(ELR(1)(2:2))
-		LRMAX = LR1 + LR1
+                LR1 = LVAL(ELR(1)(2:2))
+                LRMAX = LR1 + LR1
                 PR = MOD(LRMAX, 2)
 *
 *       If it has the same parity with the left side, replace them,
@@ -1981,7 +1981,7 @@ CSUN            end if
      : 5X,'Header and Closed Shells cannot exceed 72 characters and'/
      : 5X,'will be copied to the output file. The electrons are'/
      : 5X,'separated by blanks in the Closed Shells.')
-	    WRITE(0,13)
+            WRITE(0,13)
 13          FORMAT(5X,'Press RETURN for more... ')
             READ(5,'(A)') STR
      
@@ -2092,7 +2092,7 @@ CSUN            end if
             WRITE(0,*)
             WRITE(0,*)
             WRITE(0,*) '   Then reenter the data for the Reference Set',
-	    
+            
      :                 ' and continue the input.'
             WRITE(0,*)
             WRITE(0,22)
