@@ -582,7 +582,9 @@
       COMMON/STATES/NCFG,MAXORB,IAJCMP(NWD),LJCOMP(NWD),
      :NJCOMP(NWD),NOCCSH(NCD),NELCSH(5,NCD),NOCORB(5,NCD),J1QNRD(9,NCD)
       INTEGER IEL(2),IBUFF(2)
-      DATA IASTER,IBLANK/3H*  ,3H   /
+*     See the line 650 for more information why the following line
+*     is commented out:
+*      DATA IASTER,IBLANK/3H*  ,3H   /
 *
       CALL CFGO1(NCFG,MAXORB,IAJCMP,LJCOMP,NJCOMP,NOCCSH,NELCSH,
      :            NOCORB,J1QNRD,NCD,INPUT)
@@ -642,6 +644,11 @@
 *
       READ(IREAD,*,END=90)
  79   READ(IREAD,'(2(1X,A3))',END=90) IBUFF(1),IBUFF(2)
+      print *, "This code should be rewritten. It tries to compare"
+      print *, "a character from the input file to '*' or ' ',"
+      print *, "but in a non portable way. Aborting..."
+      stop 1
+*     Rework the below to use ichar("*") and ichar(" ") instead.
       IF (IBUFF(1) .NE. IASTER .AND. IBUFF(1) .NE. IBLANK) THEN
          DO 80 I = 1,2
             DO 81 J = 1,MAXORB
