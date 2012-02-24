@@ -41,9 +41,6 @@ mv wfn.out wfn.inp
 
 #----------------------------------------
 
-echo "" >> cfg.inp
-echo "" >> cfg.inp
-
 ../../src/MCHF <<EOF
 Al,2P,13.
 =3
