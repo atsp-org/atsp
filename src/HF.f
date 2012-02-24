@@ -1066,6 +1066,9 @@
          ACC(I) = .75*ACC(I)
       ELSE
          ED2 = ED2 - E(I,I)
+         print *, "This could uses uninitialized variable ED1."
+         print *, "Aborting for now, until it gets fixed..."
+         stop 1
          IF (ED1*ED2 .GT. D0 ) THEN
             ACC(I) = .75*ACC(I)
          ELSE

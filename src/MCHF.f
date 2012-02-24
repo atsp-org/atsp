@@ -880,6 +880,9 @@ C     END IF
 *
 13    IF (IPR .NE. I ) GO TO 33
       ED2 = ED2 - E(I,I)
+      print *, "This could uses uninitialized variable ED1."
+      print *, "Aborting for now, until it gets fixed..."
+      stop 1
       IF (ED1*ED2 .GT. D0) ACC(I) = .75*ACC(I)
       IF (ED1*ED2 .LT. D0) ACC(I) = (D1 + D3*ACC(I))/D4
 33    C = ACC(I)
