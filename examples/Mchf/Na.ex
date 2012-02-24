@@ -38,6 +38,7 @@ Na 2S
      2P1     2S1     2P1     3P0     2S0
   2p( 5) 3p2( 1) 3d2( 1)
      2P1     2P1     2D1     3D0     2S0
+*
 S2a
 time ../../src/NONH >>Na.out <<S2b
 n
