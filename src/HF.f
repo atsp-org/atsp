@@ -1029,6 +1029,9 @@
      :     AZZ,PP,FN,EM,FM,EU,FU,DELTAE,M,NODE,MK,KK,NJ
       CHARACTER*3 ASTER(3)
       DATA ASTER(1),ASTER(2),ASTER(3)/'  ','* ','**'/
+      DOUBLE PRECISION ED1
+      SAVE ED1
+      DATA ED1 /0/
 *
       I = I1
       ED2 = E(I,I)
@@ -1066,9 +1069,6 @@
          ACC(I) = .75*ACC(I)
       ELSE
          ED2 = ED2 - E(I,I)
-         print *, "This could uses uninitialized variable ED1."
-         print *, "Aborting for now, until it gets fixed..."
-         stop 1
          IF (ED1*ED2 .GT. D0 ) THEN
             ACC(I) = .75*ACC(I)
          ELSE
