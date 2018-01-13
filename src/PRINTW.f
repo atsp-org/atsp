@@ -12,7 +12,7 @@
 *     if (iarg .gt. 0) then
 *	 call getarg(1,NAME)
 *      else 
-	 NAME = 'wfn.inp'
+         NAME = 'wfn.inp'
 *     end if
       OPEN(UNIT=3,FILE=NAME,STATUS='OLD',FORM='UNFORMATTED')
       IUF=3
