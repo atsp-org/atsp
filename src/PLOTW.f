@@ -30,7 +30,7 @@
       MM = 0
 2     P(1,nwf) = 0.D0
       READ(IUF,END=5) AT,TT,EL1,M,ZT,ETI,EKI,AZI,(P(J,NWF),J=2,M+1)
-      WRITE(6,'($,2x,A,A)') EL1,' = '
+      WRITE(6,'(2x,A,A,$)') EL1,' = '
       READ(5,'(A)') NEW
       IF ( NEW .NE. 'd  ' .AND. NEW .NE. 'D  ' ) THEN
          IF ( NEW .NE. '   ') THEN

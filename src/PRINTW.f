@@ -17,7 +17,7 @@
       OPEN(UNIT=3,FILE=NAME,STATUS='OLD',FORM='UNFORMATTED')
       IUF=3
 2     READ(IUF,END=5) AT,TT,EL1,M,ZT,ETI,EKI,AZI,(PT(J),J=1,M)
-      WRITE(6,'($,2x,A,A)') EL1,' = '
+      WRITE(6,'(2x,A,A,$)') EL1,' = '
       READ(5,'(A)') NEW
       IF ( NEW .NE. 'd  ' .AND. NEW .NE. 'D  ' ) THEN
          IF ( NEW .NE. '   ') THEN
