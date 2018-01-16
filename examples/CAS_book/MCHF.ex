@@ -28,7 +28,7 @@ EOF
 
 ../../src/HF <<EOF
 Al,2P,13.
- 1s  2s  2p  3s
+  1s  2s  2p  3s
 3p(1)
 all
 y
