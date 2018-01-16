@@ -4,7 +4,7 @@ F90FLAGS += -g -fcheck=all
 
 all: NONH TERMS GENCL HF MCHF PLOTW PRINTW
 
-NONH: NONH.o ANG.o COM.o NJGRAF.o RAD6.o
+NONH: NONH.o ANG.o COM.o NJGRAF.o RAD3.o
 	$(F90) $(F90FLAGS) -o $@ $^
 
 TERMS: TERMS.o
@@ -16,7 +16,7 @@ GENCL: GENCL.o
 HF: HF.o
 	$(F90) $(F90FLAGS) -o $@ $^
 
-MCHF: MCHF.o COM.o RAD6.o
+MCHF: MCHF.o COM.o RAD3.o
 	$(F90) $(F90FLAGS) -o $@ $^
 
 PLOTW: PLOTW.o
