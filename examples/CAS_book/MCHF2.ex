@@ -51,7 +51,7 @@ EOF
 echo "*" >> cfg.inp
 
 #----------------------------------------
-# 3) Compute necessary integrals
+# 3) Compute energy expression
 #----------------------------------------
 ../../src/NONH <<EOF
 n
