@@ -1,6 +1,6 @@
 *     ------------------------------------------------------------------ 
 * 
-	PROGRAM CI
+      PROGRAM CI
 *
 *                   C O P Y R I G H T -- 1994
 *
@@ -45,21 +45,21 @@
 CSUN  i = iargc()
 999   NAME(2) = 'int.lst'
 CSUN  if (i .eq. 0) then
-	 WRITE(0,*) ' Name of State'
+         WRITE(0,*) ' Name of State'
          read(5,'(A)') NAME(1)
 CSUN  else
-CSUN	 call getarg(1,NAME)
-CSUN	 if (i .eq. 2) call getarg(2,NAME(2))
+CSUN     call getarg(1,NAME)
+CSUN     if (i .eq. 2) call getarg(2,NAME(2))
 CSUN  end if
       j = index(NAME(1),' ')
       if (j .eq. 1) then
-	 WRITE(0,*) ' Names may not start with a blank'
-	 go to 999
+         WRITE(0,*) ' Names may not start with a blank'
+         go to 999
       else
-	 NAME(1) = NAME(1)(1:j-1)//'.c'
-	 NAME(3) = NAME(1)(1:j-1)//'.w'
-	 NAME(4) = NAME(1)(1:j-1)//'.l'
-	 NAME(5) = NAME(1)(1:j-1)//'.j'
+         NAME(1) = NAME(1)(1:j-1)//'.c'
+         NAME(3) = NAME(1)(1:j-1)//'.w'
+         NAME(4) = NAME(1)(1:j-1)//'.l'
+         NAME(5) = NAME(1)(1:j-1)//'.j'
       end if
 *
       CALL INITA
@@ -84,7 +84,7 @@ CSUN  end if
       OPEN(UNIT=7,FILE=NAME(4),STATUS='UNKNOWN') 
       IF (REL) THEN
          OPEN(UNIT=8,FILE=NAME(5),STATUS='UNKNOWN') 
-	 OPEN(UNIT=3,STATUS='SCRATCH',FORM='UNFORMATTED')
+         OPEN(UNIT=3,STATUS='SCRATCH',FORM='UNFORMATTED')
       END IF
       OPEN(UNIT=9,STATUS='SCRATCH',FORM='UNFORMATTED') 
 * 
@@ -113,7 +113,7 @@ CSUN  end if
          CALL LSJMAT(N, NZERO,  J,  PRINT, LS) 
     1 CONTINUE 
 99    IF (REL) THEN
-	 CLOSE(UNIT=3) 
+         CLOSE(UNIT=3) 
          WRITE(8,'(A)') '***'
       END IF
       WRITE(7,'(A)') '***'
@@ -142,7 +142,7 @@ CSUN  end if
       CHARACTER*3 EL1, EL2, EL3, EL4, COUPLE(9), ELC(5), ANS*1 
       INTEGER S, IQ(5) 
       COMMON /INTGRL/VALUE(IDIM2),LL(NCD2),S(NCD2),LENGTH(NCD2),EC, 
-     :	   ICPTR(IDIM2),IOV(2),OVALUE(20),LSP(NCD2),INDEX(NTERMD),NTERM
+     :   ICPTR(IDIM2),IOV(2),OVALUE(20),LSP(NCD2),INDEX(NTERMD),NTERM
       COMMON /LABEL/CONFIG(NCD2),EL(NWD) 
       COMMON /PARAM/H,H1,H3,CH,EH,RHO,Z,TOL,NO,ND,NWF,MASS,NCFG,IB,IC,ID
      :   ,D0,D1,D2,D3,D4,D5,D6,D8,D10,D12,D16,D30,FINE,NSCF,NCLOSD,RMASS
@@ -162,8 +162,8 @@ CSUN  end if
       END IF 
       IF (NOCC .EQ. 0) GO TO 2 
       IF (I .GT. NCD2) THEN
-	 WRITE(0,*) ' Too many configurations: Max = ',NCD2
-	 STOP 1
+         WRITE(0,*) ' Too many configurations: Max = ',NCD2
+         STOP 1
       END IF
       NEL = IQ(1)+IQ(2)+IQ(3)+IQ(4)+IQ(5)
       READ(1,'(9(5X,A3))') (COUPLE(J),J=1,9) 
@@ -185,19 +185,19 @@ CSUN  end if
 *  *****  Determine the list of TERMS
 *
       DO 14 I = 1,NC
-	 LSP(I) = 0
+         LSP(I) = 0
  14   CONTINUE
       NTERM = 0
       DO 15 I = 1,NC
-	 IF (LSP(I) .EQ. 0) THEN
-	    NTERM = NTERM + 1
-	    LSP(I) = NTERM
-	    INDEX(NTERM) = I
-	    DO 16 J = I+1,NC
-	       IF (LSP(J) .EQ. 0 .AND.
-     :		   LL(I).EQ.LL(J) .AND. S(I).EQ.S(J)) LSP(J) = NTERM
- 16	    CONTINUE
-	 END IF
+         IF (LSP(I) .EQ. 0) THEN
+            NTERM = NTERM + 1
+            LSP(I) = NTERM
+            INDEX(NTERM) = I
+            DO 16 J = I+1,NC
+               IF (LSP(J) .EQ. 0 .AND.
+     :            LL(I).EQ.LL(J) .AND. S(I).EQ.S(J)) LSP(J) = NTERM
+ 16         CONTINUE
+         END IF
  15   CONTINUE
       IF (NTERM .GT. NTERMD) THEN
          WRITE(0,'(/A,I3/A,I3)') ' The number of terms is ', NTERM,
@@ -227,10 +227,10 @@ CSUN  end if
          EL1 = CLSDEL(II:II+2) 
          IF (EL1 .NE. '   ' .AND. EL(I) .NE. EL1) THEN 
              STOP 'Radial functions do match list of closed shells' 
-	 ELSE IF (EL1 .EQ. EL(I)) THEN
-	     J = 3
-	     IF (EL1(1:1) .NE. ' ') J = 2
-	     NEL = 4*LVAL(EL1(J:J)) + 2 + NEL
+         ELSE IF (EL1 .EQ. EL(I)) THEN
+             J = 3
+             IF (EL1(1:1) .NE. ' ') J = 2
+             NEL = 4*LVAL(EL1(J:J)) + 2 + NEL
          ELSE IF (EL1 .EQ. '   ') THEN 
              NCLOSD = I-1 
          END IF 
@@ -256,9 +256,9 @@ CSUN  end if
 3     FORMAT(//3X,'ATOM = ',A6,3X,'Z = ',F3.0/) 
       IF (REL) 
      :WRITE (8,'(2X,A6,A,F5.1,A,I3,A,I3)' ) ATOM,'  Z = ',Z ,'  N = ',
-     :	   NEL, '   NCFG = ',NC
+     :   NEL, '   NCFG = ',NC
       WRITE (7,'(2X,A6,A,F5.1,A,I3,A,I3)' ) ATOM,'  Z = ',Z ,'  N = ',
-     :	   NEL, '   NCFG = ',NC
+     :   NEL, '   NCFG = ',NC
       DO 4 J=1,NO 
       R(J)=DEXP(RHO)/Z 
       RR(J)=R(J)*R(J) 
@@ -304,12 +304,12 @@ CSUN  end if
          VALUE(I) = ZETA(I1,I2) 
          I = I + 1 
          IF( I .LE. IDIM2) THEN
-	    GO TO 71 
-	 ELSE
-	   WRITE(0,*)
+            GO TO 71 
+         ELSE
+            WRITE(0,*)
      :    ' Too many integrals for current dimensions: MAX=',IDIM2
-	   STOP 1
-	 END IF
+            STOP 1
+         END IF
    72 CALL LSJPTR
 * 
 *  ***** READ Nk INTEGRALS 
@@ -323,12 +323,12 @@ CSUN  end if
          VALUE(I) = SN(I1, I2, I3, I4, K) 
          I = I + 1 
          IF (I .LE. IDIM2) THEN
-	    GO TO 81 
-	 ELSE
-  	    WRITE(0,*)
+            GO TO 81 
+         ELSE
+            WRITE(0,*)
      :    ' Too many integrals for current dimensions: MAX=',IDIM2
-	    STOP 1
-	 END IF
+            STOP 1
+         END IF
    82 CALL LSJPTR
 * 
 *  ***** READ Vk INTEGRALS 
@@ -342,12 +342,12 @@ CSUN  end if
          VALUE(I) = VK(I1, I2, I3, I4, K) 
          I = I + 1 
          IF (I .LE. IDIM2) THEN
-	    GO TO 91 
-	 ELSE
-	    WRITE(0,*)
+            GO TO 91 
+         ELSE
+            WRITE(0,*)
      :    ' Too many integrals for current dimensions: MAX=',IDIM2
-	    STOP 1
-	 END IF
+            STOP 1
+         END IF
    92 CALL LSJPTR
 * 
 *  *****  READ SPIN-SPIN INTEGRALS 
@@ -361,12 +361,12 @@ CSUN  end if
          VALUE(I) = SN(I1, I2, I3, I4, K) 
          I = I + 1 
          IF (I .LE. IDIM2) THEN
-	    GO TO 101 
-	 ELSE
-	    WRITE(0,*)
+            GO TO 101 
+         ELSE
+            WRITE(0,*)
      :    ' Too many integrals for current dimensions: MAX=',IDIM2
-	    STOP 1
-	 END IF
+            STOP 1
+         END IF
   102 CALL LSJPTR
   111 CLOSE(UNIT=1) 
       CLOSE(UNIT=2) 
@@ -393,36 +393,36 @@ CSUN  end if
       CHARACTER*3 CONFIG*66, COUPLE, END*1, EL
       COMMON /LABEL/CONFIG(NCD2),EL(NWD) 
 *
-	DO 1 I = 1,MFOUND
-	   E0 = W(I)
-	   E1 = 0.D0
-	   U2 = 0.D0
-	   DO 2 J = NZERO+1, N
+      DO 1 I = 1,MFOUND
+           E0 = W(I)
+           E1 = 0.D0
+           U2 = 0.D0
+           DO 2 J = NZERO+1, N
 *
 *	   ...  Clear the components
 *
-	      U(J,I) = 0.D0
-  2	   CONTINUE
-	   DO 4 J = NZERO+1, N
+              U(J,I) = 0.D0
+  2        CONTINUE
+           DO 4 J = NZERO+1, N
 *
 *	   ...  Compute inner product of zero-order vectors with 
 *		first-order interactions
 *
-	      V = 0.D0
-	      DO 6 JJ = 1,NZERO
-		V = V - H(J,JJ)*U(JJ,I)
-  6	      CONTINUE
-	      U(J,I) = V/(HD(J)-E0)
-	      E1 = E1 - U(J,I)*V
-	      U2 = U2 + U(J,I)*U(J,I)
-  4	   CONTINUE
-	   W(I) = W(I) + E1/(1.D0 +U2)
-	   SCALE = 1.D0/SQRT(1.D0+U2)
-	   DO 8 J = 1,N
-	      U(J,I) = SCALE*U(J,I)
-  8	   CONTINUE
-  1	CONTINUE
-	END
+              V = 0.D0
+              DO 6 JJ = 1,NZERO
+                 V = V - H(J,JJ)*U(JJ,I)
+  6           CONTINUE
+              U(J,I) = V/(HD(J)-E0)
+              E1 = E1 - U(J,I)*V
+              U2 = U2 + U(J,I)*U(J,I)
+  4        CONTINUE
+           W(I) = W(I) + E1/(1.D0 +U2)
+           SCALE = 1.D0/SQRT(1.D0+U2)
+           DO 8 J = 1,N
+              U(J,I) = SCALE*U(J,I)
+  8        CONTINUE
+  1     CONTINUE
+        END
 * 
 *     ------------------------------------------------------------------ 
 *             L S J M A T 
@@ -438,7 +438,7 @@ CSUN  end if
       PARAMETER(NOD=220,NWD=30,NCD2=200,MD=20,NZ=200,NTERMD=10,
      :          IDIM2=1000)
       COMMON /INTGRL/VALUE(IDIM2),L(NCD2),S(NCD2),LENGTH(NCD2),EC, 
-     :	   ICPTR(IDIM2),IOV(2),OVALUE(20),LSP(NCD2),INDEX(NTERMD),NTERM 
+     :    ICPTR(IDIM2),IOV(2),OVALUE(20),LSP(NCD2),INDEX(NTERMD),NTERM 
       COMMON H(NCD2,NZ),RLB,RUB,HD(NCD2),W(MD),U(NCD2,MD),V1(NZ),V2(NZ),
      :    V3(NZ),V4(NZ),V5(NZ),V6(NZ),D(NZ),E(NZ),E2(NZ),IND(NZ) 
       DIMENSION EIGVAL(MD),EIGVEC(NCD2,MD),FLSJ(NTERMD,NTERMD,2) 
@@ -449,36 +449,36 @@ CSUN  end if
 *  ***** READ THE LS-INTERACTION MATRIX 
 * 
       READ (9) ((H(I,J),I=J,N),J=1,NZERO), (HD(J),J=NZERO+1,N) 
-       REWIND 9 
-	IF (LS) GO TO 30 
+      REWIND 9 
+      IF (LS) GO TO 30 
 * 
 *  *****  INCLUDE ONLY THOSE INTERACTIONS FOR WHICH 
 *         |L - S| <= JJ <= L + S 
 * 
        DO 1 J = 1,N
           IF ( JJ .LT. ABS(L(J) - S(J)) .OR. JJ .GT. L(J) + S(J) ) THEN
-	     IF (J .LE. NZERO) THEN
-	       DO 2 I = J+1,N
-		 H(I,J) = 0.
-   2	       CONTINUE
-	       H(J,J) = 1.D0
-	     ELSE
-		HD(J) = 1.D0
-	     END IF
+             IF (J .LE. NZERO) THEN
+               DO 2 I = J+1,N
+                 H(I,J) = 0.
+   2           CONTINUE
+               H(J,J) = 1.D0
+             ELSE
+               HD(J) = 1.D0
+             END IF
           END IF 
     1  CONTINUE 
 *
 *  *****  CLEAR TABLE OF J-DEPENDENT FACTORS
 *
       DO 3 II = 1,NTERM
-	 I = INDEX(II)
-	 DO 4 JJJ = 1,NTERM
-	    J = INDEX(JJJ)
+         I = INDEX(II)
+         DO 4 JJJ = 1,NTERM
+            J = INDEX(JJJ)
             PHASE =(-1)**((L(I)+S(J)-JJ +L(I)+S(I)-JJ +L(J)+S(J)-JJ)/2) 
             CALL GRACAH(L(J),S(J),L(I),S(I),JJ,2,W1) 
             CALL GRACAH(L(J),S(J),L(I),S(I),JJ,4,W2) 
-	    FLSJ(II,JJJ,1) = PHASE*W1
-	    FLSJ(II,JJJ,2) = PHASE*W2
+            FLSJ(II,JJJ,1) = PHASE*W1
+            FLSJ(II,JJJ,2) = PHASE*W2
  4       CONTINUE
  3    CONTINUE
 * 
@@ -494,21 +494,21 @@ C      READ(3,'()' )
 *  12 FORMAT(F14.8,A1,2I3) 
       IF ( END .EQ. '*' ) GO TO 10 
       IF (J .GT. NZERO .AND. .NOT.(J .EQ. N) ) THEN
-	 WRITE(0,'(A,I3,A,I3,A)') ' Data for (',I,',',J,') IGNORED!'
-	 GO TO 13
+         WRITE(0,'(A,I3,A,I3,A)') ' Data for (',I,',',J,') IGNORED!'
+         GO TO 13
       END IF
-	 IF (II .EQ. 4) THEN
-	    FACTOR = FLSJ(LSP(I),LSP(J),2)
-	 ELSE
-	    FACTOR = FLSJ(LSP(I),LSP(J),1)
-	 END IF
+         IF (II .EQ. 4) THEN
+            FACTOR = FLSJ(LSP(I),LSP(J),2)
+         ELSE
+            FACTOR = FLSJ(LSP(I),LSP(J),1)
+         END IF
          H(I,J) = H(I,J) + C*FACTOR*V
    13    IC = IC + 1
-	 IF (IC .GT. LAST) THEN
-	    INT = INT + 1
-	    V = VALUE(INT)
-	    LAST = ICPTR(INT)
-	 END IF
+         IF (IC .GT. LAST) THEN
+            INT = INT + 1
+            V = VALUE(INT)
+            LAST = ICPTR(INT)
+         END IF
          GO TO 11 
    10 CONTINUE 
       REWIND 3 
@@ -521,7 +521,7 @@ C      READ(3,'()' )
       IF (J .LE. NZERO) THEN
          WRITE(6,71) (H(J,K),K=1,J) 
       ELSE
-	 WRITE(6,71) (H(J,K),K=1,NZERO),HD(J)
+         WRITE(6,71) (H(J,K),K=1,NZERO),HD(J)
       END IF
  70   CONTINUE
  71   FORMAT(/(8F16.7)) 
@@ -632,7 +632,7 @@ C      READ(3,'()' )
 *
         SUBROUTINE LSJPTR
         CHARACTER*1 END
-	DOUBLE PRECISION C
+        DOUBLE PRECISION C
 *
   1     READ(2,12) C, END, I, J
  12     FORMAT(F14.8,A1,2I3)
@@ -668,11 +668,11 @@ C      READ(3,'()' )
 *  ***** INITIALIZE  THE INTERACTION MATRIX TO ZERO 
 * 
       DO 5 J=1,N
-	IF (J .LE. NZERO) THEN
+        IF (J .LE. NZERO) THEN
           DO 6 I = 1,N 
              H(I,J) = 0. 
     6     CONTINUE 
-	  H(J,J) = EC
+          H(J,J) = EC
         ELSE
           HD(J) = EC
         END IF
@@ -680,94 +680,94 @@ C      READ(3,'()' )
 C
 C ***** READ AND ADD THE LIST OF INTEGRALS
 C
-	READ(2,'()')
-	DO 10 INT = 1,6
-	  I = 1
-	  IF (INT.NE.4 .AND. INT.NE.5) THEN
+        READ(2,'()')
+        DO 10 INT = 1,6
+          I = 1
+          IF (INT.NE.4 .AND. INT.NE.5) THEN
 *
 *            ...F, G, L, or O1 integrals....
 *
-   12	     READ(2,1) END, KVAL, EL1, EL2, ICPTR(I)
-	     IF (END .EQ. '*') GO TO 16
-	     CALL EPTR( EL, EL1,IEL1,*999)
-	     CALL EPTR( EL, EL2,IEL2,*999)
-	     IF (INT .EQ. 1) THEN
-		VALUE(I) = FK(IEL1,IEL2,KVAL,REL)
-	     ELSE IF (INT .EQ. 2) THEN
-		VALUE(I) = GK(IEL1,IEL2,KVAL,REL)
- 	     ELSE IF (INT .EQ. 3) THEN
-		OVALUE(I) = QUADR(IEL1,IEL2,0)**KVAL
-	     ELSE
-		VALUE(I) = HLC(EL, IEL1, IEL2, REL)
-	     END IF
-	     I = I + 1
-	     IF (INT .NE. 3) THEN
-	        IF (I .LE. (IDIM2) ) GO TO 12
-	        WRITE(0,*) ' Too many integrals - MAX = ',(IDIM2)
-	     ELSE
-		IF (I .LE. (20) ) GO TO 12
-		WRITE(0,*) ' Too many overlap integrals - MAX = ',(20)
-	     END IF
-	   ELSE
-   14         IF (INT.EQ.5) THEN
+   12        READ(2,1) END, KVAL, EL1, EL2, ICPTR(I)
+             IF (END .EQ. '*') GO TO 16
+             CALL EPTR( EL, EL1,IEL1,*999)
+             CALL EPTR( EL, EL2,IEL2,*999)
+             IF (INT .EQ. 1) THEN
+                VALUE(I) = FK(IEL1,IEL2,KVAL,REL)
+             ELSE IF (INT .EQ. 2) THEN
+                VALUE(I) = GK(IEL1,IEL2,KVAL,REL)
+             ELSE IF (INT .EQ. 3) THEN
+                OVALUE(I) = QUADR(IEL1,IEL2,0)**KVAL
+             ELSE
+                VALUE(I) = HLC(EL, IEL1, IEL2, REL)
+             END IF
+             I = I + 1
+             IF (INT .NE. 3) THEN
+                IF (I .LE. (IDIM2) ) GO TO 12
+                WRITE(0,*) ' Too many integrals - MAX = ',(IDIM2)
+             ELSE
+                IF (I .LE. (20) ) GO TO 12
+                WRITE(0,*) ' Too many overlap integrals - MAX = ',(20)
+             END IF
+          ELSE
+   14        IF (INT.EQ.5) THEN
 *
 *	        ... R integrals ...
 *
-     	        READ(2,2) END, KVAL, EL1, EL2, EL3, EL4, ICPTR(I)
+                READ(2,2) END, KVAL, EL1, EL2, EL3, EL4, ICPTR(I)
 *
-	      ELSE
+              ELSE
 *
 *	         ... O2 integrals ...
 *
-    	     	READ(2, 3) END, K1, EL1, EL2, K2, EL3, EL4
-	      END IF
+                 READ(2, 3) END, K1, EL1, EL2, K2, EL3, EL4
+              END IF
 *
-	     IF ( END .EQ. '*') GO TO 16
+             IF ( END .EQ. '*') GO TO 16
              CALL EPTR( EL, EL1, IEL1, *999)
              CALL EPTR( EL, EL2, IEL2, *999)
              CALL EPTR( EL, EL3, IEL3, *999)
              CALL EPTR( EL, EL4, IEL4, *999)
-	     IF (INT .EQ. 5) THEN
-		VALUE(I) = RK( IEL1, IEL2, IEL3, IEL4, KVAL, REL)
-	     ELSE
-		OVALUE(I+IOV(1))
-     :			= QUADR(IEL1,IEL2,0)**K1*QUADR(IEL3,IEL4,0)**K2
-	     END IF
-	     I = I + 1
-	     IF (INT .NE. 3) THEN
-	        IF (I .LE. (IDIM2) ) GO TO 14
-	        WRITE(0,*) ' Too many integrals - MAX = ',IDIM2
-		STOP 1
-	     ELSE
-		IF (I .LE. (20) ) GO TO 14
-		WRITE(0,*) ' Too many overlap integrals - MAX = ',(20)
-		STOP 1
-	     END IF
-	  END IF
- 16	  IF (INT .EQ. 3 .OR. INT .EQ. 4) THEN
-	    IOV(INT-2) = I-1
-	    GO TO 10
-	  END IF
+             IF (INT .EQ. 5) THEN
+                VALUE(I) = RK( IEL1, IEL2, IEL3, IEL4, KVAL, REL)
+             ELSE
+                OVALUE(I+IOV(1))
+     :          = QUADR(IEL1,IEL2,0)**K1*QUADR(IEL3,IEL4,0)**K2
+             END IF
+             I = I + 1
+             IF (INT .NE. 3) THEN
+                IF (I .LE. (IDIM2) ) GO TO 14
+                WRITE(0,*) ' Too many integrals - MAX = ',IDIM2
+                STOP 1
+             ELSE
+                IF (I .LE. (20) ) GO TO 14
+                WRITE(0,*) ' Too many overlap integrals - MAX = ',(20)
+                STOP 1
+             END IF
+          END IF
+ 16       IF (INT .EQ. 3 .OR. INT .EQ. 4) THEN
+            IOV(INT-2) = I-1
+            GO TO 10
+          END IF
 *
 *	... Read the data ...
 *
-	  I = 1
-	  IC = 1
+          I = 1
+          IC = 1
 
-   20	  READ(2,4) COEFF, END, IH, JH, IOVPTR
-	  IF ( END .NE. '*') THEN
-	    IF (IOVPTR .LT. 0) IOVPTR = IOV(1) - IOVPTR
-	    C = COEFF*VALUE(I)
-	    IF (IOVPTR .NE. 0) C = C*OVALUE(IOVPTR)
-	    IF (JH .LE. NZERO) THEN
-	      H(IH,JH) = H(IH,JH) + C
-	    ELSE
-	      IF(IH .EQ. JH) HD(JH) = HD(JH) + C
-	    END IF
-	    IC = IC + 1
-	    IF (IC .GT. ICPTR(I)) I = I+1
-	    GO TO 20
-	  END IF
+   20     READ(2,4) COEFF, END, IH, JH, IOVPTR
+          IF ( END .NE. '*') THEN
+            IF (IOVPTR .LT. 0) IOVPTR = IOV(1) - IOVPTR
+            C = COEFF*VALUE(I)
+            IF (IOVPTR .NE. 0) C = C*OVALUE(IOVPTR)
+            IF (JH .LE. NZERO) THEN
+              H(IH,JH) = H(IH,JH) + C
+            ELSE
+              IF(IH .EQ. JH) HD(JH) = HD(JH) + C
+            END IF
+            IC = IC + 1
+            IF (IC .GT. ICPTR(I)) I = I+1
+            GO TO 20
+          END IF
    10 	CONTINUE
  
 * 
@@ -782,17 +782,17 @@ C
 * 
       WRITE (6,'(//A)') '   LS interaction matrix' 
       DO 30 I = 1,N 
-	IF (I .LE. NZERO ) THEN
+        IF (I .LE. NZERO ) THEN
          WRITE(6,'(/(8F16.7))') (H(I,J),J=1,I) 
-	ELSE
-	 WRITE(6,'(/(8F16.7))') (H(I,J),J=1,NZERO),HD(I)
-	END IF
+        ELSE
+         WRITE(6,'(/(8F16.7))') (H(I,J),J=1,NZERO),HD(I)
+        END IF
 30    CONTINUE 
 32    WRITE(0,'(/A,I5/A)') 'The size of the matrix is ', N,
      :   ' Enter the approximate number of eigenvalues required ' 
       READ( IREAD, *) MEIV 
       IF (MEIV .GT. (MD)) THEN 
-	WRITE(0,*)' Maximum for current dimensions is',MD,' :Re-enter' 
+        WRITE(0,*)' Maximum for current dimensions is',MD,' :Re-enter' 
         GO TO 32 
       END IF 
 * 
@@ -814,7 +814,7 @@ C
    35    CONTINUE 
          DIAG(K) = DIAG(I) 
          DIAG(I) = DL 
-	 IF (DL .NE. 1.D0) NUMBER = NUMBER + 1 
+         IF (DL .NE. 1.D0) NUMBER = NUMBER + 1 
    34 CONTINUE 
       IF (NUMBER .EQ. 0) STOP ' ERROR IN MATRIX' 
       RLB = 1.5*DIAG(1) 
@@ -827,5 +827,5 @@ C
 *
   999   WRITE(0,*) ' Electron in ',END,'-data not found in ',
      :          'configuration data'
-        STOP
-	END
+      STOP
+      END

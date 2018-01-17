@@ -75,9 +75,9 @@
       IWRITE=6
       IOUT = 7
       DO 2 I = 1,8
-	 ISC(I) = 10 + I
-	 NCOUNT(I) = 0
-	 OPEN(UNIT=ISC(I),STATUS='SCRATCH',FORM='UNFORMATTED')
+         ISC(I) = 10 + I
+         NCOUNT(I) = 0
+         OPEN(UNIT=ISC(I),STATUS='SCRATCH',FORM='UNFORMATTED')
     2 CONTINUE
       NAME(1) = 'cfg.inp'
       NAME(2) = 'int.lst'
@@ -197,7 +197,7 @@ CDBG  WRITE(IWRITE,78) NBUG6,NBUG7
      :         ' configurations, how many at the end are new? ',
      :         ' How many configurations define the zero-order set?'
          READ (5,*) NEW,NZERO
-	 IF (NEW .EQ. 0) NEW = NCFG
+         IF (NEW .EQ. 0) NEW = NCFG
          ISTART = NCFG - NEW + 1
          IF (NZERO .eq. 0) NZERO = NCFG
          IF (IREL .NE. 0 .AND. NZERO .NE. NCFG) THEN
@@ -231,7 +231,7 @@ CDBG  WRITE(IWRITE,78) NBUG6,NBUG7
 * ...  Start the calculation
 *
    67 DO 6 JA = ISTART, NCFG
-	  IF (IFULL .EQ. 0) WRITE(0,'(A,I5)') ' JA =',JA
+      IF (IFULL .EQ. 0) WRITE(0,'(A,I5)') ' JA =',JA
       DO 7 JB=1, JA
       INCL = .FALSE.
       IF (JB.LE.NZERO.AND.IRFST(JB).EQ.1) INCL = .TRUE.
@@ -605,12 +605,12 @@ C
      :                             IAJCMP(JSIGP),IAJCLD(1)
          ENDIF
       ELSE
-	 IF (IFULL.NE.0) 
+         IF (IFULL.NE.0) 
      :      WRITE(IWRITE,3)D11NK,K,IAJCMP(JSIG),IAJCMP(JRHO),
      :                             IAJCMP(JSIGP),IAJCMP(JRHO)
 *        WRITE(JSC1,303) D11NK,K,IAJCMP(JSIG),IAJCMP(JRHO),JA,
 *    :                           IAJCMP(JSIGP),IAJCMP(JRHO),JB
-	 CALL SAVE(6,D11NK,K,JSIG,JRHO,JSIGP,JRHO,JA,JB,0)
+         CALL SAVE(6,D11NK,K,JSIG,JRHO,JSIGP,JRHO,JA,JB,0)
       ENDIF
       IF(LA.EQ.LB)THEN
          KE1=3
@@ -649,7 +649,7 @@ C
      :                              IAJCLD(I),IAJCMP(JSIGP)
          ENDIF
       ELSE
-	 IF (IFULL.NE.0) THEN
+         IF (IFULL.NE.0) THEN
             WRITE(IWRITE,3)E01N2,K2,IAJCMP(JSIG),IAJCMP(JRHO),
      :                              IAJCMP(JRHO),IAJCMP(JSIGP)
             WRITE(IWRITE,3)E01NK,K,IAJCMP(JRHO),IAJCMP(JSIG),
@@ -658,7 +658,7 @@ C
      :                              IAJCMP(JSIGP),IAJCMP(JRHO)
             WRITE(IWRITE,4)E10VK,K1,IAJCMP(JSIG),IAJCMP(JRHO),
      :                              IAJCMP(JRHO),IAJCMP(JSIGP)
-	 END IF
+         END IF
 *        WRITE(JSC1,303)E01N2,K2,IAJCMP(JSIG),IAJCMP(JRHO),JA,
 *    :                           IAJCMP(JRHO),IAJCMP(JSIGP),JB
 *        WRITE(JSC1,303)E01NK,K,IAJCMP(JRHO),IAJCMP(JSIG),JA,
@@ -667,10 +667,10 @@ C
 *    :                           IAJCMP(JSIGP),IAJCMP(JRHO),JB
 *        WRITE(JSC2,304)E10VK,K1,IAJCMP(JSIG),IAJCMP(JRHO),JA,
 *    :                           IAJCMP(JRHO),IAJCMP(JSIGP),JB
-	 CALL SAVE(6,E01N2,K2,JSIG,JRHO,JRHO,JSIGP,JA,JB,0)
-	 CALL SAVE(6,E01NK,K,JRHO,JSIG,JSIGP,JRHO,JA,JB,0)
-	 CALL SAVE(7,E01VK,K1,JRHO,JSIG,JSIGP,JRHO,JA,JB,0)
-	 CALL SAVE(7,E10VK,K1,JSIG,JRHO,JRHO,JSIGP,JA,JB,0)
+         CALL SAVE(6,E01N2,K2,JSIG,JRHO,JRHO,JSIGP,JA,JB,0)
+         CALL SAVE(6,E01NK,K,JRHO,JSIG,JSIGP,JRHO,JA,JB,0)
+         CALL SAVE(7,E01VK,K1,JRHO,JSIG,JSIGP,JRHO,JA,JB,0)
+         CALL SAVE(7,E10VK,K1,JSIG,JRHO,JRHO,JSIGP,JA,JB,0)
       ENDIF
     1 CONTINUE
       IF(IRHO.EQ.0)THEN
@@ -1708,7 +1708,7 @@ c     PRINT *,' AMULT(JK1) = ',AMULT(JK1)
       NJ1S=M11
       NJ23S=M4
       DO 100 J = 1,M11
-	 FREE(J) = .FALSE.
+        FREE(J) = .FALSE.
   100 CONTINUE
       IF(IBUG1.LT.1.OR.IBUG3.EQ.1) GO TO 77
       WRITE(IWRITE,306) (J1(J),J=1,M11)
@@ -1941,11 +1941,11 @@ c     PRINT *,' AMULT(JK1) = ',AMULT(JK1)
 *
 * --- Special Case: IHSH = 1
 *
-	  IF (IHSH .EQ. 1) THEN
-		 J3(2,3) = M12
-		 J3(4,1) = M12
-		 J3(4,3) = M10
-	  END IF
+      IF (IHSH .EQ. 1) THEN
+         J3(2,3) = M12
+         J3(4,1) = M12
+         J3(4,3) = M10
+      END IF
 *
 * --- STORE THE ARRAYS J2 AND J3 FOR FUTURE RESETTING OF J2 AND J3
 *
@@ -2493,63 +2493,63 @@ c     PRINT *,' AMULT(JK1) = ',AMULT(JK1)
 * --- TERMINATE  INTEGERAL LISTS and Rewind
 *
       DO 1 J = 1,8
-	 ENDFILE(UNIT=ISC(J))
-	 REWIND(UNIT=ISC(J))
+         ENDFILE(UNIT=ISC(J))
+         REWIND(UNIT=ISC(J))
     1 CONTINUE
 *
 *     Test if current dimensions are big enough
 *
       N = MAX(NF,NG,NR,NL,NZ,NN,NV,NS)
       IF (N .GT. NCDIM4) THEN
-	 WRITE(0,'(A/A,I10)') ' NCDIM4 dimension in OUTLSJ too small',
+         WRITE(0,'(A/A,I10)') ' NCDIM4 dimension in OUTLSJ too small',
      :    ' Must be increased to at least',N
-	 STOP 1
+         STOP 1
       END IF
 *
 *===  Begin processing data
 *
       NINT = 0
       DO 100 ICASE = 1,8
-	 N = NCOUNT(ICASE)
-	 IF (ICASE .NE. 3 .AND. ICASE .NE. 4) THEN
-	    DO 102 J = 1,N
-	      READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J)
+         N = NCOUNT(ICASE)
+         IF (ICASE .NE. 3 .AND. ICASE .NE. 4) THEN
+            DO 102 J = 1,N
+               READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J)
   102       CONTINUE
-	 ELSE 
-	    DO 104 J = 1,N
-	       READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J),IPTR(J)
+         ELSE 
+            DO 104 J = 1,N
+               READ(ISC(ICASE)) C(J),IPACK(J),JA(J),JB(J),IPTR(J)
   104       CONTINUE
-	 END IF
-	 CALL QSORT(N,IPACK,IPT,ISTACK,LSTACK,IERR)
-	 IF (IERR .EQ. 1) THEN
-	    WRITE(0,*) ' Stack dimension not large enough for sort'
-	    STOP 1
-	 END IF
+         END IF
+         CALL QSORT(N,IPACK,IPT,ISTACK,LSTACK,IERR)
+         IF (IERR .EQ. 1) THEN
+            WRITE(0,*) ' Stack dimension not large enough for sort'
+            STOP 1
+         END IF
 *
 *        Output the list of integrals with pointers to the data
 *
-	 LAST = 0
+         LAST = 0
   110    J = LAST +1
-	 LAST = J
-	 IF (J .LE. N) THEN
+         LAST = J
+         IF (J .LE. N) THEN
 *
 *          Unpack electron data
 *
            K = IPACK(IPT(J))
-   	   I4 = MOD(K,64)
-   	   K = K/64
-     	   IF (ICASE.LE.2 .OR. ICASE.EQ.4 .OR. ICASE.EQ.5) THEN
-   	     I2 = MOD(K,64)
-   	     K = K/64
-	   ELSE
-	      I3 = MOD(K,64)
-	      K = K/64
-	      I2 = MOD(K,64)
-	      K = K/64
-	      I1 = MOD(K,64)
-	      K = K/64
-	      IF (ICASE .GT. 5) K = K - 1
-	   END IF
+           I4 = MOD(K,64)
+           K = K/64
+           IF (ICASE.LE.2 .OR. ICASE.EQ.4 .OR. ICASE.EQ.5) THEN
+              I2 = MOD(K,64)
+              K = K/64
+           ELSE
+              I3 = MOD(K,64)
+              K = K/64
+              I2 = MOD(K,64)
+              K = K/64
+              I1 = MOD(K,64)
+              K = K/64
+              IF (ICASE .GT. 5) K = K - 1
+           END IF
 *
 *           Find  last item in the list with this integral
 *           
@@ -2558,36 +2558,36 @@ c     PRINT *,' AMULT(JK1) = ',AMULT(JK1)
              IF (IPACK(IPT(J)) .EQ. IPACK(IPT(LAST))) GO TO 120
            END IF
            LAST = LAST -1
-	   NINT = NINT + 1
+           NINT = NINT + 1
            IF (ICASE .LE. 2) THEN
              WRITE(IOUT,10) INT(ICASE),K,IAJCMP(I2),IAJCMP(I4),LAST
            ELSE IF (ICASE .EQ. 4 .OR. ICASE .EQ. 5) THEN
              WRITE(IOUT,12) INT(ICASE),IAJCMP(I2),IAJCMP(I4),LAST
            ELSE
-	     DO 140 J = 1,4
-	       IF (II(J) .LT. 32) THEN
-	         IEL(J) = IAJCMP(II(J))
-	       ELSE
-	         IEL(J) = IAJCLD(64-II(J))
-	       END IF
+             DO 140 J = 1,4
+               IF (II(J) .LT. 32) THEN
+                 IEL(J) = IAJCMP(II(J))
+               ELSE
+                 IEL(J) = IAJCLD(64-II(J))
+               END IF
   140        CONTINUE
-	     WRITE(IOUT,11) INT(ICASE),K,(IEL(J),J=1,4),LAST
+             WRITE(IOUT,11) INT(ICASE),K,(IEL(J),J=1,4),LAST
            END IF
-	   GO TO 110
-	END IF
+           GO TO 110
+        END IF
         WRITE(IOUT,31) 
 *
 *             Write out the data for the integrals
 *
         DO 150 J = 1,N
-  	  K = IPT(J)
+          K = IPT(J)
           WRITE(IOUT,20) C(K),INT(ICASE),JA(K),JB(K)
   150   CONTINUE
         WRITE(IOUT,30) 
-	IF (ICASE .EQ. 2) THEN
+        IF (ICASE .EQ. 2) THEN
           WRITE(IOUT,31) 
           WRITE(IOUT,31) 
-	END IF
+        END IF
   100 CONTINUE
       WRITE(0,*) 'The total number of integrals =',NINT
       RETURN
@@ -3250,7 +3250,7 @@ C
       IF (ICALL.EQ.0) THEN
          I = 2
          CALL SETJ1(I,IRHO,ISIG,IRHOP,ISIGP,
-     :        			  0,0,KK1,KK2,KK3,KK4)
+     :       0,0,KK1,KK2,KK3,KK4)
          MLIMIT=M16
          NJ1S=M8+11
          NJ23S=M18+1
@@ -3263,9 +3263,9 @@ C
          FREE(M17) = .TRUE.
          FREE(M21) = .TRUE.
          FREE(NJ1S) = .TRUE.
-		 J1(M17) = 1
-		 J1(M21) = 1
-		 J1(NJ1S) = 1
+         J1(M17) = 1
+         J1(M21) = 1
+         J1(NJ1S) = 1
          J23REL=0
          CALL J23SP1(J23REL)
 cdbg print*,(j1(ik),ik=1,nj1s)
@@ -3292,7 +3292,7 @@ C ICI KNJAE
 *
       I=3
       CALL SETJ1(I,IRHO,ISIG,IRHOP,ISIGP,0,0,KK1,KK2,
-     :                                KK3,KK4)		       
+     :                                KK3,KK4)
       J1(M15)=2
       J1(M16)=2
       MLIMIT=M16
@@ -3309,9 +3309,9 @@ C ICI KNJAE
              FREE(M17) = .TRUE.
              FREE(M21) = .TRUE.
              FREE(NJ1S) = .TRUE.
-		     J1(M17) = 1
-		     J1(M21) = 1
-		     J1(NJ1S) = 1
+             J1(M17) = 1
+             J1(M21) = 1
+             J1(NJ1S) = 1
              J23REL=0
              CALL J23SP1(J23REL)
 cdbg  print*,(j1(ik),ik=1,nj1s)
@@ -4291,15 +4291,15 @@ C
 *     SINCE WE COUPLE THE SHELL TO A DUMMY SINGLET S.
 *
          IF(IC .LE.1) THEN 
-	    I2 = 1
+            I2 = 1
          ELSE
-	    I2 = NOCCSH(JC)+IC-1
+            I2 = NOCCSH(JC)+IC-1
          END IF
          JD = J1QNRD(I2,JC)
          IF (IC .LE. 1) THEN
-	    J1QN(I2HSH,1,I) = 0
+            J1QN(I2HSH,1,I) = 0
          ELSE
-	    J1QN(I2HSH,1,I) = MOD(JD,64)
+            J1QN(I2HSH,1,I) = MOD(JD,64)
          END IF
          JD = JD/64
          J1QN(I2HSH,2,I) = MOD(JD, 64)
