@@ -1,10 +1,10 @@
 #! /bin/sh
 
 set -e
-
+BIN=../../bin
 #----------------------------------------
 
-../../src/GENCL <<EOF
+$BIN/GENCL <<EOF
 
 C
  1s  2s
@@ -17,7 +17,7 @@ EOF
 
 #----------------------------------------
 
-../../src/NONH <<EOF
+$BIN/NONH <<EOF
 y
 y
 EOF

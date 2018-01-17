@@ -7,6 +7,7 @@
 # configuration states, {1s(2), 2s(2), 2p(2)} 1S.
 #
 set -e
+BIN=../../bin
 
 #----------------------------------------
 # 1) Use HF to obtain radial function for 1s
@@ -16,7 +17,7 @@ set -e
 # or it will be used by HF.
 rm -f wfn.inp
 
-../../src/HF <<EOF
+$BIN/HF <<EOF
 He,1S,2.
 
 1s(2)
@@ -32,7 +33,7 @@ mv wfn.out wfn.inp
 #----------------------------------------
 # 2) Specify the set of configuration states
 #----------------------------------------
-../../src/GENCL <<EOF
+$BIN/GENCL <<EOF
 
 He
 
@@ -53,7 +54,7 @@ echo "*" >> cfg.inp
 #----------------------------------------
 # 3) Compute energy expression
 #----------------------------------------
-../../src/NONH <<EOF
+$BIN/NONH <<EOF
 n
 y
 EOF
@@ -62,7 +63,7 @@ EOF
 #----------------------------------------
 # 4) Run MCHF
 #----------------------------------------
-../../src/MCHF <<EOF
+$BIN/MCHF <<EOF
 He,1S,2.
 all
 y
