@@ -2,11 +2,9 @@
 
 set -e
 
-BIN=../../bin
-
 #----------------------------------------
 
-$BIN/GENCL <<EOF
+../../src/GENCL <<EOF
 
 Al
  1s  2s  2p
@@ -21,14 +19,14 @@ EOF
 
 #----------------------------------------
 
-$BIN/NONH <<EOF
+../../src/NONH <<EOF
 n
 y
 EOF
 
 #----------------------------------------
-rm -f wfn.inp
-$BIN/HF <<EOF
+
+../../src/HF <<EOF
 Al,2P,13.
   1s  2s  2p  3s
 3p(1)
@@ -51,7 +49,7 @@ mv wfn.out wfn.inp
 # fail. In any case, this fixes it.
 echo "*" >> cfg.inp
 
-$BIN/MCHF <<EOF
+../../src/MCHF <<EOF
 Al,2P,13.
 =3
 y
