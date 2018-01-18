@@ -1,8 +1,9 @@
 #! /bin/sh
 
 set -e
+rm -f wfn.inp
 
-../../src/HF <<EOF
+../../bin/HF <<EOF
 Li,2S,3.
  1s
 2s(1)
