@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+#  Script for making ATSP executables
+#
+cd src
+echo "Making ATSP programs ..."
+rm -f *.o
+make
+
+echo 
+echo "Moving executables to bin/"
+mv TERMS ../bin/
+mv GENCL ../bin/
+mv NONH  ../bin/
+mv PRINTW ../bin/
+mv PLOTW  ../bin/
+mv HF    ../bin/
+mv MCHF  ../bin/
+mv BREIT ../bin/
+mv CI    ../bin/
+mv ISO   ../bin/
+
+cd ../
+echo
+echo "See examples from CAS in examples/CAS_book/"
+echo
+echo "Finished."
+

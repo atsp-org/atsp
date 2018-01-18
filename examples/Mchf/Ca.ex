@@ -4,6 +4,8 @@
 #..... Step 0.  Obtain initial estimates for the Ca- calculation from a
 #            Hartree-Fock calculation for Ca 4s3p 3P
 #
+BIN=../../bin
+
 rm -f Ca.out
 time HF >Ca.out <<S0
 Ca,3P,20.
@@ -21,7 +23,7 @@ mv -f wfn.out wfn.inp
 #
 #..... Step 1.  Obtain the configuration state expansion for Ca-
 #
-time Gencl >>Ca.out <<S1
+time $BIN/GENCL >>Ca.out <<S1
 
  Ca- 2P
  1s  2s  2p  3s  3p
@@ -40,7 +42,7 @@ cat cfg.inp >>Ca.out
 #..... Step 2.  Obtain the energy expression for the non-relativistic 
 #            hamiltonian for this atomic state expansion
 #
-time Nonh >>Ca.out  <<S2
+time $BIN/NONH >>Ca.out  <<S2
 n
 y
 S2
@@ -50,7 +52,7 @@ cat int.lst
 #
 #..... Step 3.  Determine the radial functions for the Mchf expansion
 #
-time Mchf >>Ca.out  <<S3
+time $BIN/MCHF >>Ca.out  <<S3
 Ca-,2P,20.
 all
 y
@@ -71,7 +73,7 @@ mv -f wfn.out wfn.inp
 #
 #..... Step 4.  Obtain a larger configuration state expansion for Ca-
 #
-time Gencl >> Ca.out <<S4
+time $BIN/GENCL >> Ca.out <<S4
 
  Ca- 2P
  1s  2s  2p  3s  3p
@@ -109,7 +111,7 @@ cat cfg.inp >>Ca.out
 #..... Step 5.  Obtain the energy expression for the non-relativistic 
 #            hamiltonian
 #
-time Nonh >> Ca.out  <<S5
+time $BIN/NONH >> Ca.out  <<S5
 n
 y
 S5
@@ -119,7 +121,7 @@ cat int.lst >>Ca.out
 #
 #..... Step 6.  Determine the radial functions for the Mchf expansion
 #
-time Mchf  >>Ca.out  <<S6
+time $BIN/MCHF >>Ca.out  <<S6
 Ca-,2P,20.
 4s,4p,5s,3d,4d,5p
 y
