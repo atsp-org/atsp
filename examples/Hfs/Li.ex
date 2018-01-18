@@ -3,6 +3,8 @@
 # 
 #  Generate configuration list
 #
+BIN=../../bin
+
 rm -f cfg.inp Li1.out
 cat >cfg.inp <<S1
 Li  2P
@@ -14,14 +16,16 @@ cat cfg.inp
 #
 #  Obtain Energy Expression
 #
-Nonh >Li1.out <<S2
+$BIN/NONH >Li1.out <<S2
 n
 y
 S2
 #
 #  Obtain Wavefunction
 #
-Mchf >>Li1.out <<S3
+echo "*" >> cfg.inp
+
+$BIN/MCHF >>Li1.out <<S3
 Li,2P,3.
 all
 y
@@ -35,7 +39,7 @@ mv -f wfn.out li1.w
 #
 #  Compute Hyperfine parameters
 #
-time Hfs Li1.out <<S4
+time $BIN/HFS Li1.out <<S4
 li1
 0
 y
@@ -68,15 +72,17 @@ cat cfg.inp
 #
 #  Get energy expression
 #
-Nonh > Li2.out <<S2
+$BIN/NONH > Li2.out <<S2
 n
 y
 S2
 #  
 #  Get MCHF wave function
 #
+echo "*" >> cfg.inp
+
 cp li1.w wfn.inp
-Mchf >>Li2.out <<S3
+$BIN/MCHF >>Li2.out <<S3
 Li,2P,3.
 2p1,2s2,2p2,2s3,2p3
 y
@@ -89,7 +95,7 @@ mv -f cfg.out li2.c
 mv -f wfn.out li2.w
 #
 #  Perform Hyperfine calculation
-time Hfs >>Li2.out <<S4
+time $BIN/HFS >>Li2.out <<S4
 li2
 1
 y

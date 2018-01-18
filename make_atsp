@@ -2,6 +2,8 @@
 #
 #  Script for making ATSP executables
 #
+BIN=../bin
+
 cd src
 echo "Making ATSP programs ..."
 rm -f *.o
@@ -9,16 +11,7 @@ make
 
 echo 
 echo "Moving executables to bin/"
-mv TERMS ../bin/
-mv GENCL ../bin/
-mv NONH  ../bin/
-mv PRINTW ../bin/
-mv PLOTW  ../bin/
-mv HF    ../bin/
-mv MCHF  ../bin/
-mv BREIT ../bin/
-mv CI    ../bin/
-mv ISO   ../bin/
+mv TERMS GENCL NONH PRINTW PLOTW HF MCHF BREIT CI ISO HFS $BIN/
 
 cd ../
 echo
