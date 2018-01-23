@@ -7,8 +7,27 @@
 #  CASE I. Prepare <name>.w, <name>.c and int.lst files 
 #          to run the MCHF_ISOTOPE program for Be I.
 #
-#  Step 1. Display a set of configuration state functions.
-#
+BIN=../../bin
+
+# ------------------------------------------
+#  Step 1. Run the HF program to get initial wavefunctions.
+# ------------------------------------------
+rm -f wfn.inp
+$BIN/HF << S1
+Be,1S,4.
+  1s
+2s(1)3s(1)
+all
+y
+y
+n
+n
+S1
+
+# -------------------------------------------------
+#  Step 2. Specify set of configuration state functions.
+# -------------------------------------------------
+
 rm -f cfg.inp Be.out
 cat > cfg.inp << STOP1
    Be    1S 
@@ -24,24 +43,28 @@ cat > cfg.inp << STOP1
   3d( 2)    
      1S0
 STOP1
-#
-# Step 2. Compute angular integrals using the MCHF_nonh program. 
-#
-Nonh > Be.out << STOP2
+
+# -------------------------------------------
+# Step 3. Compute angular integrals using the MCHF_nonh program. 
+# --------------------------------------------
+$BIN/NONH > Be.out << STOP2
 n
 y
 STOP2
-#
-# Step 3. Run the MCHF_88 program to obtain radial functions
+
+# --------------------------------------------
+# Step 4. Run the MCHF_88 program to obtain radial functions
 #         and mixing coefficients.
-#
-Mchf >>Be.out << STOP3
+# --------------------------------------------
+mv -f wfn.out wfn.inp
+echo "*" >> cfg.inp
+
+$BIN/MCHF >>Be.out << STOP3
 Be,1S,4.0
 all
 y
 y
 y
-n
 STOP3
 #
 # Save the results into Be.c and Be.w files. 
@@ -52,10 +75,11 @@ echo move wfn.out into Be.w
 mv -f cfg.out Be.c
 mv -f wfn.out Be.w
 echo ' '
-#
-# Step 4. Run the MCHF_ISOTOPE program
-#
-Iso >> Be.out << STOP4
+
+# -----------------------------------------
+# Step 5. Run the MCHF_ISOTOPE program
+# -----------------------------------------
+$BIN/ISO >> Be.out << STOP4
 Be
 1
 y
