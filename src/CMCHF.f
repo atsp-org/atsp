@@ -732,6 +732,9 @@ cxi
       LOGICAL DIAG
       CHARACTER*2 ASTER(5)
       DATA ASTER/'  ','* ','**',' c',' b'/
+      DOUBLE PRECISION ED1
+      SAVE ED1
+      DATA ED1 /0/
 *
       I = I1
       ED2 = E(I,I)
