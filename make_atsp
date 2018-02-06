@@ -11,7 +11,7 @@ make
 
 echo 
 echo "Moving executables to bin/"
-mv TERMS GENCL NONH PRINTW PLOTW HF MCHF BREIT CI ISO HFS $BIN/
+mv TERMS GENCL NONH PRINTW PLOTW HF MCHF AUTO BREIT CI ISO HFS $BIN/
 
 cd ../
 echo
