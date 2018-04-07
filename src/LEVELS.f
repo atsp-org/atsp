@@ -163,7 +163,7 @@ CSUN    end if
         LOW = EN(1)
  
 ***************
-*       Compute   Rz = 109737.31534/(1.+548.579903D-6/ZMU)
+*       Compute   Rz = R_INF / (1. + ME/ZMU)
 *
         IF (NZ .EQ. 1) THEN
             ZMU = 1.
@@ -174,7 +174,7 @@ CSUN    end if
         ELSE
             ZMU = 2*NZ+1
         ENDIF
-        RZ = 109737.31534/(1.+548.579903D-6/ZMU)
+        RZ = 109737.31568508/(1.+548.579909070D-6/ZMU)
  
  
  
