@@ -282,7 +282,7 @@ CSUN  end if
          WRITE(0,*) ' Enter the mass of the atom' 
          READ(IREAD,*)  ZMU 
       END IF 
-      RMASS = 548.579903E-6/ZMU
+      RMASS = 548.579909070D-6/ZMU
       END IF
 * 
 * ***** COMPUTE ENERGY OF THE CORE 

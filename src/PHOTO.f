@@ -14,7 +14,7 @@
 * 
       PROGRAM PHOTO
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) 
-      PARAMETER(NOD=220,NWD=30,NWD2=2*NWD,NCD=100,NCD2=2*NCD) 
+      PARAMETER(NOD=220,NWD=30,NWD2=2*NWD,NCD=500,NCD2=2*NCD) 
       INTEGER Q(5)
       CHARACTER*1 END,ASTER,PP 
       CHARACTER*3 EL(NWD2),ELC(8),COUPLE(9),ELI 
@@ -341,7 +341,7 @@ cxi
 *        
 *        Electron Mass
 	 
-	 EM = 548.579903D-6
+	 EM = 548.579909070D-6
 	 ratio = AWT/(AWT + EM)
 *
 *	Hartree --> cm^1
