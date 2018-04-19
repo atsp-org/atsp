@@ -5,9 +5,11 @@
 #            states of the Al-like sequence
 #   
 #   Step 1.  Create a configuration list
-#           
+#
+BIN=../../bin
+
 rm -f cfg.inp Breit.out
-cat >cfg.inp <<S1
+cat >cfg.inp <<ST1
    al                                                        
   1s  2s  2p
   3s( 2)  3p( 1)
@@ -18,15 +20,15 @@ cat >cfg.inp <<S1
      2D3
   3p( 3)
      4S3
-S1
+ST1
 #
 #   Step 2.  Derive the energy expression for the Breit-Pauli 
 #            interaction matrix
-time Breit >Breit.out  <<S2
+time $BIN/BREIT >Breit.out  <<ST2
 1
 y
 y
 y
-S2
+ST2
 echo  ' '
 echo Display the int.lst file produced
