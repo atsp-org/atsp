@@ -513,6 +513,7 @@ c           write(*,*)jdif,' should be 0.Is :',j1(jdif),'recup ->0'
 *
       character*6 name
       data name/'diagrm'/
+      SAVE NB
 *
 *
 *
@@ -524,8 +525,7 @@ c           write(*,*)jdif,' should be 0.Is :',j1(jdif),'recup ->0'
       if(tabs(nb))go to 1
       node=nbtr
       ilast=nbtr
-*
-*      write(6,*) 'nb = ', nb
+      
       do 2 j=1,3
         jdiag(node,j)=j23(nb,j)
         arr(node,j)=arrow(nb,j)
