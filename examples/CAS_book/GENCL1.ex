@@ -27,7 +27,7 @@
 BIN=../../bin
 
 rm -f cfg.inp
-$BIN/GENCL <<S1
+$BIN/GENCL <<ST1
 
 Example
 1s
@@ -37,7 +37,7 @@ Example
 
 3P
 
-S1
+ST1
 
 # Display the couplings found by GENCL 
 cat cfg.inp
