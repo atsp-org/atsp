@@ -1583,12 +1583,13 @@ CSUN            end if
      :                 ELA(NELS)
         CHARACTER*3    ELB(NELS),ELC(NELS),CH3
         CHARACTER      FBETA*8, FILE1*32, FILE2*40, FILE3*32
+        INTEGER        MB
         INTEGER        Q(NELS),QL(NELS),QR(NELS),
      :                 QS(NELS,NELS),MS(NELS),RL(NELS),
      :                 Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,
      :                 Q10,Q11,Q12,Q13,Q14,Q15
         INTEGER        QA(NELS),QB(NELS),QC(NELS),PARITY,CONST,PP(NCFG),
-     :                 NP,QQ
+     :                 QQ
         COMMON         NF,NR,NFTM,MAX,MIN,PARITY,CONST,NQ
      :                 /BLK3/EL,ELL,ELR,ELS,ELA
      :                 /BLK4/Q,QL,ML,QR,MR,M,QS,MS,MA,RL,NREF,
@@ -1596,6 +1597,8 @@ CSUN            end if
      :                       Q10,Q11,Q12,Q13,Q14,Q15
         COMMON         /FILES/FBETA(4,NSCOUP),FILE1(NCFG),FILE2(NCFG),
      :                        FILE3(NSCOUP)
+        INTEGER NP/0/
+        SAVE NP, PP
      
      
             DO 10 I=1,NELS
@@ -1704,10 +1707,6 @@ CSUN            end if
 *       If the replacement duplicates a configuration in the previous
 *   replacement, it should not sent to CI.LST
 *
-            print *, "This code should never get executed, because"
-            print *, "it uses an uninitialized variable. Aborting..."
-            stop 1
-*           The variable NP is not initialized below:
             DO 40 I=1,NP
                 L = PP(I)
                 READ (FILE2(I),42) (ELC(J),QC(J), J=1,L)
