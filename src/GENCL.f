@@ -1588,8 +1588,7 @@ CSUN            end if
      :                 QS(NELS,NELS),MS(NELS),RL(NELS),
      :                 Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,
      :                 Q10,Q11,Q12,Q13,Q14,Q15
-        INTEGER        QA(NELS),QB(NELS),QC(NELS),PARITY,CONST,PP(NCFG),
-     :                 QQ
+        INTEGER        QA(NELS),QB(NELS),QC(NELS),PARITY,CONST,QQ
         COMMON         NF,NR,NFTM,MAX,MIN,PARITY,CONST,NQ
      :                 /BLK3/EL,ELL,ELR,ELS,ELA
      :                 /BLK4/Q,QL,ML,QR,MR,M,QS,MS,MA,RL,NREF,
@@ -1598,6 +1597,7 @@ CSUN            end if
         COMMON         /FILES/FBETA(4,NSCOUP),FILE1(NCFG),FILE2(NCFG),
      :                        FILE3(NSCOUP)
         INTEGER NP/0/
+        INTEGER PP(NCFG)/NCFG*0
         SAVE NP, PP
      
      
