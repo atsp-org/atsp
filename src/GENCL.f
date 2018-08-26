@@ -1597,7 +1597,7 @@ CSUN            end if
         COMMON         /FILES/FBETA(4,NSCOUP),FILE1(NCFG),FILE2(NCFG),
      :                        FILE3(NSCOUP)
         INTEGER NP/0/
-        INTEGER PP(NCFG)/NCFG*0
+        INTEGER PP(NCFG)/NCFG*0/
         SAVE NP, PP
      
      
