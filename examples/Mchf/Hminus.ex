@@ -2,9 +2,9 @@
 #
 # MCHF calculation for the H- 1s(2) 1S ground state
 # with a wave function expansion over the set of 
-# configuration states:
+# electron configurations:
 #
-#     {1s(2), 2s(2), 2p(2), 3s(2), 3p(2), 3d(2)} 1S.
+#     { 1s(2), 2s(2), 2p(2), 3s(2), 3p(2), 3d(2) }
 #
 # References:
 #  1. A. R. P. Rau, "The Negative Ion of Hydrogen",
