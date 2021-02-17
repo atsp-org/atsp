@@ -6,8 +6,8 @@
 #
 BIN=../../bin
 
-rm -f Ca.out
-time HF >Ca.out <<S0
+rm -f Ca.out wfn.inp
+time $BIN/HF >Ca.out <<S0
 Ca,3P,20.
   1s  2s  2p  3s  3p
 4s(1)4p(1)
@@ -35,7 +35,8 @@ time $BIN/GENCL >>Ca.out <<S1
 2P
 
 S1
-echo '  '
+# echo '  '
+echo "*" >> cfg.inp
 echo Display the cfg.inp file produced
 cat cfg.inp >>Ca.out
 #
@@ -85,7 +86,8 @@ time $BIN/GENCL >> Ca.out <<S4
 2P
 
 S4
-echo '  '
+# echo '  '
+echo "*" >> cfg.inp
 #
 #   Apply Brillouin's Theorem to the 4s3d(3D)4p configuration state
 #
