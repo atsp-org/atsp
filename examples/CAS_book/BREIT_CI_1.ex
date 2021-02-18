@@ -10,6 +10,7 @@ BIN=../../bin
 #   Step 1: Compute the non-relativistic HF wavefunction for the
 #           He 1s2p 3P state.
 # ---------------------------------------
+rm -f wfn.inp
 $BIN/HF <<S0
 He,3P,2.
 
